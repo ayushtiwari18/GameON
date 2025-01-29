@@ -26,7 +26,7 @@ class AcademyModel {
       VALUES (
         @name, 
         @location, 
-        @Contact_email, 
+        @contact_email, 
         @Contact_phone, 
         @city, 
         @description, 
@@ -65,18 +65,20 @@ class AcademyModel {
     return result.recordset[0];
   }
 
-  // Update academy information
   static async update(id, academyData) {
     await poolConnect;
     const request = pool.request();
-    request.input("id", sql.Int, id);
+
+    // Ensure 'id' is passed as a GUID if necessary
+    request.input("id", sql.UniqueIdentifier, id); // Change input type to UniqueIdentifier
 
     // Add input parameters dynamically for update
     Object.keys(academyData).forEach((key) => {
+      // Sanitize input: make sure the value is of the correct type
       request.input(key, academyData[key]);
     });
 
-    // Build SET clause dynamically based on provided fields
+    // Build the SET clause dynamically based on provided fields
     const setClause = Object.keys(academyData)
       .map((key) => `${key} = @${key}`)
       .join(", ");

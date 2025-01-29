@@ -1,35 +1,69 @@
-// src/models/playerModel.js
 const { pool, poolConnect } = require("../config/database");
 const sql = require("mssql");
 
 class PlayerModel {
   static async create(playerData) {
-    await poolConnect;
-    const request = pool.request();
+    try {
+      await poolConnect;
+      const request = pool.request();
 
-    // Add input parameters
-    Object.keys(playerData).forEach((key) => {
-      request.input(key, playerData[key]);
-    });
+      // Define SQL types for each field
+      const sqlTypes = {
+        Name: sql.NVarChar,
+        Email: sql.NVarChar,
+        Password: sql.NVarChar,
+        Gender: sql.NVarChar,
+        Dob: sql.Date,
+        Contact_number: sql.NVarChar,
+        Skill_level: sql.NVarChar,
+      };
 
-    const query = `
-      INSERT INTO Players (Name, Email, Password, Gender, 
-         Dob, Contact_number)
-      VALUES (@name, @email, @password, @gender, 
-         @dob, @contact_number )
-    `;
+      // Add input parameters with proper SQL types
+      Object.keys(playerData).forEach((key) => {
+        request.input(key, sqlTypes[key] || sql.NVarChar, playerData[key]);
+      });
 
-    return request.query(query);
+      const query = `
+        INSERT INTO Players (
+          Name, 
+          Email, 
+          Password, 
+          Gender, 
+          Dob, 
+          Contact_number,
+          Skill_level
+        )
+        VALUES (
+          @Name, 
+          @Email, 
+          @Password, 
+          @Gender, 
+          @Dob, 
+          @Contact_number,
+          @Skill_level
+        )
+      `;
+
+      return await request.query(query);
+    } catch (error) {
+      console.error("Database error in create:", error);
+      throw error;
+    }
   }
 
   static async findByEmail(email) {
-    await poolConnect;
-    const result = await pool
-      .request()
-      .input("email", sql.NVarChar, email)
-      .query("SELECT * FROM Players WHERE Email = @email");
+    try {
+      await poolConnect;
+      const result = await pool
+        .request()
+        .input("Email", sql.NVarChar, email)
+        .query("SELECT * FROM Players WHERE Email = @Email");
 
-    return result.recordset[0];
+      return result.recordset[0];
+    } catch (error) {
+      console.error("Database error in findByEmail:", error);
+      throw error;
+    }
   }
 }
 

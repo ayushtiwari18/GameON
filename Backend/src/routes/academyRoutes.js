@@ -12,7 +12,7 @@ const { authenticateToken } = require("../middleware/auth");
 
 // Public routes
 router.post("/register", registerAcademy);
-router.get("/list", getAcademyByEmail);
+router.get("/:email", getAcademyByEmail);
 router.get("/:id", getAcademyById);
 router.get("/city/:city", getAcademyByCity);
 
