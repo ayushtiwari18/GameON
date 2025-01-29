@@ -57,12 +57,12 @@ const getAcademyByEmail = async (req, res) => {
   }
 };
 
-// Get academy details by ID // check by Ayush
+// Get academy details by ID (updated for UUID format)
 const getAcademyById = async (req, res) => {
   const { id } = req.params;
 
-  // Validate UUID format
-  if (!/^[0-9a-fA-F-]{36}$/.test(id)) {
+  // Validate UUID format using isUUID from the 'uuid' package
+  if (!isUUID(id)) {
     return res.status(400).json({ message: "Invalid UUID format." });
   }
 
@@ -91,6 +91,11 @@ const getAcademyById = async (req, res) => {
 const updateAcademy = async (req, res) => {
   const { id } = req.params;
   const academyData = req.body;
+
+  // Ensure data is provided to update
+  if (Object.keys(academyData).length === 0) {
+    return res.status(400).json({ message: "No data provided for update" });
+  }
 
   try {
     await AcademyModel.update(id, academyData);
@@ -132,6 +137,21 @@ const getAllActiveAcademies = async (req, res) => {
   }
 };
 
+const getAcademyByCity = async (req, res) => {
+  const { city } = req.params;
+
+  try {
+    const academies = await AcademyModel.findByCity(city);
+    res.status(200).json({ academies });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Error fetching academies by city",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   registerAcademy,
   getAcademyByEmail,
@@ -139,4 +159,5 @@ module.exports = {
   updateAcademy,
   deactivateAcademy,
   getAllActiveAcademies,
+  getAcademyByCity,
 };
