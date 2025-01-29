@@ -1,35 +1,30 @@
 const AcademyModel = require("../models/academyModel");
+const { v4: isUUID } = require("uuid"); // Import UUID validator
+const sql = require("mssql");
+const { pool, poolConnect } = require("../config/database"); // Import database connection
 
 // Register a new academy
 const registerAcademy = async (req, res) => {
   const {
     name,
-    email,
-    password,
-    phone,
-    address,
+    location,
+    Contact_email,
+    Contact_phone,
     city,
-    state,
     description,
-    isActive,
-    logo,
-    website,
-    establishedYear,
+    website_url,
+    specialization,
   } = req.body;
 
   const academyData = {
     name,
-    email,
-    password,
-    phone,
-    address,
+    location,
+    Contact_email,
+    Contact_phone,
     city,
-    state,
     description,
-    isActive,
-    logo,
-    website,
-    establishedYear,
+    website_url,
+    specialization,
   };
 
   try {
@@ -45,10 +40,10 @@ const registerAcademy = async (req, res) => {
 
 // Get academy details by email
 const getAcademyByEmail = async (req, res) => {
-  const { email } = req.params;
+  const { email: Contact_email } = req.params;
 
   try {
-    const academy = await AcademyModel.findByEmail(email);
+    const academy = await AcademyModel.findByEmail(Contact_email);
     if (academy) {
       res.status(200).json({ academy });
     } else {
@@ -62,14 +57,25 @@ const getAcademyByEmail = async (req, res) => {
   }
 };
 
-// Get academy details by ID
+// Get academy details by ID // check by Ayush
 const getAcademyById = async (req, res) => {
   const { id } = req.params;
 
+  // Validate UUID format
+  if (!/^[0-9a-fA-F-]{36}$/.test(id)) {
+    return res.status(400).json({ message: "Invalid UUID format." });
+  }
+
   try {
-    const academy = await AcademyModel.findById(id);
-    if (academy) {
-      res.status(200).json({ academy });
+    await poolConnect; // Ensure DB connection is established
+
+    const result = await pool
+      .request()
+      .input("id", sql.NVarChar, id)
+      .query("SELECT * FROM Academies WHERE Academy_id = @id");
+
+    if (result.recordset.length > 0) {
+      res.status(200).json({ academy: result.recordset[0] });
     } else {
       res.status(404).json({ message: "Academy not found" });
     }

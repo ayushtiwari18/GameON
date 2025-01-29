@@ -14,31 +14,23 @@ class AcademyModel {
     const query = `
             INSERT INTO Academies (
                 Name, 
-                Email, 
-                Password, 
-                Phone, 
-                Address, 
-                City, 
-                State, 
-                Description, 
-                IsActive, 
-                Logo, 
-                Website, 
-                EstablishedYear
+                Location,
+                Contact_email,
+                Contact_Phone,  
+                City,
+                Description,  
+                Website_url, 
+                Specialization
             )
             VALUES (
                 @name,
-                @email,
-                @password,
-                @phone,
-                @address,
+                @location,
+                @Contact_email,
+                @Contact_phone,
                 @city,
-                @state,
                 @description,
-                @isActive,
-                @logo,
-                @website,
-                @establishedYear
+                @website_url,
+                @specialization
             )
         `;
 
@@ -87,23 +79,6 @@ class AcademyModel {
         `;
 
     return request.query(query);
-  }
-
-  static async deactivate(id) {
-    await poolConnect;
-    return pool
-      .request()
-      .input("id", sql.Int, id)
-      .query("UPDATE Academies SET IsActive = 0 WHERE Id = @id");
-  }
-
-  static async getAllActive() {
-    await poolConnect;
-    const result = await pool
-      .request()
-      .query("SELECT * FROM Academies WHERE IsActive = 1");
-
-    return result.recordset;
   }
 }
 

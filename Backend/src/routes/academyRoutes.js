@@ -1,16 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const academyController = require("../controllers/academyController");
+const {
+  registerAcademy,
+  getAcademyByEmail,
+  getAcademyById,
+} = require("../controllers/academyController");
 const { authenticateToken } = require("../middleware/auth");
 
 // Public routes
-// router.post("/register", academyController.register);
+router.post("/register", registerAcademy);
 // router.post("/login", academyController.login);
-// router.get("/list", academyController.getAllAcademies);
-// router.get("/:id", academyController.getAcademyById);
+router.get("/list", getAcademyByEmail);
+router.get("/:id", getAcademyById);
 
 // Protected routes - require authentication
-router.use(authenticateToken);
+// router.use(authenticateToken);
 
 // Academy profile management
 // router.put("/profile", academyController.updateProfile);
