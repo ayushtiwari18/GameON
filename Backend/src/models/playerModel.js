@@ -13,10 +13,10 @@ class PlayerModel {
     });
 
     const query = `
-      INSERT INTO Players (Name, Email, Password, Gender, Preferred_position, 
-        Skill_level, Dob, Contact_number, Aadhar_no)
-      VALUES (@name, @email, @password, @gender, @preferred_position, 
-        @skill_level, @dob, @contact_number, @aadhar_no)
+      INSERT INTO Players (Name, Email, Password, Gender, 
+         Dob, Contact_number)
+      VALUES (@name, @email, @password, @gender, 
+         @dob, @contact_number )
     `;
 
     return request.query(query);
