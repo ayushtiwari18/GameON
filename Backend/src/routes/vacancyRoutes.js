@@ -2,19 +2,18 @@
 const express = require("express");
 const router = express.Router();
 const vacancyController = require("../controllers/vacancyController");
-const { authenticateToken } = require("../middleware/auth");
+// const { authenticateToken } = require("../middleware/auth");
 
 // Define routes with their corresponding controller methods
-router.post("/create", authenticateToken, vacancyController.createVacancy);
+// Public routes
+router.post("/", vacancyController.createVacancy); // Create a new vacancy
 router.get(
-  "/tournament/:id",
-  authenticateToken,
+  "/vacancies/tournament/:id",
   vacancyController.getVacanciesByTournament
-);
+); // Get vacancies by tournament
 router.get(
-  "/with-tournaments",
-  authenticateToken,
+  "/vacancies/tournaments",
   vacancyController.getTournamentsWithVacancies
-);
+); // Get tournaments with vacancies
 
 module.exports = router;

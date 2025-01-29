@@ -6,7 +6,6 @@ const {
   getAcademyById,
   updateAcademy,
   deactivateAcademy,
-  getAllActiveAcademies,
   getAcademyByCity,
 } = require("../controllers/academyController");
 const { authenticateToken } = require("../middleware/auth");
@@ -24,8 +23,5 @@ router.get("/city/:city", getAcademyByCity);
 // Academy profile management (if needed in the future)
 router.put("/:id", updateAcademy);
 router.delete("/:id/deactivate", deactivateAcademy);
-
-// Get all active academies
-router.get("/active", getAllActiveAcademies);
 
 module.exports = router;

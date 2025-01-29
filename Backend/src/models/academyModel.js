@@ -60,7 +60,7 @@ class AcademyModel {
     const result = await pool
       .request()
       .input("id", sql.Int, id)
-      .query("SELECT * FROM Academies WHERE id = @id");
+      .query("SELECT * FROM Academies WHERE Academy_id = @id");
 
     return result.recordset[0];
   }
@@ -84,7 +84,7 @@ class AcademyModel {
     const query = `
       UPDATE Academies 
       SET ${setClause}
-      WHERE id = @id
+      WHERE Academy_id = @id
     `;
 
     try {
@@ -100,12 +100,12 @@ class AcademyModel {
     await poolConnect;
     const query = `
       DELETE FROM Academies 
-      WHERE id = @id
+      WHERE Academy_id = @id
     `;
 
     try {
       const request = pool.request();
-      request.input("id", sql.Int, id);
+      request.input("id", sql.UniqueIdentifier, id);
       await request.query(query);
     } catch (error) {
       console.error("Error deleting academy: ", error);

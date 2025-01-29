@@ -113,27 +113,13 @@ const deactivateAcademy = async (req, res) => {
   const { id } = req.params;
 
   try {
-    await AcademyModel.deactivate(id);
+    await AcademyModel.delete(id);
     res.status(200).json({ message: "Academy deactivated successfully!" });
   } catch (error) {
     console.error(error);
     res
       .status(500)
       .json({ message: "Error deactivating academy", error: error.message });
-  }
-};
-
-// Get all active academies
-const getAllActiveAcademies = async (req, res) => {
-  try {
-    const academies = await AcademyModel.getAllActive();
-    res.status(200).json({ academies });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: "Error fetching active academies",
-      error: error.message,
-    });
   }
 };
 
@@ -158,6 +144,5 @@ module.exports = {
   getAcademyById,
   updateAcademy,
   deactivateAcademy,
-  getAllActiveAcademies,
   getAcademyByCity,
 };
