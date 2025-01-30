@@ -15,6 +15,7 @@ class AcademyModel {
     const query = `
       INSERT INTO Academies (
         Name, 
+        Password,
         Location, 
         Contact_email, 
         Contact_phone,  
@@ -25,6 +26,7 @@ class AcademyModel {
       )
       VALUES (
         @name, 
+        @password,
         @location, 
         @contact_email, 
         @Contact_phone, 

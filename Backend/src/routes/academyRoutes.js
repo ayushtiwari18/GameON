@@ -6,11 +6,11 @@ const { authenticateToken } = require("../middleware/auth");
 
 // Public routes
 router.post("/register", academyController.registerAcademy);
-router.post("/login", academyController.loginAcademy); // password Not in Db
+router.post("/login", academyController.loginAcademy); // checked
 
 // Protected routes
 // router.use(authenticateToken);
-router.post("/logout", academyController.logoutAcademy); // not checked
+router.post("/logout", academyController.logoutAcademy); // not wroking be cookies required to be deleted
 router.get("/:id/home", academyController.getAcademyHome); // same as player
 router.get("/city/:city", academyController.getAcademyByCity);
 router.get("/:id/profile", academyController.getAcademyProfile);

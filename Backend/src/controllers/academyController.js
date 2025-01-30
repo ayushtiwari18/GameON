@@ -127,21 +127,23 @@ const academyController = {
         });
       }
 
+      console.log("Login request for academy:", email, password);
+
       const academy = await AcademyModel.findByEmail(email);
       if (!academy) {
         return res.status(404).json({ message: "Academy not found" });
       }
-      console.log("Academy found:", academy.password);
+      console.log("Academy found:", academy.Password);
 
       // Add defensive check for stored password
-      if (!academy.password) {
+      if (!academy.Password) {
         console.error("Stored password hash is missing for academy:", email);
         return res.status(500).json({ message: "Authentication error" });
       }
 
       // Validate password
       try {
-        const validPassword = await bcrypt.compare(password, academy.password);
+        const validPassword = await bcrypt.compare(password, academy.Password);
         if (!validPassword) {
           return res.status(401).json({ message: "Invalid password" });
         }
