@@ -5,6 +5,7 @@ require("dotenv").config();
 const playerRoutes = require("./src/routes/playerRoutes");
 const academyRoutes = require("./src/routes/academyRoutes");
 const vacancyRoutes = require("./src/routes/vacancyRoutes");
+const tournamentRoutes = require("./src/routes/tournamentRoutes");
 const errorHandler = require("./src/middleware/errorHandler");
 
 const app = express();
@@ -36,6 +37,7 @@ app.use(express.json());
 app.use("/player", playerRoutes);
 app.use("/academy", academyRoutes);
 app.use("/vacancy", vacancyRoutes);
+app.use("/tournament", tournamentRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {
