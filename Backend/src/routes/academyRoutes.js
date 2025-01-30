@@ -1,27 +1,21 @@
+// src/routes/academyRoutes.js
 const express = require("express");
 const router = express.Router();
-const {
-  registerAcademy,
-  getAcademyByEmail,
-  getAcademyById,
-  updateAcademy,
-  deactivateAcademy,
-  getAcademyByCity,
-} = require("../controllers/academyController");
+const academyController = require("../controllers/academyController");
 const { authenticateToken } = require("../middleware/auth");
 
 // Public routes
-router.post("/register", registerAcademy);
-router.get("/:email", getAcademyByEmail);
-router.get("/:id", getAcademyById);
-router.get("/city/:city", getAcademyByCity);
+router.post("/register", academyController.registerAcademy);
+router.post("/login", academyController.loginAcademy); // password Not in Db
 
-// Protected routes - require authentication
-// Uncomment if you want to protect certain routes
+// Protected routes
 // router.use(authenticateToken);
-
-// Academy profile management (if needed in the future)
-router.put("/:id", updateAcademy);
-router.delete("/:id/deactivate", deactivateAcademy);
+router.post("/logout", academyController.logoutAcademy); // not checked
+router.get("/:id/home", academyController.getAcademyHome); // same as player
+router.get("/city/:city", academyController.getAcademyByCity);
+router.get("/:id/profile", academyController.getAcademyProfile);
+router.get("/:id/profile/update", academyController.getUpdateForm);
+router.put("/:id/profile/update", academyController.updateAcademy);
+router.delete("/:id/delete", academyController.deleteAcademy);
 
 module.exports = router;

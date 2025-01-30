@@ -59,7 +59,7 @@ class AcademyModel {
     await poolConnect;
     const result = await pool
       .request()
-      .input("id", sql.Int, id)
+      .input("id", sql.UniqueIdentifier, id)
       .query("SELECT * FROM Academies WHERE Academy_id = @id");
 
     return result.recordset[0];
@@ -122,6 +122,47 @@ class AcademyModel {
       .request()
       .input("city", sql.NVarChar, city)
       .query("SELECT * FROM Academies WHERE City = @city");
+
+    return result.recordset;
+  }
+  static async getCalendarEvents(academyId) {
+    await poolConnect;
+    const result = await pool
+      .request()
+      .input("academyId", sql.UniqueIdentifier, academyId).query(`
+        SELECT * FROM AcademyCalendar 
+        WHERE Academy_id = @academyId 
+        AND Event_date >= GETDATE()
+        ORDER BY Event_date
+      `);
+
+    return result.recordset;
+  }
+
+  static async getUpdates(academyId) {
+    await poolConnect;
+    const result = await pool
+      .request()
+      .input("academyId", sql.UniqueIdentifier, academyId).query(`
+        SELECT * FROM AcademyUpdates 
+        WHERE Academy_id = @academyId 
+        AND Publish_date >= DATEADD(month, -1, GETDATE())
+        ORDER BY Publish_date DESC
+      `);
+
+    return result.recordset;
+  }
+
+  static async getUpcomingTournaments(academyId) {
+    await poolConnect;
+    const result = await pool
+      .request()
+      .input("academyId", sql.UniqueIdentifier, academyId).query(`
+        SELECT * FROM AcademyTournaments 
+        WHERE Academy_id = @academyId 
+        AND Tournament_date >= GETDATE()
+        ORDER BY Tournament_date
+      `);
 
     return result.recordset;
   }
