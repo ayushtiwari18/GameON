@@ -33,9 +33,9 @@ app.use(express.json());
 // });
 
 // Routes
-app.use("/api/player", playerRoutes);
-app.use("/api/academy", academyRoutes);
-app.use("/api/vacancy", vacancyRoutes);
+app.use("/player", playerRoutes);
+app.use("/academy", academyRoutes);
+app.use("/vacancy", vacancyRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {
