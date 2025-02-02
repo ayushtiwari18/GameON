@@ -36,18 +36,14 @@ class TournamentModel {
 
     const query = `
       INSERT INTO Tournaments (
-        Academy_id,
-        Name,
-        Date,
-        Location,
-        description,
-        Category
+       Academy_id, Name, Date, Location, Max_Teams, [description], Category
       )
       VALUES (
         @academyId,
         @Name,
         @Date,
         @location,
+        @Max_Teams,
         @description,
         @category
       )
