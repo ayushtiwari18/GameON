@@ -1,0 +1,32 @@
+.right-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 50px;
+  padding: 20px;
+  background: transparent;
+}
+
+.basketball-image {
+  width: 400px;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 10px 10px 20px rgb(38, 114, 255); /* Blue glow effect */
+}
+
+.basketball-text {
+  background: rgba(128, 128, 128, 0.3); /* Light transparent background */
+  padding: 25px;
+  border-radius: 50px;
+  font-family: "Satisfy", cursive;
+  font-size: 25px;
+  color: #333;
+  font-weight: 500;
+  max-width: 600px;
+  height: auto;
+  box-shadow: 10px 10px 20px rgb(38, 114, 255),
+    inset 6px 6px 12px rgba(0, 0, 0, 0.4);
+}

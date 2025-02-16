@@ -1,0 +1,31 @@
+.neumorphic-btn {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(
+    to right,
+    #4a4aff,
+    #0d0d50
+  ); /*Adjusted gradient for more vibrancy */
+  border: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.3),
+    -8px -8px 16px rgba(255, 255, 255, 0.2);
+}
+
+.neumorphic-btn:hover {
+  background: linear-gradient(
+    to right,
+    #5a5aff,
+    #1a1a7a
+  ); /* Lighter blue on hover */
+}
+
+.neumorphic-btn:active {
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.3),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.2);
+}
