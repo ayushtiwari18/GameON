@@ -13,7 +13,7 @@ function Footer() {
       <div className="footer-container">
         {/* Left Section - Logo and Contact */}
         <div className="footer-logo">
-          <img src="/assets/logo.png" alt="Game On Logo" />
+          <img src="/assets/logot.png" alt="Game On Logo" />
 
           <div className="footer-text">
             <h2 className="footer-brand">GAMEON</h2>
