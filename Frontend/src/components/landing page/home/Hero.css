@@ -1,0 +1,75 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Carousel Container */
+.carousel-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Swiper Wrapper */
+.custom-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+/* Individual Slide */
+.slide {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Overlay with Glassmorphism */
+.overlay {
+  position: absolute;
+  bottom: 10%;
+  left: 30%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 600px;
+  height: 250px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 50px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  box-shadow: inset 8px 8px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Heading */
+.overlay h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+/* Paragraph */
+.overlay p {
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+/* Swiper Pagination */
+.swiper-pagination-bullet {
+  background: white !important;
+  width: 12px;
+  height: 12px;
+  opacity: 0.7;
+}
+
+.swiper-pagination-bullet-active {
+  background: #6366f1 !important;
+}
