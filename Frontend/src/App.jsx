@@ -1,16 +1,37 @@
-import { Routes, Route } from "react-router-dom"; // ✅ No BrowserRouter here
-import Navbar from "./components/navbar/Navbar";
-import Footer from "./components/footer/Footer";
+import { Routes, Route } from "react-router-dom";
+// ✅ No BrowserRouter here
+import { BrowserRouter as Router } from "react-router-dom";
+
+import LandingLayout from "./components/landing page/LandingLayout";
 import Home from "./components/landing page/home/Home";
+import PlayerLayout from "./components/Player/PlayerLayout";
+import PlayerHome from "./components/Player/Home/Home";
+import PlayerSignup from "./components/landing page/Signup/PlayerSignup";
 
 function App() {
   return (
     <>
-      <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* Landing Page Routes */}
+        <Route
+          path="/"
+          element={
+            <LandingLayout>
+              <Home />
+            </LandingLayout>
+          }
+        />
+        <Route path="/player/signup" element={<PlayerSignup />} />
+        {/* Player Routes */}
+        <Route
+          path="/player"
+          element={
+            <PlayerLayout>
+              <PlayerHome />
+            </PlayerLayout>
+          }
+        />
       </Routes>
-      <Footer />
     </>
   );
 }

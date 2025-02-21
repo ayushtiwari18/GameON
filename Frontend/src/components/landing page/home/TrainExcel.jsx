@@ -6,7 +6,7 @@ import {
   FaTrophy,
   FaGraduationCap,
 } from "react-icons/fa";
-import Buttoncustom from "../../../common/buttoncustom";
+import Buttoncustom from "../../../common/Buttoncustom";
 
 const TrainExcel = () => {
   return (
@@ -21,7 +21,6 @@ const TrainExcel = () => {
           <Buttoncustom
             text="Latest Update"
             Icon={FaClock}
-            className="playpage-btn"
             style={{
               fontSize: "25px",
               fontFamily: "Poppins",
@@ -31,7 +30,6 @@ const TrainExcel = () => {
           <Buttoncustom
             text="Top Players"
             Icon={FaChessKing}
-            className="playpage-btn"
             style={{
               fontSize: "25px",
               fontFamily: "Poppins",
@@ -41,7 +39,6 @@ const TrainExcel = () => {
           <Buttoncustom
             text="Tournaments"
             Icon={FaTrophy}
-            className="playpage-btn"
             style={{
               fontSize: "25px",
               fontFamily: "Poppins",
@@ -51,7 +48,6 @@ const TrainExcel = () => {
           <Buttoncustom
             text="Academy"
             Icon={FaGraduationCap}
-            className="playpage-btn"
             style={{
               fontSize: "25px",
               fontFamily: "Poppins",

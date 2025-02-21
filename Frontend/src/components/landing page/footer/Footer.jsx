@@ -1,6 +1,6 @@
 import React from "react";
 import "./Footer.css";
-import Buttoncustom from "../../common/Buttoncustom";
+import Buttoncustom from "../../../common/Buttoncustom";
 import {
   FaInstagram,
   FaYoutube,
