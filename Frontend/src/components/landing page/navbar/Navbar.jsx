@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Home, Info, Users, Image, HelpCircle } from "lucide-react";
-import Buttoncustom from "../../common/Buttoncustom";
+import Buttoncustom from "../../../common/Buttoncustom";
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -44,7 +44,7 @@ const Navbar = () => {
         className="signup-container"
         onMouseEnter={() => setShowDropdown(true)}
         // onMouseLeave={() => setShowDropdown(false)}
-        onclick={() => setShowDropdown(true)}
+        onClick={() => setShowDropdown(true)}
       >
         <Buttoncustom text="Signup" className="signup-button" />
 
@@ -54,8 +54,12 @@ const Navbar = () => {
             onMouseEnter={() => setShowDropdown(true)}
             onMouseLeave={() => setShowDropdown(false)}
           >
-            <Buttoncustom text="As Player"></Buttoncustom>
-            <Buttoncustom text="As Academy"></Buttoncustom>
+            <Link to="/player/signup">
+              <Buttoncustom text="As Player"></Buttoncustom>
+            </Link>
+            <Link to="/academy/signup">
+              <Buttoncustom text="As Academy"></Buttoncustom>
+            </Link>
           </div>
         )}
       </div>
