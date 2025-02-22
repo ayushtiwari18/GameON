@@ -8,43 +8,54 @@ class PlayerModel {
     try {
       await poolConnect;
       const request = pool.request();
+      console.log("Creating player with data:", playerData);
 
-      // Define SQL types for each field
+      // Define SQL types for all fields in the Players table
       const sqlTypes = {
-        Name: sql.NVarChar,
+        Full_Name: sql.NVarChar,
         Email: sql.NVarChar,
         Password: sql.NVarChar,
+        State: sql.NVarChar, // Ensure these are included
+        City: sql.NVarChar,
+        Address: sql.NVarChar,
         Gender: sql.NVarChar,
         Dob: sql.Date,
         Contact_number: sql.NVarChar,
         Skill_level: sql.NVarChar,
       };
+      console.log("Creating player with data:", playerData);
 
-      // Add input parameters with proper SQL types
-      Object.keys(playerData).forEach((key) => {
-        request.input(key, sqlTypes[key] || sql.NVarChar, playerData[key]);
+      // Bind each field explicitly
+      Object.keys(sqlTypes).forEach((key) => {
+        request.input(key, sqlTypes[key], playerData[key] || null);
       });
 
       const query = `
-        INSERT INTO Players (
-          Name, 
-          Email, 
-          Password, 
-          Gender, 
-          Dob, 
-          Contact_number,
-          Skill_level
-        )
-        VALUES (
-          @Name, 
-          @Email, 
-          @Password, 
-          @Gender, 
-          @Dob, 
-          @Contact_number,
-          @Skill_level
-        )
-      `;
+      INSERT INTO Players (
+        Full_Name,
+        Email,
+        Password,
+        State,
+        City, 
+        Address, 
+        Gender, 
+        Dob, 
+        Contact_number, 
+        Skill_level
+      ) VALUES (
+        @Full_Name, 
+        @Email, 
+        @Password, 
+        @State, 
+        @City, 
+        @Address, 
+        @Gender, 
+        @Dob, 
+        @Contact_number, 
+        @Skill_level
+      )
+    `;
+      console.log("Creating player with data:", playerData);
 
       return await request.query(query);
     } catch (error) {

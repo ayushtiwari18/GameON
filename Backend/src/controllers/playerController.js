@@ -12,9 +12,12 @@ const playerController = {
       console.log("Registration request body:", req.body);
 
       const {
+        Full_Name,
         Password,
         Email,
-        Name,
+        State,
+        City,
+        Address,
         Gender,
         Dob,
         Contact_number,
@@ -25,7 +28,10 @@ const playerController = {
       console.log("Destructured values:", {
         Password: Password || "missing",
         Email: Email || "missing",
-        Name: Name || "missing",
+        Full_Name: Full_Name || "missing",
+        State: State || "missing",
+        City: City || "missing",
+        Address: Address || "missing ",
       });
 
       // Check if the body is being parsed correctly
@@ -40,7 +46,7 @@ const playerController = {
       const missingFields = [];
       if (!Password) missingFields.push("Password");
       if (!Email) missingFields.push("Email");
-      if (!Name) missingFields.push("Name");
+      if (!Full_Name) missingFields.push("Full_Name");
 
       if (missingFields.length > 0) {
         return res.status(400).json({
@@ -70,8 +76,11 @@ const playerController = {
 
       // Create player with validated data
       const playerData = {
-        Name,
+        Full_Name: Full_Name,
         Email,
+        State,
+        City,
+        Address,
         Password: hashedPassword,
         Gender,
         Dob,

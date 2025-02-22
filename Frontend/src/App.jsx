@@ -31,6 +31,7 @@ function App() {
             </PlayerLayout>
           }
         />
+        <Route path="/signin" />
       </Routes>
     </>
   );

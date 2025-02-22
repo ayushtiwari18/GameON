@@ -22,7 +22,18 @@ const app = express();
 // });
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production"
+        ? process.env.FRONTEND_URL
+        : "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allow required methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+  })
+);
+
 app.use(express.json());
 
 // Debug middleware after body parsing

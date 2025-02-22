@@ -1,12 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./PlayerSignup.css";
 import { Camera } from "lucide-react";
 import Buttoncustom from "../../../common/Buttoncustom";
+import playerService from "../../../../../Backend/src/api/services/playerService.js";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Add this import
 
 function PlayerSignup() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     dateOfBirth: "",
@@ -17,8 +22,7 @@ function PlayerSignup() {
     gender: "",
     state: "",
     password: "",
-    experience: "",
-    sports: "",
+    experience: "Beginner",
   });
 
   const handleInputChange = (e) => {
@@ -29,13 +33,104 @@ function PlayerSignup() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const validateForm = () => {
+    const requiredFields = {
+      fullName: "Name",
+      emailId: "Email",
+      password: "Password",
+      phoneNumber: "Contact number",
+      gender: "Gender",
+      dateOfBirth: "Date of Birth",
+    };
+
+    const missingFields = Object.entries(requiredFields)
+      .filter(([key]) => !formData[key])
+      .map(([, label]) => label);
+
+    if (missingFields.length > 0) {
+      toast.error(`Required fields missing: ${missingFields.join(", ")}`);
+      return false;
+    }
+
+    if (formData.password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.emailId)) {
+      toast.error("Please enter a valid email address");
+      return false;
+    }
+
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(formData.phoneNumber)) {
+      toast.error("Please enter a valid 10-digit phone number");
+      return false;
+    }
+
+    return true;
+  };
+
+  const checkDuplicate = async () => {
+    try {
+      const response = await playerService.auth.checkDuplicate({
+        emailId: formData.emailId,
+        phoneNumber: formData.phoneNumber,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Duplicate check error:", error);
+      toast.error("Error checking duplicate records");
+      return { emailExists: false, phoneExists: false };
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    if (!validateForm()) return;
+
+    try {
+      setLoading(true);
+      const { emailExists, phoneExists } = await checkDuplicate();
+
+      if (emailExists) {
+        toast.error("Email is already registered");
+        setLoading(false);
+        return;
+      }
+      if (phoneExists) {
+        toast.error("Phone number is already registered");
+        setLoading(false);
+        return;
+      }
+
+      await playerService.auth.register(formData);
+      toast.success("Registration successful! Please login to continue.");
+      navigate("/signin");
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error(error.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="app">
+      {/* Add ToastContainer at the top level of your component */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <header>
         <div className="header-container">
           <div className="header-left">
@@ -44,9 +139,9 @@ function PlayerSignup() {
           </div>
           <div className="header-right">
             <span className="member-text">Already a member?</span>
-            <a href="/signin" className="signin-link">
+            <Link to="/signin" className="signin-link">
               Sign in
-            </a>
+            </Link>
           </div>
           <div className="welcome-box">
             <h2 className="welcome-title">Welcome!</h2>
@@ -185,6 +280,11 @@ function PlayerSignup() {
               <Buttoncustom text="Save"></Buttoncustom>
             </Link>
             <Buttoncustom text="confirm"></Buttoncustom>
+            <Buttoncustom
+              text="Register"
+              onClick={handleSubmit}
+              disabled={loading}
+            />
           </div>
         </form>
       </div>
