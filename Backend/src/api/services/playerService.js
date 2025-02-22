@@ -79,7 +79,52 @@ const playerService = {
         throw error;
       }
     },
-    // ... rest of the service methods
+    login: async (email, password) => {
+      const response = await axiosInstance.post("/login", {
+        Email: email,
+        Password: password,
+      });
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+      }
+      return response;
+    },
+
+    logout: async () => {
+      const response = await axiosInstance.post("/logout");
+      localStorage.removeItem("token");
+      return response;
+    },
+  },
+
+  // Profile endpoints
+  profile: {
+    getHome: async (playerId) => {
+      return axiosInstance.get(`/${playerId}/home`);
+    },
+
+    getProfile: async (playerId) => {
+      return axiosInstance.get(`/${playerId}/profile`);
+    },
+
+    getUpdateForm: async (playerId) => {
+      return axiosInstance.get(`/${playerId}/profile/update`);
+    },
+
+    updateProfile: async (playerId, updateData) => {
+      return axiosInstance.put(`/${playerId}/profile/update`, updateData);
+    },
+
+    deleteProfile: async (playerId) => {
+      return axiosInstance.delete(`/${playerId}/delete`);
+    },
+  },
+
+  // Skill-related endpoints
+  skills: {
+    getBySkillSet: async (skillSet) => {
+      return axiosInstance.get(`/skill-set/${skillSet}`);
+    },
   },
 };
 
