@@ -1,0 +1,71 @@
+/* Navbar.css */
+.navbar-player {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  /* max-width: 1100px; */
+  background: rgba(255, 255, 255, 0.1); /* Transparent background */
+  backdrop-filter: blur(10px); /* Glassmorphism effect */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+  box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.4);
+  border-radius: 50px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+  transition: transform 0.4s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* Logo */
+.navbar-logo1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-logo1 img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.navbar-logo1 span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #0f172a;
+}
+
+/* Navigation Links */
+.navbar-links1 {
+  display: flex;
+  gap: 50px;
+  align-content: flex-end;
+  color: #000;
+  list-style: none;
+  margin-left: auto; /* Push options to the right */
+  padding-right: 50px;
+}
+
+.link1 {
+  list-style: none;
+  display: flex;
+  padding-left: 20px;
+  gap: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+  text-decoration: none;
+
+  align-items: center;
+  gap: 5px;
+}
+
+.navbar-links1 li:hover {
+  color: #2563eb;
+}

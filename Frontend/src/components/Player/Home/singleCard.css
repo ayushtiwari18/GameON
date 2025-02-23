@@ -1,0 +1,25 @@
+.card {
+  background: white !important;
+  border-radius: 12px;
+  box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.3) !important;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+  height: 350px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-image {
+  height: auto;
+  border-radius: 8px;
+}
+
+.card-text {
+  font-size: 32px;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #333;
+}

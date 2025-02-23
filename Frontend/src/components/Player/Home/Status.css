@@ -1,0 +1,36 @@
+.tournament-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 20px;
+  background: linear-gradient(to bottom right, #fdf6e3, #f9e7c4);
+  border-radius: 20px;
+  box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.4);
+  width: fit-content;
+  margin: 30px 0;
+  height: 400px;
+}
+
+.status-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+  width: 300px;
+}
+
+.status-card h3 {
+  font-size: 32px;
+  font-weight: bold;
+  color: #63320c;
+  margin-bottom: 15px;
+}
+
+.sub-card {
+  background: #f6f6f6;
+  height: 70px;
+  border-radius: 10px;
+  margin: 8px 0;
+  box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,65 @@
+.home-container {
+  min-height: 100vh; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 80px;
+  background: linear-gradient(
+    to bottom,
+    #fff6db,
+    #fef2a5
+  ); /* Gradient colors */
+}
+.welcome-header {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+  color: transparent; /* Hide the default text color */
+  background-image: linear-gradient(
+    to right,
+    #4848ff,
+    #000000
+  ); /* Gradient colors */
+  -webkit-background-clip: text; /* Apply gradient to text */
+  background-clip: text; /* Dark Blue */
+  text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4); /* Text shadow */
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between rows */
+  margin-top: 20px;
+}
+
+.card-row {
+  margin-top: 25px;
+  display: flex;
+  gap: 45px; /* Space between cards */
+  justify-content: center;
+}
+.card-image-appointment {
+  width: 250px;
+  height: auto;
+  margin-left: 0;
+}
+
+.card-image-playing-volleyball {
+  width: 250px;
+  height: auto;
+  margin-left: 0;
+}
+.card-image-award-success-trophy {
+  width: 200px;
+  height: auto;
+  margin-left: 0;
+}
+
+.tournament-calender {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  margin: 50px 0;
+}
