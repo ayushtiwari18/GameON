@@ -1,0 +1,98 @@
+/* Card Styling */
+.card {
+  background-color: #e8dbb5 !important; /* Soft beige */
+  border-radius: 10px;
+  padding: 15px;
+  max-width: 350px;
+  box-shadow: 12px 12px 18px rgba(0, 0, 0, 0.4) !important;
+  font-family: "Poppins", sans-serif;
+  height: auto;
+
+  transform: scale(1.05);
+}
+
+/* Image Styling */
+.card-img {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+
+/* Tags Section */
+.tag-tournament {
+  padding: 8px 15px;
+
+  font-weight: bold;
+  font-size: 10px;
+  background: #d4cbb2; /* Soft beige */
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 600px;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3),
+    inset 6px 6px 12px rgba(0, 0, 0, 0.3); /* Soft shadows */
+  font-family: "Poppins", sans-serif;
+  display: inline-block;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+
+.tag,
+.date {
+  font-weight: bold;
+  font-size: 10px;
+  background: #d4cbb2; /* Soft beige */
+  border-radius: 8px;
+  padding: 8px;
+  max-width: 600px;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3),
+    inset 6px 6px 12px rgba(0, 0, 0, 0.3); /* Soft shadows */
+  font-family: "Poppins", sans-serif;
+  display: inline-block;
+}
+
+/* Text Content */
+.content {
+  display: inline-block;
+  top: 0;
+}
+.content h2 {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.content p {
+  font-size: 10px;
+  color: #333;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+
+/* Apply Now Button */
+.apply-btn {
+  background: linear-gradient(to right, #4a4a8a, #2c2c5a);
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.apply-btn:hover {
+  background: linear-gradient(to right, #2c2c5a, #4a4a8a);
+  transform: scale(1.05);
+}
