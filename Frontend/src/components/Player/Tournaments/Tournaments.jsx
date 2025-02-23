@@ -1,33 +1,56 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import VenueCard from "./VenueCard";
-{
-  /* venue card is the single tournament card */
-}
+import tournamentService from "../../../../../Backend/src/api/services/tournamentService.js";
 import "./Tournaments.css";
 
-const dummyTournaments = [
-  {
-    id: 1,
-    title: "Basketball tournament",
-    image:
-      "https://img.freepik.com/free-photo/black-man-doing-sports-playing-basketball-sunrise-silhouette_285396-1451.jpg",
-    description:
-      "The GameOn Basketball Championship brings together the most talented teams and rising stars for an electrifying tournament filled with skill, speed, and passion.",
-    location: "Krishi upag mandi deen dyal chowk",
-    rating: 4,
-  },
-  // Add more tournaments...
-];
 function Tournaments({ type = "tournament" }) {
   const navigate = useNavigate();
+  const [tournaments, setTournaments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
     city: "",
     search: "",
     category: "",
     state: "",
   });
+
+  useEffect(() => {
+    fetchTournaments();
+  }, []);
+
+  const fetchTournaments = async () => {
+    try {
+      setLoading(true);
+      const response = await tournamentService.getAll();
+
+      // Extract tournaments array from response
+      const tournamentsData = response.tournaments || [];
+      console.log(tournamentsData);
+
+      // Ensure each tournament has required fields
+      const sanitizedTournaments = tournamentsData.map((tournament) => ({
+        ...tournament,
+        console: console.log(tournament),
+        _id: tournament.Tournament_id, // Map Tournament_id to _id for consistency
+        Location: tournament.City || tournament.Location, // Use City if Location is null
+        Name: tournament.Name || "",
+        description: tournament.description || "",
+        category: tournament.Category || "",
+        state: tournament.City?.split(", ")[1] || "", // Extract state from City field
+      }));
+
+      setTournaments(sanitizedTournaments);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching tournaments:", err);
+      setError("Failed to fetch tournaments. Please try again later.");
+      setTournaments([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -45,7 +68,34 @@ function Tournaments({ type = "tournament" }) {
     }
   };
 
-  const venues = type === "tournament" ? dummyTournaments : dummyAcademies;
+  const filteredTournaments = tournaments.filter((tournament) => {
+    const cityMatch =
+      !filters.city ||
+      tournament.Location?.toLowerCase().includes(filters.city.toLowerCase()) ||
+      tournament.City?.toLowerCase().includes(filters.city.toLowerCase());
+
+    const searchMatch =
+      !filters.search ||
+      tournament.Name?.toLowerCase().includes(filters.search.toLowerCase()) ||
+      tournament.description
+        ?.toLowerCase()
+        .includes(filters.search.toLowerCase());
+
+    const categoryMatch =
+      !filters.category ||
+      tournament.category
+        ?.toLowerCase()
+        .includes(filters.category.toLowerCase()) ||
+      tournament.Category?.toLowerCase().includes(
+        filters.category.toLowerCase()
+      );
+
+    const stateMatch =
+      !filters.state ||
+      tournament.state?.toLowerCase().includes(filters.state.toLowerCase());
+
+    return cityMatch && searchMatch && categoryMatch && stateMatch;
+  });
 
   return (
     <div className="venue-list">
@@ -89,18 +139,30 @@ function Tournaments({ type = "tournament" }) {
             className="filter-input"
           />
         </div>
-        {/* venue card is the single tournament card */}
-        <div className="venues-grid">
-          <VenueCard />
-          <VenueCard />
-          <VenueCard />
-          <VenueCard />
-          <VenueCard />
-          <VenueCard />
-          <VenueCard />
-          <VenueCard />
-          <VenueCard />
-        </div>
+
+        {loading ? (
+          <div className="loading">Loading tournaments...</div>
+        ) : error ? (
+          <div className="error">{error}</div>
+        ) : (
+          <div className="venues-grid">
+            {filteredTournaments.length > 0 ? (
+              filteredTournaments.map((tournament) => (
+                <VenueCard
+                  key={tournament.Tournament_id || tournament._id}
+                  venue={tournament}
+                  onClick={() =>
+                    handleVenueClick(tournament.Tournament_id || tournament._id)
+                  }
+                />
+              ))
+            ) : (
+              <div className="no-results">
+                No tournaments found matching your criteria.
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

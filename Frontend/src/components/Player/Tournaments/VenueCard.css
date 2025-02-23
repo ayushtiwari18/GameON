@@ -1,85 +1,149 @@
-/* Card Styling */
+/* Importing Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+
+/* Card Base Styling */
 .card {
-  background-color: #e8dbb5 !important; /* Soft beige */
-  border-radius: 10px;
-  padding: 15px;
+  cursor: pointer;
+  background-color: #e8dbb5 !important;
+  border-radius: 15px;
+  padding: 20px;
+  width: 100%;
   max-width: 350px;
   box-shadow: 12px 12px 18px rgba(0, 0, 0, 0.4) !important;
-  font-family: "Poppins", sans-serif;
+  font-family: "Montserrat", sans-serif;
   height: auto;
-
-  transform: scale(1.05);
+  transform: scale(1);
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
 }
 
-/* Image Styling */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Image Container and Loading */
+.card-image-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background-color: #d4cbb2;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 .card-img {
   width: 100%;
-  border-radius: 10px;
+  height: 100%;
   object-fit: cover;
+  border-radius: 12px;
+}
+
+.default-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: linear-gradient(45deg, #4a4a8a, #2c2c5a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Content Section */
+.content {
+  width: 100%;
+  padding: 16px;
+  background: #d4cbb2;
+  border-radius: 12px;
+  margin: 15px 0;
+}
+
+.content h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2c2c5a;
   margin-bottom: 8px;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.content p {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 12px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 /* Tags Section */
 .tag-tournament {
   padding: 8px 15px;
-
-  font-weight: bold;
-  font-size: 10px;
-  background: #d4cbb2; /* Soft beige */
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: #d4cbb2;
   border-radius: 10px;
-  padding: 10px;
-  max-width: 600px;
   box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3),
-    inset 6px 6px 12px rgba(0, 0, 0, 0.3); /* Soft shadows */
-  font-family: "Poppins", sans-serif;
+    inset 6px 6px 12px rgba(0, 0, 0, 0.3);
   display: inline-block;
+  margin: 15px 0;
+  color: #2c2c5a;
 }
+
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  justify-content: space-between;
+  gap: 12px;
   margin: 15px 0;
 }
 
 .tag,
 .date {
-  font-weight: bold;
-  font-size: 10px;
-  background: #d4cbb2; /* Soft beige */
-  border-radius: 8px;
-  padding: 8px;
-  max-width: 600px;
-  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3),
-    inset 6px 6px 12px rgba(0, 0, 0, 0.3); /* Soft shadows */
   font-family: "Poppins", sans-serif;
-  display: inline-block;
+  font-weight: 500;
+  font-size: 0.85rem;
+  background: #d4cbb2;
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3),
+    inset 6px 6px 12px rgba(0, 0, 0, 0.3);
+  color: #2c2c5a;
 }
 
-/* Text Content */
-.content {
-  display: inline-block;
-  top: 0;
-}
-.content h2 {
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.content p {
-  font-size: 10px;
-  color: #333;
+/* Status Badges */
+.status-badge {
+  padding: 8px 15px;
+  border-radius: 10px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Footer */
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 15px;
+/* Retaining other styles but updating font sizes and families */
+.prize-badge {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.85rem;
 }
 
-/* Apply Now Button */
+.location {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+}
+
+/* Apply Button */
 .apply-btn {
   background: linear-gradient(to right, #4a4a8a, #2c2c5a);
   color: white;
@@ -92,7 +156,17 @@
   transition: 0.3s;
 }
 
-.apply-btn:hover {
+.apply-btn:hover:not(.disabled) {
   background: linear-gradient(to right, #2c2c5a, #4a4a8a);
   transform: scale(1.05);
+}
+
+.apply-btn.disabled {
+  background: linear-gradient(to right, #9ca3af, #6b7280);
+  cursor: not-allowed;
+}
+
+/* Animation */
+.animate-spin {
+  animation: spin 1s linear infinite;
 }

@@ -7,13 +7,14 @@
 
 .venue-list-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem; /* Increased margin */
 }
+
 .venue-box-outer {
   background-color: #e8dbb5;
   border-radius: 10px;
   margin: 10px 70px;
-  padding: 20px;
+  padding: 40px; /* Increased padding */
   box-shadow: 8px 8px 16px #4848ff;
 }
 
@@ -22,26 +23,25 @@
   font-size: 36px;
   font-weight: bold;
   margin-top: 20px;
-  color: transparent !important; /* Hide the default text color */
+  color: transparent !important;
   background-image: linear-gradient(
     to right,
     #4848ff 0%,
     #6060ff 25%,
     #000000 100%
-  ) !important; /* Gradient colors */
-  -webkit-background-clip: text !important; /* Apply gradient to text */
-  background-clip: text !important; /* Dark Blue */
-
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
   text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
 }
 
 .filters {
   max-width: 1200px;
-  margin: 0 auto 2rem;
+  margin: 0 auto 3rem; /* Increased margin */
   padding: 0 1rem;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  gap: 1.5rem; /* Increased gap */
 }
 
 .filter-input {
@@ -52,117 +52,45 @@
 }
 
 .venues-grid {
-  max-width: 1200px;
+  max-width: 1400px; /* Increased max-width */
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(
     auto-fit,
-    minmax(300px, 1fr)
-  ); /* Responsive columns */
-  gap: 30px; /* Space between cards */
-  padding: 20px;
-  justify-content: center; /* Centering */
+    minmax(350px, 1fr)
+  ); /* Increased minmax width */
+  gap: 50px; /* Increased gap between cards */
+  padding: 20px 40px; /* Increased padding */
+  justify-content: center;
 }
 
-.venue-list-footer {
-  margin-top: 4rem;
-  padding: 2rem;
-  background: white;
+/* Added container for better card alignment */
+.venues-grid > * {
+  justify-self: center;
+  width: 100%;
+  max-width: 350px;
 }
 
-.footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer-left {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.footer-logo {
-  height: 40px;
-}
-
-.footer-center {
-  text-align: center;
-}
-
-.subscribe-form {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.subscribe-form input {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 0.25rem;
-}
-
-.subscribe-form button {
-  padding: 0.5rem 1rem;
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 0.25rem;
-  cursor: pointer;
-}
-
-.join-now-btn {
-  padding: 0.75rem 2rem;
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 2rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.join-now-btn:hover {
-  transform: translateY(-2px);
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .venues-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+  }
 }
 
 @media (max-width: 768px) {
+  .venue-box-outer {
+    margin: 10px 20px;
+    padding: 20px;
+  }
+
   .filters {
     grid-template-columns: 1fr;
   }
 
-  .footer-content {
-    flex-direction: column;
-    gap: 2rem;
-    text-align: center;
-  }
-
-  .footer-left {
-    align-items: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .venue-list-footer {
-    padding: 1rem;
-  }
-
-  .footer-content {
-    padding: 1rem;
-  }
-
-  .footer-logo {
-    height: 30px;
-  }
-
-  .subscribe-form {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .subscribe-form input {
-    width: 100%;
+  .venues-grid {
+    padding: 20px;
+    gap: 30px;
   }
 }
