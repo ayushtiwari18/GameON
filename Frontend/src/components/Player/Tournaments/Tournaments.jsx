@@ -62,7 +62,7 @@ function Tournaments({ type = "tournament" }) {
 
   const handleVenueClick = (id) => {
     if (type === "tournament") {
-      navigate(`/tournament/${id}`);
+      navigate(`/player/tournaments/${id}`);
     } else {
       navigate(`/academy/${id}`);
     }

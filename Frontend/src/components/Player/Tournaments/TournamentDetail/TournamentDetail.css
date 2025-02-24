@@ -1,0 +1,123 @@
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #fff6db, #fef2a5);
+  padding: 8rem;
+}
+
+.main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.tournament-title {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: transparent;
+  background-image: linear-gradient(to right, #4848ff, #000000);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* New layout structure */
+.content-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+}
+
+/* Main content area */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Image grid */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.placeholder-image {
+  background-color: #e5e7eb;
+  aspect-ratio: 1;
+  border-radius: 0.5rem;
+  box-shadow: 8px 8px 5px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Cards container */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+/* Card styles */
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 8px 8px 5px rgba(0, 0, 0, 0.3) !important;
+}
+
+.card h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+}
+
+.card ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.card li {
+  margin-bottom: 0.5rem;
+  color: #4b5563;
+}
+
+.card p {
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* Info cards grid */
+/* Remove background and shadow from the wrapper */
+.info-cards {
+  width: 100% !important;
+  display: flex;
+  gap: 55px;
+  padding: 15px;
+  background: none; /* Ensure no background */
+  box-shadow: none; /* Remove any unwanted shadow */
+  margin-top: 50px;
+  border-top: 2px dashed #e1cb03;
+}
+
+/* Ensure individual cards have consistent styling */
+.info-cards .card {
+  background-color: #fef6db; /* Match other card styles */
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Registration sidebar */
+.registration-sidebar {
+  position: sticky;
+  top: 1rem;
+  height: fit-content;
+}
+
+.registration-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}

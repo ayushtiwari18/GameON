@@ -3,7 +3,7 @@ import "./TournamentCard.css"; // Import the CSS file
 
 const TournamentCard = () => {
   return (
-    <div className="card">
+    <div className="card2">
       <div className="images">
         <img src="https://via.placeholder.com/150" alt="Tournament" />
         <img src="https://via.placeholder.com/150" alt="Team" />

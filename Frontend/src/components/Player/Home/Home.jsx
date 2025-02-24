@@ -22,13 +22,13 @@ function PlayerHome({ playerName }) {
           <Card
             width="400px"
             text="Track your application"
-            image="./assets/PlayerDashboard/application.png"
+            image="/assets/PlayerDashboard/application.png"
             imgclass="application"
           />
           <Card
             width="800px"
             text="One click and you are good to go..."
-            image="./assets/PlayerDashboard/appointment.png"
+            image="/assets/PlayerDashboard/appointment.png"
             imgclass="appointment"
           />
         </div>
@@ -38,13 +38,13 @@ function PlayerHome({ playerName }) {
           <Card
             width="700px"
             text="Introducing online team formation feature"
-            image="./assets/PlayerDashboard/Playing-volleyball.png"
+            image="/assets/PlayerDashboard/Playing-volleyball.png"
             imgclass="playing-volleyball"
           />
           <Card
             width="500px"
             text="Get rewards and recognition"
-            image="./assets/PlayerDashboard/Award-success-trophy.png"
+            image="/assets/PlayerDashboard/Award-success-trophy.png"
             imgclass="award-success-trophy"
           />
         </div>
