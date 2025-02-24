@@ -1,9 +1,17 @@
 import React from "react";
 import "./TournamentDetail.css";
 import InfoCard from "./InfoCard";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Buttoncustom from "../../../../common/Buttoncustom";
 
-function TournamentDetail() {
+function TournamentDetail({ id }) {
+  const navigate = useNavigate();
+
+  const handleVacancyButton = () => {
+    navigate(`/player/tournaments/${id}/find-vacancy`);
+  };
+
   return (
     <div className="app-container">
       {/* Main Content */}
@@ -66,7 +74,11 @@ function TournamentDetail() {
           {/* Registration Sidebar */}
           <div className="registration-sidebar">
             <div className="registration-buttons card">
-              <Buttoncustom text="Find Vacancies" />
+              <Buttoncustom
+                text="Find Vacancies"
+                onClick={handleVacancyButton}
+              />
+
               <Buttoncustom text="Download Details" />
             </div>
           </div>
