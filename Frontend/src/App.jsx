@@ -11,6 +11,7 @@ import PlayerLayout from "./components/Player/PlayerLayout";
 import PlayerHome from "./components/Player/Home/Home";
 import Tournaments from "./components/Player/Tournaments/Tournaments";
 import TournamentDetail from "./components/Player/Tournaments/TournamentDetail/TournamentDetail";
+import FindVacancy from "./components/Player/Tournaments/Vacancies/FindVacancy";
 
 function App() {
   return (
@@ -48,6 +49,14 @@ function App() {
           element={
             <PlayerLayout>
               <TournamentDetail />
+            </PlayerLayout>
+          }
+        />
+        <Route
+          path="/player/tournaments/:id/find-vacancy"
+          element={
+            <PlayerLayout>
+              <FindVacancy />
             </PlayerLayout>
           }
         />

@@ -1,0 +1,196 @@
+.find-vacancy-list {
+  min-height: 100vh;
+  background-color: var(--secondary-color);
+  padding: 100px 0;
+  background: linear-gradient(to bottom, #fff6db, #fef2a5);
+}
+
+.find-vacancy-box-outer {
+  background-color: #e8dbb5;
+  border-radius: 10px;
+  margin: 10px 70px;
+  padding: 40px; /* Increased padding */
+  box-shadow: 6px 6px 12px #4848ff;
+}
+
+.vacancies-page {
+  min-height: 100vh;
+  background-color: var(--secondary-color);
+  padding: 2rem 0;
+}
+
+.vacancies-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.vacancies-container h2 {
+  text-align: center;
+  color: var(--primary-color);
+  margin-bottom: 2rem;
+}
+
+.vacancy-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.tab-button {
+  padding: 0.5rem 2rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: #666;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.tab-button.active {
+  color: var(--primary-color);
+}
+
+.tab-button.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--primary-color);
+}
+
+.vacancies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.vacancy-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.vacancy-info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.academy-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #f0f0f0;
+}
+
+.vacancy-details h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
+.vacancy-details p {
+  margin: 0.25rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.vacancy-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.apply-btn,
+.follow-btn {
+  padding: 0.5rem 2rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.apply-btn {
+  background: #f0f0f0;
+  border: none;
+  color: #000000;
+}
+
+.follow-btn {
+  background: none;
+  border: 1px solid #ddd;
+  color: #666;
+}
+
+.follow-btn.following {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+  .vacancies-page {
+    padding: 1rem;
+  }
+
+  .vacancy-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .vacancy-info {
+    flex-direction: column;
+  }
+
+  .vacancy-actions {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .vacancies-container {
+    padding: 1rem;
+  }
+
+  .tab-button {
+    padding: 0.5rem 1rem;
+  }
+
+  .vacancy-card {
+    padding: 1rem 0;
+  }
+
+  .academy-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .vacancy-details h3 {
+    font-size: 1rem;
+  }
+
+  .vacancy-details p {
+    font-size: 0.8rem;
+  }
+
+  .apply-btn,
+  .follow-btn {
+    padding: 0.5rem 1rem;
+  }
+
+  .footer-content {
+    gap: 1rem;
+  }
+}

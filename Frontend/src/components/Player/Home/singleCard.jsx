@@ -3,7 +3,7 @@ import "./singleCard.css"; // Import CSS for styling
 
 const Card = ({ width = "300px", text, image, imgclass }) => {
   return (
-    <div className="card" style={{ width }}>
+    <div className="card1" style={{ width }}>
       <p className="card-text">{text}</p>
       <img src={image} alt="Card Visual" className={`card-image-${imgclass}`} />
     </div>
