@@ -37,6 +37,11 @@ axiosInstance.interceptors.response.use(
 );
 
 const academyService = {
+  // Get all academies
+  getAll: async () => {
+    return axiosInstance.get("/"); // Assuming your API has an endpoint that returns all academies
+  },
+
   // Auth endpoints
   auth: {
     register: async (academyData) => {

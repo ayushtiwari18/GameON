@@ -1,42 +1,182 @@
-.academy-card-container {
-  width: 400px;
-  background: #e8dbb5;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.3);
-  font-family: Arial, sans-serif;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Importing Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+
+/* Card Base Styling */
+.card {
+  cursor: pointer;
+  background-color: #e8dbb5 !important;
+  border-radius: 15px;
+  padding: 20px;
+  width: 100%;
+  max-width: 350px;
+  box-shadow: 12px 12px 18px rgba(0, 0, 0, 0.4) !important;
+  font-family: "Montserrat", sans-serif;
+  height: auto;
+  transform: scale(1);
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  margin: 0 auto;
+  position: relative;
 }
 
-.academy-card-container:hover {
+.card:hover {
   transform: translateY(-5px);
-  box-shadow: 12px 12px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 15px 15px 20px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* Additional hover effect for buttons */
-.academy-card-join:hover {
-  background: #6d4c2f;
-  transform: scale(1.05);
+/* Image Container and Loading */
+.card-image-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background-color: #d4cbb2;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.academy-card-header {
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.hidden {
+  display: none;
+}
+
+.image-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  background-color: rgba(212, 203, 178, 0.5);
 }
 
-.academy-card-logo {
-  background: #d4a373;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  font-weight: bold;
+.default-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: linear-gradient(45deg, #4a4a8a, #2c2c5a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
-.academy-card-title {
-  font-size: 18px;
-  font-weight: bold;
-  background-color: #d4cbb2;
+/* Card Badges */
+.card-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status-badge {
+  padding: 8px 15px;
+  border-radius: 10px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.status-badge.open {
+  background-color: #10b981;
+}
+
+.status-badge.closed {
+  background-color: #ef4444;
+}
+
+.prize-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #4a4a8a;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Content Section */
+.content {
+  width: 100%;
+  padding: 16px;
+  background: #d4cbb2;
+  border-radius: 12px;
+  margin: 15px 0;
+}
+
+.content h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2c2c5a;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.content p {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Tags Section */
+.tag-tournament {
+  padding: 8px 15px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: #d4cbb2;
+  border-radius: 10px;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3),
+    inset 6px 6px 12px rgba(0, 0, 0, 0.3);
+  display: inline-block;
+  margin: 15px 0;
+  color: #2c2c5a;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 15px 0;
+}
+
+.tag,
+.date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+  background: #d4cbb2;
   border-radius: 8px;
   padding: 8px 12px;
   box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3),
@@ -44,59 +184,170 @@
   color: #2c2c5a;
 }
 
-.academy-card-image img {
-  width: 100%;
-  border-radius: 10px;
-  margin-top: 10px;
+/* Details Grid */
+.details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 15px 0;
 }
 
-.academy-card-description {
-  margin: 10px 0;
-  font-size: 14px;
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #d4cbb2;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3),
+    inset 6px 6px 12px rgba(0, 0, 0, 0.3);
+  font-family: "Poppins", sans-serif;
+  font-size: 0.85rem;
+  color: #2c2c5a;
 }
 
-.academy-card-tags {
-  background: #e3caa8;
-  padding: 5px;
-  text-align: center;
-  border-radius: 5px;
-}
-
-.academy-card-details {
-  margin-top: 10px;
-}
-
-.academy-card-location,
-.academy-card-vacancy,
-.academy-card-contact {
-  background: #c8b6a6;
-  padding: 5px;
-  border-radius: 5px;
-  margin-top: 5px;
-}
-
-.academy-card-footer {
+/* Footer Section */
+.footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 10px;
+  margin: 15px 0;
 }
 
-.academy-card-join {
-  background: #8b5e34;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
-  cursor: pointer;
+.location {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  color: #2c2c5a;
 }
 
-.academy-card-rating {
+/* Rating Stars */
+.academy-rating-container {
+  display: flex;
+  align-items: center;
+}
+
+.academy-rating-stars {
+  display: flex;
+  align-items: center;
+}
+
+.star {
   font-size: 16px;
 }
 
-.academy-card-social-icons svg {
-  margin: 0 5px;
+.star-filled {
+  color: #f59e0b;
+}
+
+.star-empty {
+  color: #d1d5db;
+}
+
+.academy-rating-value {
+  margin-left: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2c2c5a;
+}
+
+/* Apply Button */
+.apply-btn {
+  background: linear-gradient(to right, #4a4a8a, #2c2c5a);
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
   cursor: pointer;
-  font-size: 18px;
+  transition: 0.3s;
+}
+
+.apply-btn:hover:not(.disabled) {
+  background: linear-gradient(to right, #2c2c5a, #4a4a8a);
+  transform: scale(1.05);
+}
+
+.apply-btn.disabled {
+  background: linear-gradient(to right, #9ca3af, #6b7280);
+  cursor: not-allowed;
+}
+
+/* Updated Social Icons Styling */
+.social-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding-top: 15px;
+  margin-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  width: 100%;
+  flex-wrap: nowrap; /* Ensure icons stay in a single line */
+}
+
+.social-icon-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-icon-container {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  color: white;
+}
+
+.social-icon-container:hover {
+  transform: scale(1.1);
+}
+
+.social-icon-container.whatsapp {
+  background-color: #25d366;
+}
+
+.social-icon-container.linkedin {
+  background-color: #0077b5;
+}
+
+.social-icon-container.youtube {
+  background-color: #ff0000;
+}
+
+.social-icon-container.twitter {
+  background-color: #1da1f2;
+}
+
+/* Animation */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Special sr-only class for screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

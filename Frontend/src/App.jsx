@@ -12,7 +12,7 @@ import PlayerHome from "./components/Player/Home/Home";
 import Tournaments from "./components/Player/Tournaments/Tournaments";
 import TournamentDetail from "./components/Player/Tournaments/TournamentDetail/TournamentDetail";
 import FindVacancy from "./components/Player/Tournaments/Vacancies/FindVacancy";
-import FindAcademy from "./components/landing page/FindAcademies/FindAcademies";
+import FindAcademy from "./components/Player/FindAcademies/FindAcademies.jsx";
 
 function App() {
   return (

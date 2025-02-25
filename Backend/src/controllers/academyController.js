@@ -115,6 +115,20 @@ const academyController = {
     }
   },
 
+  // Add this method to your academyController object
+
+  async getAllAcademies(req, res) {
+    try {
+      const academies = await AcademyModel.getAll();
+      res.status(200).json(academies);
+    } catch (error) {
+      console.error("Error fetching all academies:", error);
+      res
+        .status(500)
+        .json({ message: "Error fetching academies", error: error.message });
+    }
+  },
+
   // Academy Login Handler
   async loginAcademy(req, res) {
     try {

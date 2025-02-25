@@ -12,6 +12,8 @@ router.post("/login", academyController.loginAcademy); // checked
 // router.use(authenticateToken);
 router.post("/logout", academyController.logoutAcademy); // not wroking be cookies required to be deleted
 router.get("/:id/home", academyController.getAcademyHome); // same as player
+// Get all academies
+router.get("/", academyController.getAllAcademies);
 router.get("/city/:city", academyController.getAcademyByCity);
 router.get("/:id/profile", academyController.getAcademyProfile);
 router.get("/:id/profile/update", academyController.getUpdateForm);

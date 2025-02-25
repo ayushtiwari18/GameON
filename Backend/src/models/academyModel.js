@@ -45,6 +45,20 @@ class AcademyModel {
     }
   }
 
+  // Add this method to your AcademyModel class
+
+  static async getAll() {
+    await poolConnect;
+    try {
+      const result = await pool.request().query("SELECT * FROM Academies");
+
+      return result.recordset;
+    } catch (error) {
+      console.error("Error fetching all academies: ", error);
+      throw new Error("Failed to fetch academies");
+    }
+  }
+
   // Find an academy by email
   static async findByEmail(email) {
     await poolConnect;
