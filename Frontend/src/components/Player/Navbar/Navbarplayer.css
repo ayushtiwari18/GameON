@@ -69,3 +69,27 @@
 .navbar-links1 li:hover {
   color: #2563eb;
 }
+
+.custom-menu .MuiPaper-root {
+  background: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+  backdrop-filter: blur(10px); /* Blur effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Soft shadow */
+  padding: 10px;
+  transition: all 0.3s ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+}
+
+/* Dropdown Content */
+.dropdown-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+/* Style the Buttons inside the Dropdown */
+.dropdown-content a {
+  text-decoration: none;
+}

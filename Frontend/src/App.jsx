@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import LandingLayout from "./components/landing page/LandingLayout";
 import Home from "./components/landing page/home/Home";
 import PlayerSignup from "./components/landing page/Signup/PlayerSignup";
-
+import PlayerLogin from "./components/landing page/login/PlayerLogin.jsx";
 //player imports
 import PlayerLayout from "./components/Player/PlayerLayout";
 import PlayerHome from "./components/Player/Home/Home";
@@ -13,11 +13,15 @@ import Tournaments from "./components/Player/Tournaments/Tournaments";
 import TournamentDetail from "./components/Player/Tournaments/TournamentDetail/TournamentDetail";
 import FindVacancy from "./components/Player/Tournaments/Vacancies/FindVacancy";
 import FindAcademy from "./components/Player/FindAcademies/FindAcademies.jsx";
+import PlayerProfile from "./components/Player/Profile/PlayerProfile.jsx";
 
 function App() {
   return (
     <>
       <Routes>
+        {/*Sign up login routes*/}
+        <Route path="/player/signup" element={<PlayerSignup />} />
+        <Route path="/player/login" element={<PlayerLogin />} />
         {/* Landing Page Routes */}
         <Route
           path="/"
@@ -27,7 +31,7 @@ function App() {
             </LandingLayout>
           }
         />
-        <Route path="/player/signup" element={<PlayerSignup />} />
+
         {/* Player Routes */}
         <Route
           path="/player"
@@ -66,6 +70,14 @@ function App() {
           element={
             <PlayerLayout>
               <FindAcademy />
+            </PlayerLayout>
+          }
+        />
+        <Route
+          path="/player/profile/:id"
+          element={
+            <PlayerLayout>
+              <PlayerProfile />
             </PlayerLayout>
           }
         />

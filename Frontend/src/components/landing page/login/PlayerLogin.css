@@ -1,0 +1,124 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(to right, #fff6b7, #fceabb);
+  margin: 0;
+  padding: 0;
+}
+
+.login-container {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-left {
+  flex: 1;
+  text-align: center;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.illustration img {
+  width: 80%;
+}
+
+.login-right {
+  flex: 1;
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+}
+
+.welcome-text {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.welcome-text span {
+  color: #4169e1;
+}
+
+p {
+  color: #666;
+}
+
+.social-login {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.social-btn {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.google {
+  color: #db4437;
+}
+
+.facebook {
+  color: #3b5998;
+}
+
+.email {
+  color: #000;
+}
+
+.or-text {
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.input-group {
+  margin: 10px 0;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.forgot-password {
+  color: #4169e1;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: right;
+}
+
+.sign-in-btn {
+  background: linear-gradient(to right, #4a90e2, #1446a0);
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.signup-text {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.signup-text a {
+  color: #4169e1;
+  text-decoration: none;
+}

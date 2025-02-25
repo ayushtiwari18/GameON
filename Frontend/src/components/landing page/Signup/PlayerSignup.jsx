@@ -139,8 +139,8 @@ function PlayerSignup() {
           </div>
           <div className="header-right">
             <span className="member-text">Already a member?</span>
-            <Link to="/signin" className="signin-link">
-              Sign in
+            <Link to="/player/login" className="signin-link">
+              login
             </Link>
           </div>
           <div className="welcome-box">
@@ -156,7 +156,7 @@ function PlayerSignup() {
         </div>
       </header>
 
-      <div className="card">
+      <div className="signup-card">
         <form onSubmit={handleSubmit}>
           <div className="form-grid">
             <div className="form-group">

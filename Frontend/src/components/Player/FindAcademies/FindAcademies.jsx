@@ -119,9 +119,6 @@ function FindAcademy() {
             value={filters.state}
             onChange={handleFilterChange}
           />
-          <button type="submit" className="search-button">
-            Search
-          </button>
         </form>
 
         {loading ? (
