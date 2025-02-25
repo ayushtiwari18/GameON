@@ -1,43 +1,80 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import EditProfilePopup from "./EditProfilePopup";
 import "./PlayerProfile.css";
+import playerService from "../../../../../Backend/src/api/services/playerService";
 
-const PlayerProfile = ({ playerData }) => {
+const PlayerProfile = () => {
   const [activeTab, setActiveTab] = useState("all");
-
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [player, setPlayer] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
-  // Add handler function to save changes
-  const handleSaveProfile = (updatedData) => {
-    // Here you would typically update state or call an API
-    console.log("Updated profile data:", updatedData);
-    // If you have a state update or API call function, use it here
-    // For example: updatePlayerData(updatedData);
+  // Get player ID from localStorage or URL params
+  const getPlayerId = () => {
+    // Option 1: Get from localStorage if you store it there after login
+    // const playerId = localStorage.getItem("playerId");
+
+    // Option 2: Get from URL params if your route is like /profile/:id
+    const playerId = window.location.pathname.split("/").pop();
+
+    return playerId;
   };
 
-  // Mock data based on the images provided
-  const defaultPlayer = {
-    player_id: "12345",
-    full_name: "James Pearson",
-    email: "james.pearson@example.com",
-    gender: "Male",
-    preferred_position: "Ball Instruction Master",
-    skill_level: "Professional",
-    dob: "1990-05-15",
-    contact_number: "+1234567890",
-    created_at: "2023-01-01",
-    updated_at: "2024-02-25",
-    state: "California",
-    address: "123 Soccer St.",
-    imageUrl: "https://example.com/profile.jpg",
-    city: "Los Angeles",
-    profileUrl: "gameon.com/player/james-pearson",
-    language: "English",
+  const playerId = getPlayerId();
+
+  // Fetch player data on component mount
+  useEffect(() => {
+    const fetchPlayerData = async () => {
+      try {
+        setLoading(true);
+        const playerData = await playerService.profile.getProfile(playerId);
+        setPlayer(playerData);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching player data:", err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    if (playerId) {
+      fetchPlayerData();
+    }
+  }, [playerId]);
+
+  // Handle profile save
+  const handleSaveProfile = async (updatedData) => {
+    try {
+      const response = await playerService.profile.updateProfile(
+        playerId,
+        updatedData
+      );
+      setPlayer(response);
+      setIsEditPopupOpen(false);
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      // You could add error handling UI here
+    }
   };
 
-  // Use provided data or fallback to default
-  const player = playerData || defaultPlayer;
+  // Handle profile deletion
+  const handleDeleteProfile = async () => {
+    try {
+      await playerService.profile.deleteProfile(playerId);
+      // Clear user data from localStorage
+      localStorage.removeItem("token");
+      localStorage.removeItem("playerId");
+      // Redirect to homepage or login page
+      window.location.href = "/signin";
+    } catch (err) {
+      console.error("Error deleting profile:", err);
+      // You could add error handling UI here
+    }
+  };
 
+  // Mock data for activities and connections
   const activities = [
     {
       id: 1,
@@ -80,20 +117,21 @@ const PlayerProfile = ({ playerData }) => {
     },
   ];
 
-  const experiences = [
+  // Default data structures for player attributes (if they're missing in the API response)
+  const defaultExperiences = [
     {
       organization: "National Football Association",
       period: "Feb 2020 - Nov 2023",
     },
   ];
 
-  const qualifications = [
+  const defaultQualifications = [
     "Professional Football Training Certification",
     "Youth Coaching License - Level 2",
     "Sports Nutrition Certificate",
   ];
 
-  const skills = [
+  const defaultSkills = [
     { name: "Leadership", level: 5 },
     { name: "Team Management", level: 4 },
     { name: "Technical Skills", level: 5 },
@@ -110,6 +148,70 @@ const PlayerProfile = ({ playerData }) => {
       </span>
     ));
   };
+
+  // Show loading state
+  if (loading) {
+    return <div className="loading">Loading profile data...</div>;
+  }
+
+  // Show error state
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
+
+  // If no player data
+  if (!player) {
+    return <div className="error">Player profile not found</div>;
+  }
+  console.log(player);
+  // Convert API response to match component expectations
+  const playerForDisplay = {
+    player_id: player.Player_ID || player.player_id || "",
+    full_name: player.Full_Name || player.full_name || "",
+    email: player.Email || player.email || "",
+    gender: player.Gender || player.gender || "",
+    preferred_position:
+      player.Preferred_Position || player.preferred_position || "",
+    skill_level: player.Skill_level || player.skill_level || "",
+    dob: player.Dob || player.dob || "",
+    contact_number: player.Contact_number || player.contact_number || "",
+    created_at: player.Created_at || player.created_at || "",
+    updated_at: player.Updated_at || player.updated_at || "",
+    state: player.State || player.state || "",
+    address: player.Address || player.address || "",
+    imageUrl: player.ProfileImage || player.imageUrl || "/default-avatar.png",
+    city: player.City || player.city || "",
+    profileUrl: player.profileUrl || `gameon.com/player/${playerId}`,
+    language: player.language || "English",
+    // Use player's actual data or default if missing
+    experiences: player.experiences || defaultExperiences,
+    qualifications: player.qualifications || defaultQualifications,
+    skills: player.skills || defaultSkills,
+  };
+
+  // Confirmation dialog for account deletion
+  const DeleteConfirmationDialog = () => (
+    <div className={`delete-confirm-modal ${deleteConfirmOpen ? "open" : ""}`}>
+      <div className="delete-confirm-content">
+        <h2>Confirm Account Deletion</h2>
+        <p>
+          Are you sure you want to delete your profile? This action cannot be
+          undone.
+        </p>
+        <div className="delete-confirm-actions">
+          <button
+            className="cancel-btn"
+            onClick={() => setDeleteConfirmOpen(false)}
+          >
+            Cancel
+          </button>
+          <button className="delete-confirm-btn" onClick={handleDeleteProfile}>
+            Yes, Delete My Account
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="profile-container">
@@ -153,7 +255,7 @@ const PlayerProfile = ({ playerData }) => {
               </button>
             </div>
             <div className="connection-item-content">
-              <span className="profile-url">{player.profileUrl}</span>
+              <span className="profile-url">{playerForDisplay.profileUrl}</span>
             </div>
           </div>
 
@@ -166,7 +268,7 @@ const PlayerProfile = ({ playerData }) => {
               </button>
             </div>
             <div className="connection-item-content">
-              <span>{player.language}</span>
+              <span>{playerForDisplay.language}</span>
             </div>
           </div>
 
@@ -205,7 +307,12 @@ const PlayerProfile = ({ playerData }) => {
         </div>
 
         <div className="signout">
-          <button className="signout-btn">Delete Profile</button>
+          <button
+            className="signout-btn"
+            onClick={() => setDeleteConfirmOpen(true)}
+          >
+            Delete Profile
+          </button>
         </div>
       </div>
 
@@ -216,17 +323,18 @@ const PlayerProfile = ({ playerData }) => {
           <div className="player-info">
             <div className="profile-image-container">
               <img
-                src="/default-avatar.png"
+                src={playerForDisplay.imageUrl}
                 className="profile-image"
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = "/default-avatar.png";
                 }}
+                alt={playerForDisplay.full_name}
               />
             </div>
             <div className="player-details">
-              <h1>{player.full_name}</h1>
-              <p className="position">{player.preferred_position}</p>
+              <h1>{playerForDisplay.full_name}</h1>
+              <p className="position">{playerForDisplay.preferred_position}</p>
             </div>
           </div>
         </div>
@@ -303,7 +411,7 @@ const PlayerProfile = ({ playerData }) => {
             </div>
           </div>
           <div className="section-content">
-            {experiences.map((exp, index) => (
+            {playerForDisplay.experiences.map((exp, index) => (
               <div key={index} className="experience-item">
                 <div className="org-logo">
                   <img src="/nfa-logo.png" alt="Organization logo" />
@@ -328,7 +436,7 @@ const PlayerProfile = ({ playerData }) => {
           </div>
           <div className="section-content">
             <ul className="qualifications-list">
-              {qualifications.map((qual, index) => (
+              {playerForDisplay.qualifications.map((qual, index) => (
                 <li key={index}>{qual}</li>
               ))}
             </ul>
@@ -346,7 +454,7 @@ const PlayerProfile = ({ playerData }) => {
           </div>
           <div className="section-content">
             <ul className="skills-list">
-              {skills.map((skill, index) => (
+              {playerForDisplay.skills.map((skill, index) => (
                 <li key={index}>
                   <span className="skill-name">{skill.name}</span>
                   <span className="skill-level">
@@ -358,13 +466,19 @@ const PlayerProfile = ({ playerData }) => {
           </div>
         </div>
       </div>
+
+      {/* Edit Profile Popup */}
       <EditProfilePopup
         isOpen={isEditPopupOpen}
         onClose={() => setIsEditPopupOpen(false)}
-        playerData={player}
+        playerData={playerForDisplay}
         onSave={handleSaveProfile}
       />
+
+      {/* Delete Confirmation Dialog */}
+      {deleteConfirmOpen && <DeleteConfirmationDialog />}
     </div>
   );
 };
+
 export default PlayerProfile;

@@ -22,6 +22,7 @@ class PlayerModel {
         Dob: sql.Date,
         Contact_number: sql.NVarChar,
         Skill_level: sql.NVarChar,
+        Language: sql.NVarChar,
       };
       console.log("Creating player with data:", playerData);
 
@@ -41,7 +42,8 @@ class PlayerModel {
         Gender, 
         Dob, 
         Contact_number, 
-        Skill_level
+        Skill_level,
+        Language
       ) VALUES (
         @Full_Name, 
         @Email, 
@@ -52,7 +54,8 @@ class PlayerModel {
         @Gender, 
         @Dob, 
         @Contact_number, 
-        @Skill_level
+        @Skill_level,
+        @Language
       )
     `;
       console.log("Creating player with data:", playerData);
@@ -102,22 +105,60 @@ class PlayerModel {
       // Add player ID parameter
       request.input("Player_id", sql.UniqueIdentifier, playerId);
 
-      // Build dynamic update query
-      const updateFields = Object.keys(updateData)
+      // Define valid column names that exist in the database
+      const validColumns = [
+        "Full_Name",
+        "Email",
+        "Password",
+        "State",
+        "City",
+        "Address",
+        "Gender",
+        "Dob",
+        "Contact_number",
+        "Skill_level",
+        "Language",
+        "Preferred_position",
+      ];
+
+      // Filter updateData to only include valid columns
+      const filteredData = Object.entries(updateData)
+        .filter(([key]) => validColumns.includes(key))
+        .reduce((obj, [key, value]) => {
+          obj[key] = value;
+          return obj;
+        }, {});
+
+      // If nothing valid to update, return early
+      if (Object.keys(filteredData).length === 0) {
+        console.warn("No valid fields to update");
+        return { rowsAffected: [0] };
+      }
+
+      // Build dynamic update query with only valid fields
+      const updateFields = Object.keys(filteredData)
         .map((key) => `${key} = @${key}`)
         .join(", ");
 
       // Add parameters for each field being updated
-      Object.entries(updateData).forEach(([key, value]) => {
-        request.input(key, value);
+      Object.entries(filteredData).forEach(([key, value]) => {
+        // Determine SQL type based on field name (simplified version)
+        let sqlType;
+        if (key === "Dob") {
+          sqlType = sql.Date;
+        } else {
+          sqlType = sql.NVarChar;
+        }
+        request.input(key, sqlType, value);
       });
 
       const query = `
-        UPDATE Players 
-        SET ${updateFields}
-        WHERE Player_id = @Player_id
-      `;
+      UPDATE Players 
+      SET ${updateFields}
+      WHERE Player_id = @Player_id
+    `;
 
+      console.log("Executing update query:", query);
       return await request.query(query);
     } catch (error) {
       console.error("Database error in update:", error);

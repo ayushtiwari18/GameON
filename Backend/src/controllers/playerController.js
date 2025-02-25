@@ -22,6 +22,7 @@ const playerController = {
         Dob,
         Contact_number,
         Skill_level = "Beginner",
+        Language,
       } = req.body;
 
       // Debug log to see destructured values
@@ -32,6 +33,7 @@ const playerController = {
         State: State || "missing",
         City: City || "missing",
         Address: Address || "missing ",
+        Language: Language || "missing",
       });
 
       // Check if the body is being parsed correctly
@@ -86,6 +88,7 @@ const playerController = {
         Dob,
         Contact_number,
         Skill_level,
+        Language,
       };
 
       // Debug log the data being sent to model (with password redacted)
