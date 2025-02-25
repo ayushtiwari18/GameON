@@ -18,8 +18,8 @@ const VacancyModel = {
 
       const request = pool
         .request()
-        .input("tournament_id", sql.Int, tournament_id)
-        .input("academy_id", sql.Int, academy_id)
+        .input("tournament_id", sql.UniqueIdentifier, tournament_id)
+        .input("academy_id", sql.UniqueIdentifier, academy_id)
         .input("position", sql.NVarChar, position)
         .input("requirements", sql.NVarChar, requirements)
         .input("vacancy_count", sql.Int, vacancy_count)
@@ -43,7 +43,7 @@ const VacancyModel = {
       await poolConnect;
       const request = pool
         .request()
-        .input("tournament_id", sql.Int, tournamentId);
+        .input("tournament_id", sql.UniqueIdentifier, tournamentId);
 
       const query = `
         SELECT v.*, a.Name as academy_name, t.Name as tournament_name
