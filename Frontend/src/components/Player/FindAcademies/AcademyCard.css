@@ -1,0 +1,102 @@
+.academy-card-container {
+  width: 400px;
+  background: #e8dbb5;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.3);
+  font-family: Arial, sans-serif;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.academy-card-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 12px 12px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Additional hover effect for buttons */
+.academy-card-join:hover {
+  background: #6d4c2f;
+  transform: scale(1.05);
+}
+
+.academy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.academy-card-logo {
+  background: #d4a373;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.academy-card-title {
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #d4cbb2;
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3),
+    inset 6px 6px 12px rgba(0, 0, 0, 0.3);
+  color: #2c2c5a;
+}
+
+.academy-card-image img {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.academy-card-description {
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.academy-card-tags {
+  background: #e3caa8;
+  padding: 5px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.academy-card-details {
+  margin-top: 10px;
+}
+
+.academy-card-location,
+.academy-card-vacancy,
+.academy-card-contact {
+  background: #c8b6a6;
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+.academy-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.academy-card-join {
+  background: #8b5e34;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.academy-card-rating {
+  font-size: 16px;
+}
+
+.academy-card-social-icons svg {
+  margin: 0 5px;
+  cursor: pointer;
+  font-size: 18px;
+}

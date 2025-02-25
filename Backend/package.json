@@ -15,8 +15,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "file-saver": "^2.0.5",
     "jsonwebtoken": "^9.0.2",
     "mssql": "^11.0.1",
+    "pdf-lib": "^1.17.1",
     "toastify-react": "^4.3.1",
     "uuid": "^11.0.5"
   }

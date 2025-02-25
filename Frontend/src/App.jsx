@@ -12,6 +12,7 @@ import PlayerHome from "./components/Player/Home/Home";
 import Tournaments from "./components/Player/Tournaments/Tournaments";
 import TournamentDetail from "./components/Player/Tournaments/TournamentDetail/TournamentDetail";
 import FindVacancy from "./components/Player/Tournaments/Vacancies/FindVacancy";
+import FindAcademy from "./components/landing page/FindAcademies/FindAcademies";
 
 function App() {
   return (
@@ -57,6 +58,14 @@ function App() {
           element={
             <PlayerLayout>
               <FindVacancy />
+            </PlayerLayout>
+          }
+        />
+        <Route
+          path="/player/academies"
+          element={
+            <PlayerLayout>
+              <FindAcademy />
             </PlayerLayout>
           }
         />
