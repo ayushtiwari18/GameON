@@ -1,11 +1,74 @@
-import React from "react";
+import React, { useState } from "react";
 import "./PlayerLogin.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Buttoncustom from "../../../common/Buttoncustom";
+import playerService from "../../../../../Backend/src/api/services/playerService";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PlayerLogin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Basic validation
+    if (!email || !password) {
+      toast.error("Please enter both email and password");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      // Call the login method from playerService
+      const response = await playerService.auth.login(email, password);
+
+      // If login successful, show success toast and redirect
+      if (response && response.token) {
+        // Store user ID if available
+        if (response.playerId) {
+          localStorage.setItem("playerId", response.playerId);
+        }
+
+        // Show success message
+        toast.success("Login successful! Redirecting to dashboard...");
+
+        // Short delay before redirect for toast to be visible
+        setTimeout(() => {
+          navigate("/player");
+        }, 1500);
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      // Show error toast with the error message
+      toast.error(
+        err.message || "Failed to login. Please check your credentials."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="login-container">
+      {/* ToastContainer should be outside the main component structure */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
       <header>
         <div className="header-container-login">
           <div className="header-left-login">
@@ -26,20 +89,18 @@ const PlayerLogin = () => {
               />
             </div>
             <div className="illustration">
-              {/* Volleyball player illustration */}
               <img
                 src="/assets/PlayerDashboard/Player-login-2.png"
-                alt="Football icon"
+                alt="Volleyball player"
                 className="illustration-left-icon"
               />
             </div>
           </div>
 
           <div className="illustration-right">
-            {/* Basketball player illustration */}
             <img
               src="/assets/PlayerDashboard/Player-login-3.png"
-              alt="Football icon"
+              alt="Basketball player"
               className="illustration-right-icon"
             />
           </div>
@@ -54,13 +115,13 @@ const PlayerLogin = () => {
           <div className="social-login">
             <div className="social-icons">
               <button className="social-button">
-                <img src="" alt="Google" />
+                <img src="/assets/icons/google.png" alt="Google" />
               </button>
               <button className="social-button">
-                <img src="" alt="Facebook" />
+                <img src="/assets/icons/facebook.png" alt="Facebook" />
               </button>
               <button className="social-button">
-                <img src="" alt="X" />
+                <img src="/assets/icons/twitter.png" alt="X" />
               </button>
             </div>
             <div className="divider">
@@ -70,7 +131,7 @@ const PlayerLogin = () => {
             </div>
           </div>
 
-          <form className="login-form">
+          <form className="login-form" onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="email" className="visually-hidden">
                 Email ID
@@ -81,6 +142,9 @@ const PlayerLogin = () => {
                   id="email"
                   placeholder="Email ID"
                   className="form-input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
             </div>
@@ -95,15 +159,23 @@ const PlayerLogin = () => {
                   id="password"
                   placeholder="Password"
                   className="form-input"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
             </div>
 
             <div className="forgot-password">
-              <a href="#">Forget Password?</a>
+              <Link to="/player/forgot-password">Forget Password?</Link>
             </div>
 
-            <Buttoncustom text="Sign in" style={{ width: "680px" }} />
+            <Buttoncustom
+              text={loading ? "Signing in..." : "Sign in"}
+              style={{ width: "100%" }}
+              disabled={loading}
+              type="submit"
+            />
 
             <div className="create-account">
               <span>Don't have an account? </span>

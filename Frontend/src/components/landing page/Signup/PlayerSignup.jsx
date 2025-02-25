@@ -107,7 +107,7 @@ function PlayerSignup() {
 
       await playerService.auth.register(formData);
       toast.success("Registration successful! Please login to continue.");
-      navigate("/player");
+      navigate("/player/dashboard");
     } catch (error) {
       console.error("Registration error:", error);
       toast.error(error.message || "Registration failed. Please try again.");

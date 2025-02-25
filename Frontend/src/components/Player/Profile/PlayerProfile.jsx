@@ -67,7 +67,7 @@ const PlayerProfile = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("playerId");
       // Redirect to homepage or login page
-      window.location.href = "/signin";
+      window.location.href = "/player/login";
     } catch (err) {
       console.error("Error deleting profile:", err);
       // You could add error handling UI here
