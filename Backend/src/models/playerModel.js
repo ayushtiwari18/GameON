@@ -8,29 +8,21 @@ class PlayerModel {
     try {
       await poolConnect;
       const request = pool.request();
-      console.log("Creating player with data:", playerData);
 
-      // Define SQL types for all fields in the Players table
-      const sqlTypes = {
-        Full_Name: sql.NVarChar,
-        Email: sql.NVarChar,
-        Password: sql.NVarChar,
-        State: sql.NVarChar, // Ensure these are included
-        City: sql.NVarChar,
-        Address: sql.NVarChar,
-        Gender: sql.NVarChar,
-        Dob: sql.Date,
-        Contact_number: sql.NVarChar,
-        Skill_level: sql.NVarChar,
-        Language: sql.NVarChar,
-      };
-      console.log("Creating player with data:", playerData);
+      // Bind each parameter to the request
+      request.input("Full_Name", sql.NVarChar, playerData.Full_Name);
+      request.input("Email", sql.NVarChar, playerData.Email);
+      request.input("Password", sql.NVarChar, playerData.Password);
+      request.input("State", sql.NVarChar, playerData.State);
+      request.input("City", sql.NVarChar, playerData.City);
+      request.input("Address", sql.NVarChar, playerData.Address);
+      request.input("Gender", sql.NVarChar, playerData.Gender);
+      request.input("Dob", sql.Date, playerData.Dob);
+      request.input("Contact_number", sql.NVarChar, playerData.Contact_number);
+      request.input("Skill_level", sql.NVarChar, playerData.Skill_level);
+      request.input("Language", sql.NVarChar, playerData.Language);
 
-      // Bind each field explicitly
-      Object.keys(sqlTypes).forEach((key) => {
-        request.input(key, sqlTypes[key], playerData[key] || null);
-      });
-
+      // Add OUTPUT clause to get the inserted ID
       const query = `
       INSERT INTO Players (
         Full_Name,
@@ -44,7 +36,9 @@ class PlayerModel {
         Contact_number, 
         Skill_level,
         Language
-      ) VALUES (
+      ) 
+      OUTPUT INSERTED.Player_id
+      VALUES (
         @Full_Name, 
         @Email, 
         @Password, 
@@ -58,9 +52,9 @@ class PlayerModel {
         @Language
       )
     `;
-      console.log("Creating player with data:", playerData);
 
-      return await request.query(query);
+      const result = await request.query(query);
+      return result;
     } catch (error) {
       console.error("Database error in create:", error);
       throw error;
@@ -78,6 +72,21 @@ class PlayerModel {
       return result.recordset[0];
     } catch (error) {
       console.error("Database error in findByEmail:", error);
+      throw error;
+    }
+  }
+
+  static async findByContactNumber(contactNumber) {
+    try {
+      await poolConnect;
+      const result = await pool
+        .request()
+        .input("Contact_number", sql.NVarChar, contactNumber)
+        .query("SELECT * FROM Players WHERE Contact_number = @Contact_number");
+
+      return result.recordset[0];
+    } catch (error) {
+      console.error("Database error in findByContactNumber:", error);
       throw error;
     }
   }

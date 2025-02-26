@@ -55,9 +55,10 @@ axiosInstance.interceptors.response.use(
 
 const playerService = {
   auth: {
+    // Update playerService.js to handle token in registration response
     register: async (playerData) => {
       try {
-        console.log("Sending registration data:", playerData); // Debug log
+        console.log("Sending registration data:", playerData);
 
         const response = await axiosInstance.post("/register", {
           Full_Name: playerData.fullName,
@@ -70,9 +71,30 @@ const playerService = {
           City: playerData.city,
           Address: playerData.address,
           Skill_level: playerData.experience || "Beginner",
+          Language: playerData.language || "English",
         });
 
-        console.log("Registration response:", response); // Debug log
+        // Store token if it's in the response
+        if (response.token) {
+          localStorage.setItem("token", response.token);
+
+          // Store player ID from response
+          if (response.player && response.player.id) {
+            localStorage.setItem("playerId", response.player.id);
+          } else {
+            // Extract from token as fallback
+            try {
+              const payload = JSON.parse(atob(response.token.split(".")[1]));
+              if (payload && payload.id) {
+                localStorage.setItem("playerId", payload.id);
+              }
+            } catch (error) {
+              console.error("Error decoding token:", error);
+            }
+          }
+        }
+
+        console.log("Registration response:", response);
         return response;
       } catch (error) {
         console.error("Registration error:", error);
@@ -96,7 +118,13 @@ const playerService = {
       return response;
     },
   },
-
+  // Add this to the auth object in playerService.js
+  checkDuplicate: async (data) => {
+    return axiosInstance.post("/check-duplicate", {
+      Email: data.Email,
+      Contact_number: data.Contact_number,
+    });
+  },
   // Profile endpoints
   profile: {
     getHome: async (playerId) => {

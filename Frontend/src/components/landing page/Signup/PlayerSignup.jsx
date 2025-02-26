@@ -25,6 +25,8 @@ function PlayerSignup() {
     experience: "Beginner",
   });
 
+  console.log("formData:", formData);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -75,10 +77,10 @@ function PlayerSignup() {
   const checkDuplicate = async () => {
     try {
       const response = await playerService.auth.checkDuplicate({
-        emailId: formData.emailId,
-        phoneNumber: formData.phoneNumber,
+        Email: formData.emailId,
+        Contact_number: formData.phoneNumber,
       });
-      return response.data;
+      return response;
     } catch (error) {
       console.error("Duplicate check error:", error);
       toast.error("Error checking duplicate records");
@@ -92,22 +94,52 @@ function PlayerSignup() {
 
     try {
       setLoading(true);
-      const { emailExists, phoneExists } = await checkDuplicate();
 
-      if (emailExists) {
+      // First check for duplicates
+      const duplicateCheck = await checkDuplicate();
+
+      if (duplicateCheck.emailExists) {
         toast.error("Email is already registered");
         setLoading(false);
         return;
       }
-      if (phoneExists) {
+
+      if (duplicateCheck.phoneExists) {
         toast.error("Phone number is already registered");
         setLoading(false);
         return;
       }
 
-      await playerService.auth.register(formData);
-      toast.success("Registration successful! Please login to continue.");
-      navigate("/player/dashboard");
+      // If no duplicates, proceed with registration
+      const response = await playerService.auth.register(formData);
+
+      if (response && response.token) {
+        // Save token and player ID immediately
+        localStorage.setItem("token", response.token);
+
+        // If the response includes the player ID, save it
+        if (response.playerId) {
+          localStorage.setItem("playerId", response.playerId);
+        } else {
+          // Try to extract from token
+          try {
+            const payload = JSON.parse(atob(response.token.split(".")[1]));
+            if (payload && payload.id) {
+              localStorage.setItem("playerId", payload.id);
+            }
+          } catch (error) {
+            console.error("Error decoding token:", error);
+          }
+        }
+
+        toast.success("Registration successful!");
+        navigate("/player");
+      } else {
+        toast.warning(
+          "Registration successful, but automatic login failed. Please login manually."
+        );
+        navigate("/player/login");
+      }
     } catch (error) {
       console.error("Registration error:", error);
       toast.error(error.message || "Registration failed. Please try again.");

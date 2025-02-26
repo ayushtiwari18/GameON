@@ -11,74 +11,27 @@ const playerController = {
       // Debug log to see incoming request body
       console.log("Registration request body:", req.body);
 
+      // Extract data from request body
       const {
         Full_Name,
-        Password,
         Email,
         State,
         City,
         Address,
+        Password,
         Gender,
         Dob,
         Contact_number,
-        Skill_level = "Beginner",
+        Skill_level,
         Language,
       } = req.body;
 
-      // Debug log to see destructured values
-      console.log("Destructured values:", {
-        Password: Password || "missing",
-        Email: Email || "missing",
-        Full_Name: Full_Name || "missing",
-        State: State || "missing",
-        City: City || "missing",
-        Address: Address || "missing ",
-        Language: Language || "missing",
-      });
-
-      // Check if the body is being parsed correctly
-      if (!req.body || Object.keys(req.body).length === 0) {
-        return res.status(400).json({
-          message: "Empty request body",
-          tip: "Ensure Content-Type header is set to application/json",
-        });
-      }
-
-      // More detailed validation
-      const missingFields = [];
-      if (!Password) missingFields.push("Password");
-      if (!Email) missingFields.push("Email");
-      if (!Full_Name) missingFields.push("Full_Name");
-
-      if (missingFields.length > 0) {
-        return res.status(400).json({
-          message: "Required fields missing",
-          required: missingFields,
-          received: Object.keys(req.body),
-        });
-      }
-
-      // Validate password strength
-      if (Password.length < 6) {
-        return res.status(400).json({
-          message: "Password must be at least 6 characters long",
-        });
-      }
-
-      // Check if email already exists
-      const existingPlayer = await PlayerModel.findByEmail(Email);
-      if (existingPlayer) {
-        return res.status(409).json({
-          message: "Email already registered",
-        });
-      }
-
-      // Hash password
+      // Hash the password
       const hashedPassword = await bcrypt.hash(Password, 10);
 
       // Create player with validated data
       const playerData = {
-        Full_Name: Full_Name,
+        Full_Name,
         Email,
         State,
         City,
@@ -91,15 +44,32 @@ const playerController = {
         Language,
       };
 
-      // Debug log the data being sent to model (with password redacted)
-      console.log("Data being sent to model:", {
-        ...playerData,
-        Password: "[REDACTED]",
+      // Create the player and get the ID
+      const result = await PlayerModel.create(playerData);
+
+      // Find the newly created player to get their ID
+      const newPlayer = await PlayerModel.findByEmail(Email);
+
+      // Generate a token for the newly registered user
+      const token = jwt.sign(
+        {
+          id: newPlayer.Player_id, // Include the ID in the token
+          email: Email,
+          role: "player",
+        },
+        jwtSecret,
+        { expiresIn: "24h" }
+      );
+
+      res.status(201).json({
+        message: "Player registered successfully",
+        token,
+        player: {
+          id: newPlayer.Player_id, // Return the ID to the client
+          email: Email,
+          name: Full_Name,
+        },
       });
-
-      await PlayerModel.create(playerData);
-
-      res.status(201).json({ message: "Player registered successfully" });
     } catch (error) {
       console.error("Registration error:", error);
       next(error);
@@ -252,6 +222,26 @@ const playerController = {
 
       await PlayerModel.delete(playerId);
       res.json({ message: "Player deleted successfully" });
+    } catch (error) {
+      next(error);
+    }
+  },
+  // In playerController.js
+  async checkDuplicate(req, res, next) {
+    try {
+      const { Email, Contact_number } = req.body;
+
+      // Check email
+      const emailExists = (await PlayerModel.findByEmail(Email)) !== undefined;
+
+      // Check phone (you'll need to create this method)
+      const phoneExists =
+        (await PlayerModel.findByContactNumber(Contact_number)) !== undefined;
+
+      res.json({
+        emailExists,
+        phoneExists,
+      });
     } catch (error) {
       next(error);
     }
