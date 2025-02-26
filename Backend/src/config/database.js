@@ -14,6 +14,6 @@ const dbConfig = {
 };
 
 const pool = new sql.ConnectionPool(dbConfig);
-const poolConnect = pool.connect();
+const poolConnect = pool.connect(console.log("databse connected"));
 
 module.exports = { pool, poolConnect };
