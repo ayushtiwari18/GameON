@@ -3,6 +3,7 @@ const sql = require("mssql");
 
 class AcademyModel {
   // Create a new academy
+  // Update this method in your AcademyModel class
   static async create(academyData) {
     await poolConnect;
     const request = pool.request();
@@ -13,32 +14,39 @@ class AcademyModel {
     });
 
     const query = `
-      INSERT INTO Academies (
-        Name, 
-        Password,
-        Location, 
-        Contact_email, 
-        Contact_phone,  
-        City, 
-        Description,  
-        Website_url, 
-        Specialization
-      )
-      VALUES (
-        @name, 
-        @password,
-        @location, 
-        @contact_email, 
-        @Contact_phone, 
-        @city, 
-        @description, 
-        @website_url, 
-        @specialization
-      )
-    `;
+    INSERT INTO Academies (
+      Name, 
+      Password,
+      Location, 
+      Contact_email, 
+      Contact_phone,
+      Contact_person,
+      City,
+      State,
+      Description,
+      Website_url, 
+      Specialization
+    )
+    OUTPUT INSERTED.Academy_id
+    VALUES (
+      @name, 
+      @password,
+      @location, 
+      @contact_email, 
+      @contact_phone,
+      @contact_person,
+      @city,
+      @state,
+      @description, 
+      @website_url, 
+      @specialization
+    )
+  `;
 
     try {
-      await request.query(query);
+      const result = await request.query(query);
+      // Return the newly created Academy_id
+      return result.recordset[0].Academy_id;
     } catch (error) {
       console.error("Error creating academy: ", error);
       throw new Error("Failed to create academy");

@@ -68,17 +68,19 @@ const academyController = {
     try {
       const {
         name,
+        contact_person,
         location,
         contact_email,
         contact_phone,
         city,
+        state,
         description,
         website_url,
         specialization,
-        password, // Added for authentication
+        password,
       } = req.body;
 
-      if (!name || !contact_email || !contact_phone || !city || !password) {
+      if (!name || !contact_email || !contact_phone || !password) {
         return res.status(400).json({ message: "Required fields are missing" });
       }
 
@@ -95,23 +97,125 @@ const academyController = {
 
       const academyData = {
         name,
+        contact_person,
         location,
         contact_email,
         contact_phone,
         city,
+        state,
         description,
         website_url,
         specialization,
         password: hashedPassword,
       };
 
-      await AcademyModel.create(academyData);
-      res.status(201).json({ message: "Academy registered successfully!" });
+      // Create academy and get the ID back
+      const newAcademyId = await AcademyModel.create(academyData);
+
+      // Generate JWT token
+      const token = jwt.sign(
+        {
+          id: newAcademyId,
+          email: contact_email,
+          role: "academy",
+        },
+        jwtSecret,
+        { expiresIn: "24h" }
+      );
+
+      // Return token and academy ID for redirection
+      res.status(201).json({
+        message: "Academy registered successfully!",
+        token,
+        academyId: newAcademyId,
+      });
     } catch (error) {
       console.error("Error registering academy:", error);
       res
         .status(500)
         .json({ message: "Error registering academy", error: error.message });
+    }
+  },
+
+  // Add these methods to your academyController.js file
+
+  async uploadProfileImage(req, res) {
+    try {
+      const { id } = req.params;
+
+      if (!req.files || !req.files.profileImage) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const profileImage = req.files.profileImage;
+
+      // Here you would:
+      // 1. Validate file type (e.g., only images)
+      // 2. Process/resize the image if needed
+      // 3. Upload to storage (file system or cloud storage)
+      // 4. Update the database with the image path
+
+      // For example, saving to a directory and updating DB:
+      const imagePath = `/uploads/academies/${id}/${profileImage.name}`;
+
+      // Save file logic goes here
+      // profileImage.mv(path.join(__dirname, `../../public${imagePath}`));
+
+      // Update academy record with image path
+      await AcademyModel.update(id, { profile_image: imagePath });
+
+      res.status(200).json({
+        message: "Profile image uploaded successfully",
+        imagePath,
+      });
+    } catch (error) {
+      console.error("Error uploading profile image:", error);
+      res.status(500).json({
+        message: "Error uploading profile image",
+        error: error.message,
+      });
+    }
+  },
+
+  async getCalendarEvents(req, res) {
+    try {
+      const { id } = req.params;
+      const events = await AcademyModel.getCalendarEvents(id);
+      res.status(200).json(events);
+    } catch (error) {
+      console.error("Error fetching calendar events:", error);
+      res.status(500).json({
+        message: "Error fetching calendar events",
+        error: error.message,
+      });
+    }
+  },
+
+  async getUpdates(req, res) {
+    try {
+      const { id } = req.params;
+      const updates = await AcademyModel.getUpdates(id);
+      res.status(200).json(updates);
+    } catch (error) {
+      console.error("Error fetching updates:", error);
+      res.status(500).json({
+        message: "Error fetching updates",
+        error: error.message,
+      });
+    }
+  },
+
+  async getTournaments(req, res) {
+    try {
+      const { id } = req.params;
+      const tournaments = await AcademyModel.getUpcomingTournaments(id);
+      res.status(200).json(tournaments);
+    } catch (error) {
+      console.error("Error fetching tournaments:", error);
+      res.status(500).json({
+        message: "Error fetching tournaments",
+        error: error.message,
+      });
     }
   },
 

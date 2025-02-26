@@ -98,6 +98,14 @@ function App() {
             </AcademyLayout>
           }
         />
+        <Route
+          path="/academy/profile/:id"
+          element={
+            <AcademyLayout>
+              <AcademyLayout />
+            </AcademyLayout>
+          }
+        />
       </Routes>
     </>
   );

@@ -1,8 +1,50 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./AcademyLogin.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Buttoncustom from "../../../common/Buttoncustom";
+import academyService from "../../../../../Backend/src/api/services/academyService";
+
 function AcademyLogin() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { academyId } = useParams();
+
+  useEffect(() => {
+    // Check if user is already logged in
+    const token = localStorage.getItem("token");
+    const storedAcademyId = localStorage.getItem("academyId");
+
+    if (token && storedAcademyId) {
+      // If academyId is available, navigate to academy home
+      navigate(`/academy`);
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await academyService.auth.login(email, password);
+      setLoading(false);
+
+      if (response.academy && response.academy.id) {
+        // Make sure we're using the correct ID property and it's a valid UUID
+        navigate(`/academy/${response.academy.id}/home`);
+      } else {
+        setError("Could not retrieve academy ID. Please try again.");
+      }
+    } catch (err) {
+      setLoading(false);
+      setError(err.message || "Login failed. Please check your credentials.");
+      console.error("Login error:", err);
+    }
+  };
+
   return (
     <div className="login-container-academy">
       <header>
@@ -48,7 +90,9 @@ function AcademyLogin() {
             </div>
           </div>
 
-          <form className="login-form">
+          {error && <div className="error-message">{error}</div>}
+
+          <form className="login-form" onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="email" className="visually-hidden">
                 Email ID
@@ -59,6 +103,7 @@ function AcademyLogin() {
                   id="email"
                   placeholder="Email ID"
                   className="form-input"
+                  value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
@@ -75,6 +120,7 @@ function AcademyLogin() {
                   id="password"
                   placeholder="Password"
                   className="form-input"
+                  value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
@@ -86,9 +132,10 @@ function AcademyLogin() {
             </div>
 
             <Buttoncustom
-              text="Sign in"
+              text={loading ? "Signing in..." : "Sign in"}
               style={{ width: "100%" }}
               type="submit"
+              disabled={loading}
             />
 
             <div className="create-account">

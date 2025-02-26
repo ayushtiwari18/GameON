@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+console.log("API URL:", API_URL); // Debug log
 
 // Create axios instance with default config
 const axiosInstance = axios.create({
@@ -8,54 +9,117 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // Add this for credentials
 });
 
-// Request interceptor
+// Create form data instance for file uploads
+const formDataInstance = axios.create({
+  baseURL: `${API_URL}/academy`,
+  withCredentials: true,
+});
+
+// Request interceptor for JSON requests
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    console.log("Request Config:", config); // Debug log
     return config;
   },
   (error) => {
+    console.error("Request Error:", error);
     return Promise.reject(error);
   }
 );
 
-// Response interceptor
-axiosInstance.interceptors.response.use(
-  (response) => response.data,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
+// Request interceptor for form data (file uploads)
+formDataInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    return Promise.reject(error.response?.data || error.message);
+    // Don't set Content-Type here - axios will set it correctly with boundary for multipart/form-data
+    return config;
+  },
+  (error) => {
+    console.error("Request Error:", error);
+    return Promise.reject(error);
   }
 );
 
-const academyService = {
-  // Get all academies
-  getAll: async () => {
-    return axiosInstance.get("/"); // Assuming your API has an endpoint that returns all academies
-  },
+// Response interceptor with better error handling
+const responseHandler = (response) => {
+  console.log("Response Data:", response.data); // Debug log
+  return response.data;
+};
 
-  // Auth endpoints
+const errorHandler = (error) => {
+  console.error("Response Error:", error);
+
+  if (error.response?.status === 401) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("academyId");
+    window.location.href = "/academy/login";
+    return Promise.reject(new Error("Authentication failed"));
+  }
+
+  const errorMessage =
+    error.response?.data?.message ||
+    error.message ||
+    "An unexpected error occurred";
+  return Promise.reject(new Error(errorMessage));
+};
+
+axiosInstance.interceptors.response.use(responseHandler, errorHandler);
+formDataInstance.interceptors.response.use(responseHandler, errorHandler);
+
+const academyService = {
   auth: {
     register: async (academyData) => {
-      return axiosInstance.post("/register", {
-        name: academyData.name,
-        location: academyData.location,
-        contact_email: academyData.email,
-        contact_phone: academyData.phone,
-        city: academyData.city,
-        description: academyData.description,
-        website_url: academyData.websiteUrl,
-        specialization: academyData.specialization,
-        password: academyData.password,
-      });
+      try {
+        console.log("Sending registration data:", academyData);
+
+        const response = await axiosInstance.post("/register", {
+          name: academyData.name,
+          contact_person: academyData.contactPerson,
+          specialization: academyData.specialization,
+          contact_email: academyData.email,
+          contact_phone: academyData.phone,
+          state: academyData.state,
+          city: academyData.city,
+          location: academyData.address,
+          password: academyData.password,
+        });
+
+        // Store token if it's in the response
+        if (response.token) {
+          localStorage.setItem("token", response.token);
+
+          // Store academy ID from response
+          if (response.academyId) {
+            localStorage.setItem("academyId", response.academyId);
+          } else {
+            // Extract from token as fallback
+            try {
+              const payload = JSON.parse(atob(response.token.split(".")[1]));
+              if (payload && payload.id) {
+                localStorage.setItem("academyId", payload.id);
+              }
+            } catch (error) {
+              console.error("Error decoding token:", error);
+            }
+          }
+        }
+
+        console.log("Registration response:", response);
+        return response;
+      } catch (error) {
+        console.error("Registration error:", error);
+        throw error;
+      }
     },
 
     login: async (email, password) => {
@@ -65,6 +129,9 @@ const academyService = {
       });
       if (response.token) {
         localStorage.setItem("token", response.token);
+        if (response.academy.id) {
+          localStorage.setItem("academyId", response.academy.id);
+        }
       }
       return response;
     },
@@ -72,7 +139,15 @@ const academyService = {
     logout: async () => {
       const response = await axiosInstance.post("/logout");
       localStorage.removeItem("token");
+      localStorage.removeItem("academyId");
       return response;
+    },
+
+    checkDuplicate: async (data) => {
+      return axiosInstance.post("/check-duplicate", {
+        Email: data.Email,
+        Contact_number: data.Contact_number,
+      });
     },
   },
 
@@ -94,35 +169,49 @@ const academyService = {
       return axiosInstance.put(`/${academyId}/profile/update`, updateData);
     },
 
+    uploadProfileImage: async (academyId, formData) => {
+      return formDataInstance.post(`/${academyId}/profile/image`, formData);
+    },
+
     deleteProfile: async (academyId) => {
       return axiosInstance.delete(`/${academyId}/delete`);
     },
   },
 
-  // Location-based endpoints
+  // Location-based queries
   location: {
     getByCity: async (city) => {
       return axiosInstance.get(`/city/${city}`);
     },
+
+    getByState: async (state) => {
+      return axiosInstance.get(`/state/${state}`);
+    },
   },
 
-  // Additional academy-specific endpoints
-  getByEmail: async (email) => {
-    return axiosInstance.get(`/email/${email}`);
+  // Sport/Specialization endpoints
+  sports: {
+    getBySportName: async (sport) => {
+      return axiosInstance.get(`/sport/${sport}`);
+    },
   },
 
-  // Calendar and events
+  // Events and calendar
   events: {
-    getCalendar: async (academyId) => {
-      return axiosInstance.get(`/${academyId}/calendar`);
+    getAcademyEvents: async (academyId) => {
+      return axiosInstance.get(`/${academyId}/events`);
     },
 
-    getUpdates: async (academyId) => {
-      return axiosInstance.get(`/${academyId}/updates`);
+    createEvent: async (academyId, eventData) => {
+      return axiosInstance.post(`/${academyId}/events`, eventData);
     },
 
-    getTournaments: async (academyId) => {
-      return axiosInstance.get(`/${academyId}/tournaments`);
+    updateEvent: async (academyId, eventId, eventData) => {
+      return axiosInstance.put(`/${academyId}/events/${eventId}`, eventData);
+    },
+
+    deleteEvent: async (academyId, eventId) => {
+      return axiosInstance.delete(`/${academyId}/events/${eventId}`);
     },
   },
 };
