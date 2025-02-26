@@ -1,0 +1,95 @@
+/* Navbar.css */
+.navbar-academy {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  /* max-width: 1100px; */
+  background: rgba(255, 255, 255, 0.1); /* Transparent background */
+  backdrop-filter: blur(10px); /* Glassmorphism effect */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+  box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.4);
+  border-radius: 50px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+  transition: transform 0.4s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* Logo */
+.navbar-logo-academy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-logo-academy img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.navbar-logo-academy span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #0f172a;
+}
+
+/* Navigation Links */
+.navbar-links-academy {
+  display: flex;
+  gap: 50px;
+  align-content: flex-end;
+  color: #000;
+  list-style: none;
+  margin-left: auto; /* Push options to the right */
+  padding-right: 50px;
+}
+
+.link-academy {
+  list-style: none;
+  display: flex;
+  padding-left: 20px;
+  gap: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+  text-decoration: none;
+
+  align-items: center;
+  gap: 5px;
+}
+
+.navbar-links-academy li:hover {
+  color: #2563eb;
+}
+
+.custom-menu .MuiPaper-root {
+  background: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+  backdrop-filter: blur(10px); /* Blur effect */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Soft shadow */
+  padding: 10px;
+  transition: all 0.3s ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+}
+
+/* Dropdown Content */
+.dropdown-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+/* Style the Buttons inside the Dropdown */
+.dropdown-content a {
+  text-decoration: none;
+}
