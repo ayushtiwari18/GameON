@@ -6,6 +6,8 @@ import LandingLayout from "./components/landing page/LandingLayout";
 import Home from "./components/landing page/home/Home";
 import PlayerSignup from "./components/landing page/Signup/PlayerSignup";
 import PlayerLogin from "./components/landing page/login/PlayerLogin.jsx";
+import AcademySignup from "./components/landing page/Signup/AcademySignup.jsx";
+import AcademyLogin from "./components/landing page/login/AcademyLogin.jsx";
 //player imports
 import PlayerLayout from "./components/Player/PlayerLayout";
 import PlayerHome from "./components/Player/Home/Home";
@@ -15,13 +17,19 @@ import FindVacancy from "./components/Player/Tournaments/Vacancies/FindVacancy";
 import FindAcademy from "./components/Player/FindAcademies/FindAcademies.jsx";
 import PlayerProfile from "./components/Player/Profile/PlayerProfile.jsx";
 
+//Academy imports
+import AcademyLayout from "./components/Academy/AcademyLayout.jsx";
+import AcademyHome from "./components/Academy/Home/AcademyHome.jsx";
+
 function App() {
   return (
     <>
       <Routes>
-        {/*Sign up login routes*/}
+        {/*Sign-up login routes*/}
         <Route path="/player/signup" element={<PlayerSignup />} />
         <Route path="/player/login" element={<PlayerLogin />} />
+        <Route path="/academy/signup" element={<AcademySignup />} />
+        <Route path="/academy/login" element={<AcademyLogin />} />
         {/* Landing Page Routes */}
         <Route
           path="/"
@@ -81,7 +89,15 @@ function App() {
             </PlayerLayout>
           }
         />
-        <Route path="/signin" />
+        {/*Academy Routes  */}
+        <Route
+          path="/academy"
+          element={
+            <AcademyLayout>
+              <AcademyHome />
+            </AcademyLayout>
+          }
+        />
       </Routes>
     </>
   );
