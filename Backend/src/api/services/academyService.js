@@ -77,6 +77,10 @@ axiosInstance.interceptors.response.use(responseHandler, errorHandler);
 formDataInstance.interceptors.response.use(responseHandler, errorHandler);
 
 const academyService = {
+  // Add this new function at the top level
+  getAll: async () => {
+    return axiosInstance.get("/");
+  },
   auth: {
     register: async (academyData) => {
       try {
