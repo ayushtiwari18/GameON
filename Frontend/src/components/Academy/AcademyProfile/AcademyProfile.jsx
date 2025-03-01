@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import EditAcademyPopup from "./EditAcademyPopup";
 import "./AcademyProfile.css";
+import academyService from "../../../../../Backend/src/api/services/academyService";
 
 const AcademyProfile = () => {
   const [activeTab, setActiveTab] = useState("all");
@@ -9,10 +10,129 @@ const AcademyProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [suggestedConnections, setSuggestedConnections] = useState([]);
+  const [activities, setActivities] = useState([]);
+
+  // Mock data for events since endpoint isn't implemented yet
+  const mockEvents = [
+    {
+      id: 1,
+      type: "tournament",
+      date: "2025-02-15",
+      title: "Regional Youth Basketball Tournament",
+      description:
+        "Hosted annual regional youth tournament with 12 participating academies",
+    },
+    {
+      id: 2,
+      type: "training",
+      date: "2025-01-20",
+      title: "Advanced Skills Training Program",
+      description:
+        "Launched new technical skills development program for advanced players",
+    },
+    {
+      id: 3,
+      type: "achievement",
+      date: "2024-12-10",
+      title: "District Championship",
+      description: "Academy's U-16 team won the district championship",
+    },
+    {
+      id: 4,
+      type: "event",
+      date: "2025-02-05",
+      title: "Coach Certification Workshop",
+      description: "Hosted certification workshop for youth basketball coaches",
+    },
+  ];
+
+  // Mock data for academies by state since endpoint isn't implemented yet
+  const getMockStateAcademies = (state) => {
+    const mockStateMap = {
+      "Madhya Pradesh": [
+        {
+          id: "MP001",
+          Academy_Name: "Elite Basketball Academy",
+          specialization: "Basketball",
+          ProfileImage: "/basketball-academy-logo.png",
+          Address: "Civil Lines, Jabalpur",
+          State: "Madhya Pradesh",
+        },
+        {
+          id: "MP002",
+          Academy_Name: "Champions Sports Club",
+          specialization: "Multi-Sport Facility",
+          ProfileImage: "/champions-logo.png",
+          Address: "Napier Town, Jabalpur",
+          State: "Madhya Pradesh",
+        },
+        {
+          id: "MP003",
+          Academy_Name: "NextGen Athletics",
+          specialization: "Basketball & Athletics",
+          ProfileImage: "/nextgen-logo.png",
+          Address: "Gwarighat Road, Jabalpur",
+          State: "Madhya Pradesh",
+        },
+      ],
+      Maharashtra: [
+        {
+          id: "MH001",
+          Academy_Name: "Mumbai Basketball Club",
+          specialization: "Basketball",
+          ProfileImage: "/mbc-logo.png",
+          Address: "Andheri, Mumbai",
+          State: "Maharashtra",
+        },
+        {
+          id: "MH002",
+          Academy_Name: "Pune Sports Academy",
+          specialization: "Multi-Sport Facility",
+          ProfileImage: "/psa-logo.png",
+          Address: "Kothrud, Pune",
+          State: "Maharashtra",
+        },
+      ],
+      // Default academies if state isn't in our mock data
+      default: [
+        {
+          id: "DEF001",
+          Academy_Name: "National Sports Academy",
+          specialization: "Multi-Sport Training",
+          ProfileImage: "/nsa-logo.png",
+          Address: "Sports Complex, New Delhi",
+          State: "Delhi",
+        },
+        {
+          id: "DEF002",
+          Academy_Name: "Youth Development Center",
+          specialization: "Youth Sports",
+          ProfileImage: "/ydc-logo.png",
+          Address: "Stadium Road, Bangalore",
+          State: "Karnataka",
+        },
+        {
+          id: "DEF003",
+          Academy_Name: "Athletic Excellence Institute",
+          specialization: "Performance Training",
+          ProfileImage: "/aei-logo.png",
+          Address: "Sports Village, Chennai",
+          State: "Tamil Nadu",
+        },
+      ],
+    };
+
+    return mockStateMap[state] || mockStateMap["default"];
+  };
 
   // Get academy ID from localStorage or URL params
   const getAcademyId = () => {
-    // Option 2: Get from URL params if your route is like /academy-profile/:id
+    // Check localStorage first
+    const storedId = localStorage.getItem("academyId");
+    if (storedId) return storedId;
+
+    // Then check URL params
     const academyId = window.location.pathname.split("/").pop();
     return academyId;
   };
@@ -24,57 +144,119 @@ const AcademyProfile = () => {
     const fetchAcademyData = async () => {
       try {
         setLoading(true);
-        // Replace with your actual API call
-        // const academyData = await academyService.profile.getProfile(academyId);
+        const academyData = await academyService.profile.getProfile(academyId);
+        console.log("Raw API response:", academyData);
+        // Convert API response to our expected format
+        const formattedData = {
+          academy_id: academyData.Academy_id || "",
+          name: academyData.Name || "",
+          email: academyData.Contact_email || "",
+          established: academyData.Established || academyData.established || "",
+          contact_number:
+            academyData.Contact_phone || academyData.Contact_Number || "",
+          location: academyData.Location || academyData.Address || "",
+          city: academyData.City || "",
+          state: academyData.State || "",
+          country: academyData.Country || "USA",
+          website: academyData.Website_url || academyData.Website || "",
+          description: academyData.Description || academyData.description || "",
+          ProfileImage:
+            academyData.ImageUrl ||
+            academyData.ProfileImage ||
+            "/default-academy-logo.png",
 
-        // Mock data for development
-        const academyData = {
-          academy_id: "ac123456",
-          name: "Elite Soccer Academy",
-          email: "info@elitesocceracademy.com",
-          established: "2010",
-          contact_number: "+1 (555) 123-4567",
-          location: "123 Sports Way, Athletic City",
-          state: "California",
-          country: "USA",
-          website: "www.elitesocceracademy.com",
-          description: "Premier soccer training facility for youth development",
-          ProfileImage: "/academy-logo.png",
-          coaches: [
-            {
-              name: "James Wilson",
-              role: "Head Coach",
-              experience: "15 years",
-            },
-            {
-              name: "Sarah Johnson",
-              role: "Youth Development",
-              experience: "10 years",
-            },
-          ],
-          facilities: [
-            "4 Full-size Soccer Fields",
-            "Indoor Training Facility",
-            "Fitness Center",
-            "Video Analysis Room",
-          ],
-          programs: [
-            {
-              name: "Youth Development",
-              age: "8-12 years",
-              level: "Beginner to Intermediate",
-            },
-            { name: "Elite Training", age: "13-18 years", level: "Advanced" },
-            { name: "Adult Fitness", age: "18+ years", level: "All levels" },
-          ],
-          achievements: [
-            "Regional Youth Championship 2023",
-            "5 Players Drafted to Professional Teams",
-            "Certified Excellence in Youth Development",
-          ],
+          // Default empty arrays for these properties
+          coaches: academyData.coaches || [],
+          facilities: academyData.facilities || [],
+          programs: academyData.programs || [],
+          achievements: academyData.achievements || [],
         };
 
-        setAcademy(academyData);
+        setAcademy(formattedData);
+
+        // Try to fetch activities if available, otherwise use mock data
+        try {
+          const eventsData = await academyService.events.getAcademyEvents(
+            academyId
+          );
+          // Transform events to activities format
+          const formattedActivities = eventsData.map((event, index) => ({
+            id: event.id || index + 1,
+            type: event.type || "event",
+            date: new Date(event.date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            }),
+            description: event.title || event.description,
+          }));
+
+          setActivities(formattedActivities);
+        } catch (eventsErr) {
+          console.warn("Could not fetch academy events:", eventsErr);
+          // Use mock events data since API endpoint isn't implemented
+          const formattedMockActivities = mockEvents.map((event) => ({
+            id: event.id,
+            type: event.type,
+            date: new Date(event.date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            }),
+            description: event.title || event.description,
+          }));
+
+          setActivities(formattedMockActivities);
+        }
+
+        // Fetch suggested connections or use mock data
+        try {
+          // Try to fetch academies from the same state for potential connections
+          const stateAcademies = await academyService.location.getByState(
+            formattedData.state
+          );
+
+          // Filter out the current academy
+          const filteredAcademies = stateAcademies
+            .filter((a) => a.id !== academyId)
+            .slice(0, 3) // Limit to 3 suggestions
+            .map((academy) => ({
+              id: academy.id,
+              name: academy.Academy_Name || academy.name,
+              type: academy.specialization || "Sports Academy",
+              imageUrl:
+                academy.ProfileImage ||
+                academy.logo ||
+                "/default-academy-logo.png",
+            }));
+
+          setSuggestedConnections(filteredAcademies);
+        } catch (connectionsErr) {
+          console.warn(
+            "Could not fetch suggested connections:",
+            connectionsErr
+          );
+
+          // Use mock state academies since API endpoint isn't implemented
+          const mockStateAcademies = getMockStateAcademies(formattedData.state);
+
+          // Filter and format mock academies for display
+          const filteredMockAcademies = mockStateAcademies
+            .filter((a) => a.id !== academyId)
+            .slice(0, 3) // Limit to 3 suggestions
+            .map((academy) => ({
+              id: academy.id,
+              name: academy.Academy_Name || academy.name,
+              type: academy.specialization || "Sports Academy",
+              imageUrl:
+                academy.ProfileImage ||
+                academy.logo ||
+                "/default-academy-logo.png",
+            }));
+
+          setSuggestedConnections(filteredMockAcademies);
+        }
+
         setLoading(false);
       } catch (err) {
         console.error("Error fetching academy data:", err);
@@ -85,83 +267,59 @@ const AcademyProfile = () => {
 
     if (academyId) {
       fetchAcademyData();
+    } else {
+      setError("Academy ID not found. Please log in again.");
+      setLoading(false);
     }
   }, [academyId]);
 
   // Handle profile save
   const handleSaveProfile = async (updatedData) => {
     try {
-      // Replace with your actual API call
-      // const response = await academyService.profile.updateProfile(academyId, updatedData);
-      // Mock response
-      const response = { ...academy, ...updatedData };
-      setAcademy(response);
+      setLoading(true);
+
+      // Map the backend response format to our display format
+      const formattedResponse = {
+        ...(academy || {}),
+        name: updatedData.Academy_Name || academy.name,
+        email: updatedData.Email || academy.email,
+        description: updatedData.Description || academy.description,
+        website: updatedData.Website || academy.website,
+        established: updatedData.established || academy.established,
+        contact_number: updatedData.Contact_Number || academy.contact_number,
+        location: updatedData.Address || academy.location,
+        city: updatedData.City || academy.city,
+        state: updatedData.State || academy.state,
+      };
+
+      setAcademy(formattedResponse);
       setIsEditPopupOpen(false);
+      setLoading(false);
     } catch (err) {
       console.error("Error updating academy profile:", err);
-      // You could add error handling UI here
+      setError("Failed to update profile. Please try again.");
+      setLoading(false);
     }
   };
 
   // Handle profile deletion
   const handleDeleteProfile = async () => {
     try {
-      // Replace with your actual API call
-      // await academyService.profile.deleteProfile(academyId);
+      setLoading(true);
+      await academyService.profile.deleteProfile(academyId);
 
       // Clear user data from localStorage
       localStorage.removeItem("token");
       localStorage.removeItem("academyId");
+
       // Redirect to homepage or login page
       window.location.href = "/academy/login";
     } catch (err) {
       console.error("Error deleting academy profile:", err);
-      // You could add error handling UI here
+      setError("Failed to delete profile. Please try again.");
+      setLoading(false);
     }
   };
-
-  // Mock data for activities and connections
-  const activities = [
-    {
-      id: 1,
-      type: "tournament",
-      date: "2 weeks ago",
-      description: "Hosted Regional Youth Tournament",
-    },
-    {
-      id: 2,
-      type: "training",
-      date: "1 month ago",
-      description: "Launched Advanced Skills Training Program",
-    },
-    {
-      id: 3,
-      type: "achievement",
-      date: "2 months ago",
-      description: "Academy team won district championship",
-    },
-  ];
-
-  const suggestedConnections = [
-    {
-      id: 1,
-      name: "Victory Sports School",
-      type: "Sports Academy",
-      imageUrl: "/default-academy-logo.png",
-    },
-    {
-      id: 2,
-      name: "Champions Club",
-      type: "Youth Sports Club",
-      imageUrl: "/default-academy-logo.png",
-    },
-    {
-      id: 3,
-      name: "Athletic Development Center",
-      type: "Training Facility",
-      imageUrl: "/default-academy-logo.png",
-    },
-  ];
 
   // Show loading state
   if (loading) {
@@ -185,6 +343,9 @@ const AcademyProfile = () => {
     language: academy.language || "English",
     imageUrl: academy.ProfileImage || "/default-academy-logo.png",
   };
+
+  console.log("academyForDisplay", academyForDisplay);
+  console.log("academy", academy);
 
   // Confirmation dialog for account deletion
   const DeleteConfirmationDialog = () => (
@@ -338,7 +499,12 @@ const AcademyProfile = () => {
               "Add a description of your academy, including its philosophy, approach to training, and what makes it unique."}
           </p>
           {!academyForDisplay.description && (
-            <button className="academy-add-btn">+ Add description</button>
+            <button
+              className="academy-add-btn"
+              onClick={() => setIsEditPopupOpen(true)}
+            >
+              + Add description
+            </button>
           )}
         </div>
 
@@ -372,17 +538,32 @@ const AcademyProfile = () => {
             </button>
           </div>
           <div className="academy-activity-cards">
-            {activities.map((activity) => (
-              <div key={activity.id} className="academy-activity-card">
-                <div className="academy-activity-image">
-                  <img src={`/${activity.type}-icon.png`} alt={activity.type} />
+            {activities
+              .filter(
+                (activity) =>
+                  activeTab === "all" ||
+                  (activeTab === "tournaments" &&
+                    activity.type === "tournament") ||
+                  (activeTab === "training" && activity.type === "training")
+              )
+              .map((activity) => (
+                <div key={activity.id} className="academy-activity-card">
+                  <div className="academy-activity-image">
+                    <img
+                      src={`/${activity.type}-icon.png`}
+                      alt={activity.type}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/default-activity-icon.png";
+                      }}
+                    />
+                  </div>
+                  <p className="academy-activity-date">{activity.date}</p>
+                  <p className="academy-activity-description">
+                    {activity.description}
+                  </p>
                 </div>
-                <p className="academy-activity-date">{activity.date}</p>
-                <p className="academy-activity-description">
-                  {activity.description}
-                </p>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
 
@@ -397,10 +578,18 @@ const AcademyProfile = () => {
           </div>
           <div className="academy-section-content">
             {academyForDisplay.coaches &&
+            academyForDisplay.coaches.length > 0 ? (
               academyForDisplay.coaches.map((coach, index) => (
                 <div key={index} className="academy-coach-item">
                   <div className="academy-coach-avatar">
-                    <img src="/default-coach.png" alt={`${coach.name}`} />
+                    <img
+                      src={coach.profileImage || "/default-coach.png"}
+                      alt={`${coach.name}`}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/default-coach.png";
+                      }}
+                    />
                   </div>
                   <div className="academy-coach-details">
                     <h3>{coach.name}</h3>
@@ -410,7 +599,13 @@ const AcademyProfile = () => {
                     </p>
                   </div>
                 </div>
-              ))}
+              ))
+            ) : (
+              <div className="academy-empty-content">
+                <p>No coaching staff added yet.</p>
+                <button className="academy-add-btn">+ Add Coaches</button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -424,12 +619,19 @@ const AcademyProfile = () => {
             </div>
           </div>
           <div className="academy-section-content">
-            <ul className="academy-facilities-list">
-              {academyForDisplay.facilities &&
-                academyForDisplay.facilities.map((facility, index) => (
+            {academyForDisplay.facilities &&
+            academyForDisplay.facilities.length > 0 ? (
+              <ul className="academy-facilities-list">
+                {academyForDisplay.facilities.map((facility, index) => (
                   <li key={index}>{facility}</li>
                 ))}
-            </ul>
+              </ul>
+            ) : (
+              <div className="academy-empty-content">
+                <p>No facilities added yet.</p>
+                <button className="academy-add-btn">+ Add Facilities</button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -443,9 +645,10 @@ const AcademyProfile = () => {
             </div>
           </div>
           <div className="academy-section-content">
-            <div className="academy-programs-grid">
-              {academyForDisplay.programs &&
-                academyForDisplay.programs.map((program, index) => (
+            {academyForDisplay.programs &&
+            academyForDisplay.programs.length > 0 ? (
+              <div className="academy-programs-grid">
+                {academyForDisplay.programs.map((program, index) => (
                   <div key={index} className="academy-program-card">
                     <h3>{program.name}</h3>
                     <div className="academy-program-details">
@@ -461,7 +664,13 @@ const AcademyProfile = () => {
                     </button>
                   </div>
                 ))}
-            </div>
+              </div>
+            ) : (
+              <div className="academy-empty-content">
+                <p>No programs added yet.</p>
+                <button className="academy-add-btn">+ Add Programs</button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -475,9 +684,10 @@ const AcademyProfile = () => {
             </div>
           </div>
           <div className="academy-section-content">
-            <ul className="academy-achievements-list">
-              {academyForDisplay.achievements &&
-                academyForDisplay.achievements.map((achievement, index) => (
+            {academyForDisplay.achievements &&
+            academyForDisplay.achievements.length > 0 ? (
+              <ul className="academy-achievements-list">
+                {academyForDisplay.achievements.map((achievement, index) => (
                   <li key={index}>
                     <div className="academy-achievement-item">
                       <span className="academy-achievement-icon">🏆</span>
@@ -487,23 +697,29 @@ const AcademyProfile = () => {
                     </div>
                   </li>
                 ))}
-            </ul>
+              </ul>
+            ) : (
+              <div className="academy-empty-content">
+                <p>No achievements added yet.</p>
+                <button className="academy-add-btn">+ Add Achievements</button>
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Edit Academy Popup */}
+        {isEditPopupOpen && (
+          <EditAcademyPopup
+            isOpen={isEditPopupOpen}
+            onClose={() => setIsEditPopupOpen(false)}
+            academyData={academyForDisplay}
+            onSave={handleSaveProfile}
+          />
+        )}
+
+        {/* Delete Confirmation Dialog */}
+        {deleteConfirmOpen && <DeleteConfirmationDialog />}
       </div>
-
-      {/* Edit Academy Popup */}
-      {isEditPopupOpen && (
-        <EditAcademyPopup
-          isOpen={isEditPopupOpen}
-          onClose={() => setIsEditPopupOpen(false)}
-          academyData={academyForDisplay}
-          onSave={handleSaveProfile}
-        />
-      )}
-
-      {/* Delete Confirmation Dialog */}
-      {deleteConfirmOpen && <DeleteConfirmationDialog />}
     </div>
   );
 };

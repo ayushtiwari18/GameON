@@ -24,7 +24,11 @@ const EditAcademyPopup = ({ isOpen, onClose, onSave }) => {
 
     // Extract from query params (e.g., ?academyId=123)
     const urlParams = new URLSearchParams(location.search);
-    return urlParams.get("academyId") || urlParams.get("id");
+    return (
+      urlParams.get("academyId") ||
+      urlParams.get("id") ||
+      localStorage.getItem("academyId")
+    );
   };
 
   const academyId = getAcademyIdFromUrl();
@@ -58,19 +62,17 @@ const EditAcademyPopup = ({ isOpen, onClose, onSave }) => {
   const fetchAcademyData = async () => {
     try {
       setLoading(true);
-      const academyData = await academyService.profile.getAcademyProfile(
-        academyId
-      );
+      const academyData = await academyService.profile.getProfile(academyId);
 
       // Map the API response to our form structure with fallback values
       setFormData({
-        academy_name: academyData.Academy_Name || "",
-        email: academyData.Email || "",
+        academy_name: academyData.Name || "",
+        email: academyData.Contact_email || "",
         description: academyData.Description || "",
-        website: academyData.Website || "",
-        established: academyData.established || "",
-        contact_number: academyData.Contact_Number || "",
-        address: academyData.Address || "",
+        website: academyData.Website_url || "",
+        established: academyData.Established || "",
+        contact_number: academyData.Contact_phone || "",
+        address: academyData.Location || "",
         city: academyData.City || "",
         state: academyData.State || "",
       });
@@ -103,21 +105,21 @@ const EditAcademyPopup = ({ isOpen, onClose, onSave }) => {
       setLoading(true);
       setError(null);
 
-      // Map form data to match API expectations with null checks
+      // Map form data to match database column names
       const updateData = {
-        Academy_Name: formData.academy_name || null,
-        Email: formData.email || null,
+        Name: formData.academy_name || null,
+        Contact_email: formData.email || null,
         Description: formData.description || null,
-        Website: formData.website || null,
-        established: formData.established || null,
-        Contact_Number: formData.contact_number || null,
-        Address: formData.address || null,
+        Website_url: formData.website || null,
+        Established: formData.established || null,
+        Contact_phone: formData.contact_number || null,
+        Location: formData.address || null,
         City: formData.city || null,
         State: formData.state || null,
       };
 
       // Call the API to update the academy profile
-      const response = await academyService.profile.updateAcademyProfile(
+      const response = await academyService.profile.updateProfile(
         academyId,
         updateData
       );
@@ -137,10 +139,27 @@ const EditAcademyPopup = ({ isOpen, onClose, onSave }) => {
     }
   };
 
-  const handleImageUpload = () => {
-    // This is a placeholder for image upload functionality
-    // You would need to implement file upload logic here
-    alert("Logo upload functionality not implemented yet");
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const formData = new FormData();
+      formData.append("profileImage", file);
+
+      await academyService.profile.uploadProfileImage(academyId, formData);
+
+      // Refresh the academy data to show the new image
+      fetchAcademyData();
+    } catch (err) {
+      console.error("Failed to upload image:", err);
+      setError("Failed to upload image. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -173,13 +192,15 @@ const EditAcademyPopup = ({ isOpen, onClose, onSave }) => {
                   alt="Academy Logo"
                   className="profile-image"
                 />
-                <button
-                  className="image-upload-button"
-                  onClick={handleImageUpload}
-                  type="button"
-                >
+                <label className="image-upload-button">
                   <Camera size={16} />
-                </button>
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                  />
+                </label>
               </div>
             </div>
 
@@ -194,6 +215,7 @@ const EditAcademyPopup = ({ isOpen, onClose, onSave }) => {
                   value={formData.academy_name}
                   onChange={handleChange}
                   className="form-input"
+                  required
                 />
               </div>
 
@@ -205,6 +227,7 @@ const EditAcademyPopup = ({ isOpen, onClose, onSave }) => {
                   value={formData.email}
                   onChange={handleChange}
                   className="form-input"
+                  required
                 />
               </div>
 
@@ -221,7 +244,7 @@ const EditAcademyPopup = ({ isOpen, onClose, onSave }) => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Established inr</label>
+                <label className="form-label">Established in</label>
                 <input
                   type="number"
                   name="established"
@@ -278,7 +301,16 @@ const EditAcademyPopup = ({ isOpen, onClose, onSave }) => {
                 />
               </div>
 
-              {/* Detailed Information */}
+              <div className="form-group">
+                <label className="form-label">Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  className="form-input"
+                  rows="4"
+                ></textarea>
+              </div>
 
               {/* Action Buttons */}
               <div className="form-actions">
