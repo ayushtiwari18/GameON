@@ -1,16 +1,16 @@
-.app-container {
+.app-container-academy {
   min-height: 100vh;
   background: linear-gradient(to bottom, #fff6db, #fef2a5);
   padding: 8rem;
 }
 
-.main-container {
+.main-container-academy {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
 }
 
-.tournament-title {
+.tournament-title-academy {
   font-size: 4rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
@@ -22,28 +22,28 @@
 }
 
 /* New layout structure */
-.content-layout {
+.content-layout-academy {
   display: grid;
   grid-template-columns: 1fr 300px;
   gap: 2rem;
 }
 
 /* Main content area */
-.main-content {
+.main-content-academy {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
 /* Image grid */
-.image-grid {
+.image-grid-academy {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
-.placeholder-image {
+.placeholder-image-academy {
   background-color: #e5e7eb;
   aspect-ratio: 1;
   border-radius: 0.5rem;
@@ -51,45 +51,48 @@
 }
 
 /* Cards container */
-.cards-container {
+.cards-container-academy {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
 }
 
 /* Card styles */
-.card {
+.card-detail-academy {
   background-color: #e8dbb5;
   border-radius: 0.5rem;
   padding: 1.5rem;
   box-shadow: 8px 8px 5px rgba(0, 0, 0, 0.3) !important;
 }
+.card-detail-academy:hover {
+  transform: scale(1.01);
+}
 
-.card h2 {
+.card-detail-academy h2 {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1rem;
   color: #1a1a1a;
 }
 
-.card ul {
+.card-detail-academy ul {
   list-style-type: disc;
   padding-left: 1.5rem;
 }
 
-.card li {
+.card-detail-academy li {
   margin-bottom: 0.5rem;
   color: #4b5563;
 }
 
-.card p {
+.card-detail-academy p {
   color: #4b5563;
   line-height: 1.6;
 }
 
 /* Info cards grid */
 /* Remove background and shadow from the wrapper */
-.info-cards {
+.info-cards-academy {
   width: 100% !important;
   display: flex;
   gap: 55px;
@@ -101,7 +104,7 @@
 }
 
 /* Ensure individual cards have consistent styling */
-.info-cards .card {
+.info-cards-academy .card-detail-academy {
   background-color: #fef6db; /* Match other card styles */
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
@@ -110,13 +113,13 @@
 }
 
 /* Registration sidebar */
-.registration-sidebar {
+.registration-sidebar-academy {
   position: sticky;
   top: 1rem;
   height: fit-content;
 }
 
-.registration-buttons {
+.registration-buttons-academy {
   display: flex;
   flex-direction: column;
   gap: 1rem;

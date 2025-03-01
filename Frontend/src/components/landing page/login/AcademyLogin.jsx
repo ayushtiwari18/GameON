@@ -34,7 +34,7 @@ function AcademyLogin() {
 
       if (response.academy && response.academy.id) {
         // Make sure we're using the correct ID property and it's a valid UUID
-        navigate(`/academy/${response.academy.id}/home`);
+        navigate(`/academy`);
       } else {
         setError("Could not retrieve academy ID. Please try again.");
       }

@@ -20,7 +20,11 @@ import PlayerProfile from "./components/Player/Profile/PlayerProfile.jsx";
 //Academy imports
 import AcademyLayout from "./components/Academy/AcademyLayout.jsx";
 import AcademyHome from "./components/Academy/Home/AcademyHome.jsx";
-
+import AcademyTournament from "./components/Academy/AcademyTournaments/AcademyTournaments.jsx";
+import AcademyTournamentDetail from "./components/Academy/AcademyTournaments/AcademyTournamentDetails/AcademyTournamentDetail.jsx";
+import AcademyProfile from "./components/Academy/AcademyProfile/AcademyProfile.jsx";
+import MyTournament from "./components/Academy/MyTournaments/MyTournaments.jsx";
+import TournamentCreationForm from "./components/Academy/MyTournaments/TournamentCreationForm.jsx";
 function App() {
   return (
     <>
@@ -39,7 +43,6 @@ function App() {
             </LandingLayout>
           }
         />
-
         {/* Player Routes */}
         <Route
           path="/player"
@@ -99,10 +102,51 @@ function App() {
           }
         />
         <Route
+          path="/academy/:academyId/home"
+          element={
+            <AcademyLayout>
+              <AcademyHome />
+            </AcademyLayout>
+          }
+        />
+        <Route
+          path="/academy/tournament"
+          element={
+            <AcademyLayout>
+              <AcademyTournament />
+            </AcademyLayout>
+          }
+        />
+        <Route
+          path="/academy/tournament/:id"
+          element={
+            <AcademyLayout>
+              <AcademyTournamentDetail />
+            </AcademyLayout>
+          }
+        />
+        <Route
+          path="/academy/:academyId/tournament"
+          element={
+            <AcademyLayout>
+              <MyTournament />
+            </AcademyLayout>
+          }
+        />
+        <Route
+          path="/academy/:academyId/tournament/create-tournament"
+          element={
+            <AcademyLayout>
+              <TournamentCreationForm />
+            </AcademyLayout>
+          }
+        />
+
+        <Route
           path="/academy/profile/:id"
           element={
             <AcademyLayout>
-              <AcademyLayout />
+              <AcademyProfile />
             </AcademyLayout>
           }
         />

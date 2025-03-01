@@ -1,0 +1,96 @@
+.venue-list-academy {
+  min-height: 100vh;
+  background-color: var(--secondary-color);
+  padding: 100px 0;
+  background: linear-gradient(to bottom, #fff6db, #fef2a5);
+}
+
+.venue-list-header-academy {
+  text-align: center;
+  margin-bottom: 3rem; /* Increased margin */
+}
+
+.venue-box-outer-academy {
+  background-color: #e8dbb5;
+  border-radius: 10px;
+  margin: 10px 70px;
+  padding: 40px; /* Increased padding */
+  box-shadow: 8px 8px 16px #4848ff;
+}
+
+.venue-list-header-paragraph-academy {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  margin-top: 20px;
+  color: transparent !important;
+  background-image: linear-gradient(
+    to right,
+    #4848ff 0%,
+    #6060ff 25%,
+    #000000 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
+}
+
+.filters-academy {
+  max-width: 1200px;
+  margin: 0 auto 3rem; /* Increased margin */
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem; /* Increased gap */
+}
+
+.filter-input-academy {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.venues-grid-academy {
+  max-width: 1400px; /* Increased max-width */
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(350px, 1fr)
+  ); /* Increased minmax width */
+  gap: 50px; /* Increased gap between cards */
+  padding: 20px 40px; /* Increased padding */
+  justify-content: center;
+}
+
+/* Added container for better card alignment */
+.venues-grid-academy > * {
+  justify-self: center;
+  width: 100%;
+  max-width: 350px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .venues-grid-academy {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .venue-box-outer-academy {
+    margin: 10px 20px;
+    padding: 20px;
+  }
+
+  .filters-academy {
+    grid-template-columns: 1fr;
+  }
+
+  .venues-grid-academy {
+    padding: 20px;
+    gap: 30px;
+  }
+}
