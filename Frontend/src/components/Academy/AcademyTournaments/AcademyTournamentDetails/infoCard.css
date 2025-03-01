@@ -1,0 +1,35 @@
+.info-card-academy {
+  min-width: min-content;
+  max-width: 100%;
+  height: fit-content;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 10px 10px 2px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease;
+}
+
+.info-card-academy:hover {
+  transform: translateY(-2px);
+}
+
+.info-card-content-academy {
+  padding: 1.25rem;
+  width: 100%;
+}
+
+.info-card-title-academy {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.info-card-text-academy {
+  font-size: 0.875rem;
+  color: #4b5563;
+  line-height: 1.4;
+  white-space: normal;
+  word-wrap: break-word;
+}

@@ -1,6 +1,6 @@
 import React from "react";
 import AcademyNavbar from "./Navbar/AcademyNavbar";
-import Footer from "../landing page/footer/Footer";
+import Footer from "../Player/Footer/Footer";
 const AcademyLayout = ({ children }) => {
   return (
     <>

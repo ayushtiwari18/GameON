@@ -70,17 +70,17 @@ function AcademyNavbar() {
         >
           Home
         </Link>
-        <Link to="/academy/tournaments" className="link-academy">
+        <Link to="/academy/tournament" className="link-academy">
           Tournaments
         </Link>
-        <Link to="/academy/host-a-tournament" className="link-academy">
-          Host Tournament
+        <Link to={`/academy/${academyId}/tournament`} className="link-academy">
+          My Tournaments
         </Link>
         <Link to="/academy/application" className="link-academy">
           Application
         </Link>
-        <Link to="/academy/my-tournaments" className="link-academy">
-          My Tournaments
+        <Link to={`/academy/${academyId}/vacancy`} className="link-academy">
+          My vacancies
         </Link>
         <Link to="/academy/notifications" className="link-academy">
           Notifications
@@ -100,7 +100,7 @@ function AcademyNavbar() {
             <div className="dropdown-content">
               {academyId && (
                 <Link
-                  to={`/academy/${academyId}/profile`}
+                  to={`/academy/profile/${academyId}`}
                   onClick={handleClose}
                 >
                   <Buttoncustom text="Profile" />

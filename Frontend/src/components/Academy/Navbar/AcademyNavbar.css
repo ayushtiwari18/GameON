@@ -65,6 +65,9 @@
   align-items: center;
   gap: 5px;
 }
+.link-academy:focus {
+  outline: none;
+}
 
 .navbar-links-academy li:hover {
   color: #2563eb;

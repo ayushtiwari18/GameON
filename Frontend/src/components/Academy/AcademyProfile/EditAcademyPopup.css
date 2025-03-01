@@ -1,0 +1,295 @@
+/* EditAcademyPopup.css */
+
+/* Overlay styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Glassmorphism container */
+.popup-container {
+  width: 90%;
+  max-width: 800px;
+  background: rgba(243, 233, 204, 0.3);
+  backdrop-filter: blur(15px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 2rem;
+  color: #333;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header styles */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 1rem;
+}
+
+.popup-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: transparent; /* Hide the default text color */
+  background-image: linear-gradient(
+    to right,
+    #4848ff,
+    #000000
+  ); /* Gradient colors */
+  -webkit-background-clip: text; /* Apply gradient to text */
+  background-clip: text; /* Dark Blue */
+  text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4); /* Text shadow */
+}
+
+.close-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Profile image section */
+.profile-image-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.image-container {
+  position: relative;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.5);
+}
+
+.image-upload-button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #3b82f6;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Form styles */
+.edit-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .edit-form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #1a1a1a;
+}
+
+.form-input,
+.form-select,
+textarea.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #333;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus,
+textarea.form-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+textarea.form-input {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Button styles */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  grid-column: 1 / -1;
+}
+
+.cancel-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  background: rgba(200, 200, 200, 0.2);
+  color: #333;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancel-button:hover {
+  background: rgba(200, 200, 200, 0.4);
+}
+
+.save-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.save-button:hover {
+  background-color: #2563eb;
+}
+
+/* Animation effects */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popup-container {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Form row styling for responsiveness */
+.form-row {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom placeholder styling */
+.form-input::placeholder {
+  color: rgba(100, 100, 100, 0.6);
+}
+
+/* Error styling */
+.input-error {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: rgba(239, 68, 68, 0.1);
+  border-radius: 4px;
+  text-align: center;
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.125rem;
+  color: #3b82f6;
+}
+
+/* Glassmorphism card effect */
+.popup-container:before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: inherit;
+  filter: blur(10px);
+  z-index: -1;
+}
+
+/* Custom scrollbar for form */
+.popup-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.popup-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.popup-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.popup-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Handle overflow on small screens */
+@media (max-height: 800px) {
+  .popup-container {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
