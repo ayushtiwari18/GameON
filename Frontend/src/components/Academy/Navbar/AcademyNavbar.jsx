@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Menu, MenuItem, IconButton } from "@mui/material";
 import Buttoncustom from "../../../common/Buttoncustom";
-import academyService from "../../../../../Backend/src/api/services/academyService";
+import academyService from "../../../services/academyService";
 import "./AcademyNavbar.css";
 
 function AcademyNavbar() {

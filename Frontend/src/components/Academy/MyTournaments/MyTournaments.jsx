@@ -9,7 +9,7 @@ import {
   Plus,
 } from "lucide-react";
 import "./MyTournament.css";
-import tournamentService from "../../../../../Backend/src/api/services/tournamentService.js"; // Adjust the path as needed
+import tournamentService from "../../../services/tournamentService.js"; // Adjust the path as needed
 
 const MyTournament = () => {
   const { academyId } = useParams(); // Extract academyId from URL

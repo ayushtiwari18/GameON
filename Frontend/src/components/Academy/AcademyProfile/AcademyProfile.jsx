@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import EditAcademyPopup from "./EditAcademyPopup";
 import "./AcademyProfile.css";
-import academyService from "../../../../../Backend/src/api/services/academyService";
+import academyService from "../../../services/academyService";
 
 const AcademyProfile = () => {
   const [activeTab, setActiveTab] = useState("all");

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import "./FindVacancy.css";
 import Buttoncustom from "../../../../common/Buttoncustom";
-import vacancyService from "../../../../../../Backend/src/api/services/vacancyService.js"; // Adjust path as needed
+import vacancyService from "../../../../services/vacancyService"; // Adjust path as needed
 
 function FindVacancy() {
   // Extract tournamentId from URL parameters

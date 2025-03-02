@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import EditProfilePopup from "./EditProfilePopup";
 import "./PlayerProfile.css";
-import playerService from "../../../../../Backend/src/api/services/playerService";
+import playerService from "../../../services/playerService.js";
 
 const PlayerProfile = () => {
   const [activeTab, setActiveTab] = useState("all");

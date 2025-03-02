@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, Save, Camera } from "lucide-react";
 import { useParams, useLocation } from "react-router-dom";
 import "./EditProfilePopup.css";
-import playerService from "../../../../../Backend/src/api/services/playerService";
+import playerService from "../../../services/playerService.js";
 
 const EditProfilePopup = ({ isOpen, onClose, onSave }) => {
   // Extract playerId from URL parameters

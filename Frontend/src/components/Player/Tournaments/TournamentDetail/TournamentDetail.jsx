@@ -3,7 +3,7 @@ import "./TournamentDetail.css";
 import InfoCard from "./InfoCard";
 import { useParams, useNavigate } from "react-router-dom";
 import Buttoncustom from "../../../../common/Buttoncustom";
-import tournamentService from "../../../../../../Backend/src/api/services/tournamentService.js";
+import tournamentService from "../../../../services/tournamentService";
 import { generateTournamentPDF, formatDate } from "./TournamentPdfGenerator";
 
 function TournamentDetail() {

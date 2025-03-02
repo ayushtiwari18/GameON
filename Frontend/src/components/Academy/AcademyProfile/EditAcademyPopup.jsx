@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, Save, Camera } from "lucide-react";
 import { useParams, useLocation } from "react-router-dom";
 import "./EditAcademyPopup.css";
-import academyService from "../../../../../Backend/src/api/services/academyService";
+import academyService from "../../../services/academyService";
 
 const EditAcademyPopup = ({ isOpen, onClose, onSave }) => {
   // Extract academyId from URL parameters

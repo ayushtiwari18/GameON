@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./AcademySignup.css";
 import { Camera } from "lucide-react";
 import Buttoncustom from "../../../common/Buttoncustom";
-import academyService from "../../../../../Backend/src/api/services/academyService";
+import academyService from "../../../services/academyService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

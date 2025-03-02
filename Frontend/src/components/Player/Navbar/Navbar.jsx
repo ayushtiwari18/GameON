@@ -4,7 +4,7 @@ import "./Navbarplayer.css";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Menu, MenuItem, IconButton } from "@mui/material";
 import Buttoncustom from "../../../common/Buttoncustom";
-import playerService from "../../../../../Backend/src/api/services/playerService.js";
+import playerService from "../../../services/playerService.js";
 
 function Navbar() {
   const [anchorEl, setAnchorEl] = useState(null);

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Calendar, Clock, MapPin, Users, Image, Trophy, X } from "lucide-react";
-import tournamentService from "../../../../../Backend/src/api/services/tournamentService.js";
-import academyService from "../../../../../Backend/src/api/services/academyService.js";
+import tournamentService from "../../../services/tournamentService.js";
+import academyService from "../../../services/academyService.js";
 import "./TournamentCreationForm.css";
 
 const TournamentCreationForm = () => {

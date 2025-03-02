@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import VenueCard from "./VenueCard";
-import tournamentService from "../../../../../Backend/src/api/services/tournamentService.js";
+import tournamentService from "../../../services/tournamentService.js";
 import "./Tournaments.css";
 
 function Tournaments({ type = "tournament" }) {

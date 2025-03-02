@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./PlayerSignup.css";
 import { Camera } from "lucide-react";
 import Buttoncustom from "../../../common/Buttoncustom";
-import playerService from "../../../../../Backend/src/api/services/playerService.js";
+import playerService from "../../../services/playerService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Add this import
 

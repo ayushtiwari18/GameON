@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./FindAcademies.css";
 import AcademyCard from "./AcademyCard";
-import academyService from "../../../../../Backend/src/api/services/academyService";
+import academyService from "../../../services/academyService";
 
 function FindAcademy() {
   const [academies, setAcademies] = useState([]);
