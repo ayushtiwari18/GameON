@@ -25,19 +25,21 @@ const MyTournament = () => {
     const fetchTournaments = async () => {
       try {
         setLoading(true);
+
+        // Use the academy.getAll service method to fetch tournaments
         const response = await tournamentService.academy.getAll(academyId);
 
-        // Add status field based on tournament dates if not already included
-        const processedTournaments = response.map((tournament) => {
-          // This is a simple example - adjust according to your actual data structure
-          const startDate = new Date(
-            tournament.start_date || tournament.date.split("-")[0]
-          );
-          const endDate = new Date(
-            tournament.end_date || tournament.date.split("-")[1]
-          );
+        // Make sure we're handling the response correctly
+        const tournamentsData = response.tournaments || [];
+
+        // Process the tournaments with proper date handling and status
+        const processedTournaments = tournamentsData.map((tournament) => {
+          // Parse dates properly
+          const startDate = new Date(tournament.Start_Date);
+          const endDate = new Date(tournament.End_Date);
           const today = new Date();
 
+          // Determine tournament status based on dates
           let status;
           if (endDate < today) {
             status = "Completed";
@@ -48,13 +50,16 @@ const MyTournament = () => {
           }
 
           return {
-            ...tournament,
-            status: tournament.status || status,
-            // Ensure there's an image property
-            image:
-              tournament.banner_url ||
-              tournament.image ||
-              "/api/placeholder/60/60",
+            id: tournament.Tournament_id,
+            title: tournament.Name,
+            location: tournament.Location,
+            date: `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`,
+            participants: `${tournament.registered_teams || 0}/${
+              tournament.Max_Teams
+            } teams`,
+            status: status,
+            image: tournament.banner_url || "/api/placeholder/60/60",
+            // Add any other fields you need
           };
         });
 
@@ -105,7 +110,7 @@ const MyTournament = () => {
   // Handle tournament click to view details
   const handleViewTournament = (tournamentId) => {
     // Navigate to tournament details page
-    window.location.href = `/academy/${academyId}/tournament/${tournamentId}`;
+    window.location.href = `/academy/tournament/${tournamentId}`;
   };
 
   return (
@@ -182,8 +187,7 @@ const MyTournament = () => {
                         </div>
                         <div className="meta-item">
                           <Calendar size={14} className="meta-icon" />
-                          {tournament.date} •{" "}
-                          {tournament.participants || "0 registered"}
+                          {tournament.date} • {tournament.participants}
                         </div>
                       </div>
                     </div>
@@ -203,6 +207,9 @@ const MyTournament = () => {
             ) : (
               <div className="empty-state">
                 <p>No tournaments found for the selected filter.</p>
+                {activeTab === "All" && tournaments.length === 0 && (
+                  <p>Start by creating your first tournament!</p>
+                )}
               </div>
             )}
           </div>

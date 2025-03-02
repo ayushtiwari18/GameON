@@ -13,5 +13,5 @@ router.get("/:id", tournamentController.getTournamentById);
 router.post("/academy/:id/create", tournamentController.createTournament);
 router.put("/academy/:id/update", tournamentController.updateTournament);
 router.delete("/academy/:id/delete", tournamentController.deleteTournament);
-
+router.get("/academy/:id", tournamentController.getAcademyTournaments);
 module.exports = router;

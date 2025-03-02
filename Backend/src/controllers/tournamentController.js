@@ -101,6 +101,27 @@ const tournamentController = {
     }
   },
 
+  async getAcademyTournaments(req, res) {
+    try {
+      const { id: academyId } = req.params;
+
+      if (!isUUID(academyId)) {
+        return res.status(400).json({ message: "Invalid academy ID format" });
+      }
+
+      const tournaments = await TournamentModel.getTournamentsByAcademyId(
+        academyId
+      );
+      res.status(200).json({ tournaments });
+    } catch (error) {
+      console.error("Error fetching academy tournaments:", error);
+      res.status(500).json({
+        message: "Error fetching academy tournaments",
+        error: error.message,
+      });
+    }
+  },
+
   // Update tournament
   async updateTournament(req, res) {
     try {

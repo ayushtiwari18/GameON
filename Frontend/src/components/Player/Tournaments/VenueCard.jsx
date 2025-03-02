@@ -92,7 +92,7 @@ function VenueCard({ venue, onClick }) {
             ? `${venue.Max_Teams} Teams Max`
             : "Open Registration"}
         </span>
-        <span className="date">{formatDate(venue.Date)}</span>
+        <span className="date">{formatDate(venue.Start_Date)}</span>
       </div>
 
       <div className="content">

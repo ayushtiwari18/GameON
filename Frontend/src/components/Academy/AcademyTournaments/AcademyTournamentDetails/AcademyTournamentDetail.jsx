@@ -101,26 +101,34 @@ function AcademyTournamentDetail() {
     },
     {
       phase: "Group Stage",
-      dates: `${formatDate(tournament.Date)} - ${formatDate(
-        new Date(new Date(tournament.Date).getTime() + 2 * 24 * 60 * 60 * 1000)
+      dates: `${formatDate(tournament.Start_Date)} - ${formatDate(
+        new Date(
+          new Date(tournament.End_Date).getTime() + 2 * 24 * 60 * 60 * 1000
+        )
       )}`,
     },
     {
       phase: "Quarter Finals",
       dates: `${formatDate(
-        new Date(new Date(tournament.Date).getTime() + 3 * 24 * 60 * 60 * 1000)
+        new Date(
+          new Date(tournament.Start_Date).getTime() + 3 * 24 * 60 * 60 * 1000
+        )
       )}`,
     },
     {
       phase: "Semi Finals",
       dates: `${formatDate(
-        new Date(new Date(tournament.Date).getTime() + 4 * 24 * 60 * 60 * 1000)
+        new Date(
+          new Date(tournament.Start_Date).getTime() + 4 * 24 * 60 * 60 * 1000
+        )
       )}`,
     },
     {
       phase: "Finals",
       dates: `${formatDate(
-        new Date(new Date(tournament.Date).getTime() + 5 * 24 * 60 * 60 * 1000)
+        new Date(
+          new Date(tournament.Start_Date).getTime() + 5 * 24 * 60 * 60 * 1000
+        )
       )}`,
     },
   ];

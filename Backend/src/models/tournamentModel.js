@@ -2,13 +2,12 @@ const { pool, poolConnect } = require("../config/database");
 const sql = require("mssql");
 
 class TournamentModel {
-  // Get all tournaments
+  // Get all tournaments past, present, and future
   static async getAllTournaments() {
     await poolConnect;
     const result = await pool.request().query(`
       SELECT * FROM Tournaments 
-      WHERE Date >= GETDATE()
-      ORDER BY Date ASC
+      ORDER BY Start_Date ASC
     `);
     return result.recordset;
   }
@@ -147,6 +146,18 @@ class TournamentModel {
       console.error("Error updating tournament: ", error);
       throw new Error("Failed to update tournament");
     }
+  }
+
+  static async getTournamentsByAcademyId(academyId) {
+    await poolConnect;
+    const result = await pool
+      .request()
+      .input("academyId", sql.UniqueIdentifier, academyId).query(`
+      SELECT * FROM Tournaments 
+      WHERE Academy_id = @academyId
+      ORDER BY Start_Date ASC
+    `);
+    return result.recordset;
   }
 
   // Delete tournament

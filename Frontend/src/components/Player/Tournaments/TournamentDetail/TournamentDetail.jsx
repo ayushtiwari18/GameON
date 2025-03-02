@@ -169,7 +169,8 @@ function TournamentDetail() {
                 <p>{tournament.description}</p>
                 <div className="tournament-meta">
                   <p>
-                    <strong>Date:</strong> {formatDate(tournament.Date)}
+                    <strong>Date:</strong> {formatDate(tournament.Start_Date)} -{" "}
+                    {formatDate(tournament.End_Date)}
                   </p>
                   <p>
                     <strong>Registration Deadline:</strong>{" "}
