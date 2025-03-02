@@ -8,11 +8,19 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // Enable cookies for all requests
 });
 
-// Request interceptor
+// Create form data instance for file uploads
+const formDataInstance = axios.create({
+  baseURL: `${API_URL}/tournament`,
+  withCredentials: true, // Enable cookies for file uploads
+});
+
+// Request interceptor for JSON requests
 axiosInstance.interceptors.request.use(
   (config) => {
+    // With cookie auth, this is optional but kept for backwards compatibility
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -20,24 +28,56 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
+    console.error("Request Error:", error);
     return Promise.reject(error);
   }
 );
 
-// Response interceptor
-axiosInstance.interceptors.response.use(
-  (response) => response.data,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
+// Request interceptor for form data (file uploads)
+formDataInstance.interceptors.request.use(
+  (config) => {
+    // With cookie auth, this is optional but kept for backwards compatibility
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    return Promise.reject(error.response?.data || error.message);
+    // Don't set Content-Type here - axios will set it with boundary for multipart/form-data
+    return config;
+  },
+  (error) => {
+    console.error("Request Error:", error);
+    return Promise.reject(error);
   }
 );
 
+// Response interceptor with better error handling
+const responseHandler = (response) => {
+  return response.data;
+};
+
+const errorHandler = (error) => {
+  console.error("Response Error:", error);
+
+  if (error.response?.status === 401) {
+    // Authentication failed, redirect to login
+    localStorage.removeItem("token");
+    localStorage.removeItem("academyId");
+    window.location.href = "/academy/login";
+    return Promise.reject(new Error("Authentication failed"));
+  }
+
+  const errorMessage =
+    error.response?.data?.message ||
+    error.message ||
+    "An unexpected error occurred";
+  return Promise.reject(new Error(errorMessage));
+};
+
+axiosInstance.interceptors.response.use(responseHandler, errorHandler);
+formDataInstance.interceptors.response.use(responseHandler, errorHandler);
+
 const tournamentService = {
-  // Public endpoints
+  // Public tournament endpoints
   getAll: async () => {
     return axiosInstance.get("/");
   },
@@ -46,54 +86,93 @@ const tournamentService = {
     return axiosInstance.get(`/${tournamentId}`);
   },
 
-  // Academy-specific tournament management
+  search: async (params) => {
+    return axiosInstance.get("/search", { params });
+  },
+
+  // Academy-specific tournament endpoints
   academy: {
-    create: async (academyId, tournamentData) => {
-      return axiosInstance.post(`/academy/${academyId}/create`, {
-        Name: tournamentData.name,
-        Date: tournamentData.date,
-        Location: tournamentData.location,
-        Max_Teams: tournamentData.maxTeams,
-        description: tournamentData.description,
-        category: tournamentData.category,
-      });
+    getAll: async (academyId) => {
+      // Update this to match the backend route structure, if needed
+      return axiosInstance.get(`/academy/${academyId}`);
     },
 
-    update: async (academyId, tournamentId, updateData) => {
-      return axiosInstance.put(`/academy/${academyId}/update`, {
-        tournamentId,
-        ...updateData,
-      });
+    getById: async (academyId, tournamentId) => {
+      // Update this to match the backend route structure, if needed
+      return axiosInstance.get(`/academy/${academyId}/${tournamentId}`);
+    },
+
+    create: async (academyId, tournamentData) => {
+      console.log("Request URL:", `/academy/${academyId}/create`);
+      console.log("Request Data:", tournamentData);
+
+      // Check required fields are present and not empty
+      const requiredFields = [
+        "Name",
+        "Start_Date",
+        "End_Date",
+        "Location",
+        "Max_Teams",
+      ];
+      const missingFields = requiredFields.filter(
+        (field) => !tournamentData[field]
+      );
+
+      if (missingFields.length > 0) {
+        console.error("Missing required fields:", missingFields);
+      }
+
+      return axiosInstance.post(`/academy/${academyId}/create`, tournamentData);
+    },
+
+    update: async (academyId, tournamentId, tournamentData) => {
+      // Updating to match your backend route structure
+      return axiosInstance.put(`/academy/${academyId}/update`, tournamentData);
     },
 
     delete: async (academyId, tournamentId) => {
-      return axiosInstance.delete(`/academy/${academyId}/delete`, {
-        data: { tournamentId },
-      });
+      // Updating to match your backend route structure
+      return axiosInstance.delete(`/academy/${academyId}/delete`);
+    },
+
+    // File upload endpoint for tournament banner - adjust if needed
+    uploadBanner: async (academyId, tournamentId, formData) => {
+      return formDataInstance.post(
+        `/academy/${academyId}/${tournamentId}/banner`,
+        formData
+      );
+    },
+
+    // Tournament participant management - adjust if needed
+    getParticipants: async (academyId, tournamentId) => {
+      return axiosInstance.get(
+        `/academy/${academyId}/${tournamentId}/participants`
+      );
+    },
+
+    approveParticipant: async (academyId, tournamentId, participantId) => {
+      return axiosInstance.put(
+        `/academy/${academyId}/${tournamentId}/participants/${participantId}/approve`
+      );
+    },
+
+    rejectParticipant: async (academyId, tournamentId, participantId) => {
+      return axiosInstance.put(
+        `/academy/${academyId}/${tournamentId}/participants/${participantId}/reject`
+      );
     },
   },
 
-  // Additional tournament-related functionality
-  search: {
-    byDate: async (startDate, endDate) => {
-      return axiosInstance.get("/search", {
-        params: {
-          startDate,
-          endDate,
-        },
-      });
+  // Participant endpoints
+  participant: {
+    register: async (tournamentId, participantData) => {
+      return axiosInstance.post(`/${tournamentId}/register`, participantData);
     },
 
-    byLocation: async (location) => {
-      return axiosInstance.get("/search", {
-        params: { location },
-      });
-    },
-
-    byCategory: async (category) => {
-      return axiosInstance.get("/search", {
-        params: { category },
-      });
+    withdrawRegistration: async (tournamentId, participantId) => {
+      return axiosInstance.delete(
+        `/${tournamentId}/participants/${participantId}`
+      );
     },
   },
 };

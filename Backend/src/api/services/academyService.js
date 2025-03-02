@@ -1,7 +1,8 @@
+// academyService.js - Updated for proper cookie handling
+
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-console.log("API URL:", API_URL); // Debug log
 
 // Create axios instance with default config
 const axiosInstance = axios.create({
@@ -9,39 +10,24 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // Add this for credentials
+  withCredentials: true, // Ensures cookies are sent with requests
 });
 
 // Create form data instance for file uploads
 const formDataInstance = axios.create({
   baseURL: `${API_URL}/academy`,
-  withCredentials: true,
+  withCredentials: true, // Ensures cookies are sent with file upload requests
 });
 
 // Request interceptor for JSON requests
 axiosInstance.interceptors.request.use(
   (config) => {
+    // With cookies, we don't need to manually set the token in headers
+    // But we'll keep this as fallback for environments where cookies might be disabled
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    console.log("Request Config:", config); // Debug log
-    return config;
-  },
-  (error) => {
-    console.error("Request Error:", error);
-    return Promise.reject(error);
-  }
-);
-
-// Request interceptor for form data (file uploads)
-formDataInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    // Don't set Content-Type here - axios will set it correctly with boundary for multipart/form-data
     return config;
   },
   (error) => {
@@ -52,7 +38,6 @@ formDataInstance.interceptors.request.use(
 
 // Response interceptor with better error handling
 const responseHandler = (response) => {
-  console.log("Response Data:", response.data); // Debug log
   return response.data;
 };
 
@@ -60,6 +45,7 @@ const errorHandler = (error) => {
   console.error("Response Error:", error);
 
   if (error.response?.status === 401) {
+    // For cookie-based auth, we should still clear localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("academyId");
     window.location.href = "/academy/login";
@@ -77,15 +63,12 @@ axiosInstance.interceptors.response.use(responseHandler, errorHandler);
 formDataInstance.interceptors.response.use(responseHandler, errorHandler);
 
 const academyService = {
-  // Add this new function at the top level
   getAll: async () => {
     return axiosInstance.get("/");
   },
   auth: {
     register: async (academyData) => {
       try {
-        console.log("Sending registration data:", academyData);
-
         const response = await axiosInstance.post("/register", {
           name: academyData.name,
           contact_person: academyData.contactPerson,
@@ -98,27 +81,16 @@ const academyService = {
           password: academyData.password,
         });
 
-        // Store token if it's in the response
-        if (response.token) {
-          localStorage.setItem("token", response.token);
-
-          // Store academy ID from response
-          if (response.academyId) {
-            localStorage.setItem("academyId", response.academyId);
-          } else {
-            // Extract from token as fallback
-            try {
-              const payload = JSON.parse(atob(response.token.split(".")[1]));
-              if (payload && payload.id) {
-                localStorage.setItem("academyId", payload.id);
-              }
-            } catch (error) {
-              console.error("Error decoding token:", error);
-            }
-          }
+        // With cookie auth, we still store academyId in localStorage for component access
+        if (response.academyId) {
+          localStorage.setItem("academyId", response.academyId);
         }
 
-        console.log("Registration response:", response);
+        // We still store token as fallback for non-cookie environments
+        if (response.token) {
+          localStorage.setItem("token", response.token);
+        }
+
         return response;
       } catch (error) {
         console.error("Registration error:", error);
@@ -131,20 +103,41 @@ const academyService = {
         email: email,
         password: password,
       });
+
+      // With cookie auth, token is stored in HTTP-only cookie by the server
+      // But we still store in localStorage as a backup or reference
       if (response.token) {
         localStorage.setItem("token", response.token);
-        if (response.academy.id) {
-          localStorage.setItem("academyId", response.academy.id);
-        }
       }
+
+      if (response.academy && response.academy.id) {
+        localStorage.setItem("academyId", response.academy.id);
+      }
+
       return response;
     },
 
     logout: async () => {
+      // With cookie auth, the server will clear the cookie
       const response = await axiosInstance.post("/logout");
+
+      // Clear localStorage as well
       localStorage.removeItem("token");
       localStorage.removeItem("academyId");
+
       return response;
+    },
+
+    // Checks if user is authenticated using cookies
+    checkAuth: async () => {
+      try {
+        // This endpoint should verify the cookie and return user info
+        const response = await axiosInstance.get("/check-auth");
+        return { authenticated: true, academyId: response.academyId };
+      } catch (error) {
+        // If the request fails, user is not authenticated
+        return { authenticated: false };
+      }
     },
 
     checkDuplicate: async (data) => {

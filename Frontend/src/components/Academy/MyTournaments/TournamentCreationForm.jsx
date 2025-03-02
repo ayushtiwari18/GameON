@@ -1,25 +1,65 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Calendar, Clock, MapPin, Users, Image, Trophy, X } from "lucide-react";
+import tournamentService from "../../../../../Backend/src/api/services/tournamentService.js";
+import academyService from "../../../../../Backend/src/api/services/academyService.js";
 import "./TournamentCreationForm.css";
 
-const TournamentCreationForm = (academyId) => {
+const TournamentCreationForm = () => {
   const navigate = useNavigate();
+  const { academyId: paramAcademyId } = useParams();
+  const [academyId, setAcademyId] = useState(paramAcademyId || "");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [formData, setFormData] = useState({
-    tournamentName: "",
-    tournamentType: "",
-    startDate: "",
-    endDate: "",
-    registrationDeadline: "",
+    name: "",
+    start_date: "",
+    end_date: "",
     location: "",
-    address: "",
-    maxParticipants: "",
-    entryFee: "",
+    max_teams: "",
     description: "",
     rules: "",
-    prizes: "",
+    registration_deadline: "",
+    entry_fee: "",
+    prize_pool: "",
+    contact_email: "",
+    contact_phone: "",
+    category: "",
+    address: "",
     banner: null,
   });
+
+  // Verify authentication and get academyId from cookie if not in params
+  useEffect(() => {
+    const verifyAuth = async () => {
+      try {
+        // Check if user is authenticated using cookies
+        const { authenticated, academyId: cookieAcademyId } =
+          await academyService.auth.checkAuth();
+
+        // if (!authenticated) {
+        //   // Redirect to login if not authenticated
+        //   navigate("/academy/login");
+        //   return;
+        // }
+
+        // If academyId is not in URL params, use the one from cookie/auth check
+        if (!paramAcademyId && cookieAcademyId) {
+          setAcademyId(cookieAcademyId);
+        }
+      } catch (error) {
+        console.error("Authentication check failed:", error);
+        setError("Authentication failed. Please login again.");
+        navigate("/academy/login");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    verifyAuth();
+  }, [navigate, paramAcademyId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,14 +76,72 @@ const TournamentCreationForm = (academyId) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Tournament data submitted:", formData);
-    // Here you would typically send the data to your backend
-    // After successful submission, close the form
-    navigate(`/academy/${academyId}/tournament/`);
-    onClose();
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      // Validate academyId
+      if (!academyId) {
+        throw new Error("Academy ID is missing. Please login again.");
+      }
+
+      // Map the form data to match the expected API format
+      const tournamentData = {
+        Name: formData.name,
+        Start_Date: formData.start_date,
+        End_Date: formData.end_date,
+        Location: formData.location,
+        Max_Teams: parseInt(formData.max_teams),
+        Description: formData.description,
+        Rules: formData.rules,
+        Registration_Deadline: formData.registration_deadline,
+        Registration_fee: formData.entry_fee,
+        Prize_Pool: formData.prize_pool,
+        Contact_Email: formData.contact_email,
+        Contact_Phone: formData.contact_phone,
+        Academy_ID: academyId,
+        Category: formData.category,
+        Min_Teams: parseInt(formData.min_teams || 5),
+      };
+
+      // Call the API to create the tournament
+      const response = await tournamentService.academy.create(
+        academyId,
+        tournamentData
+      );
+      console.log("Tournament created successfully:", tournamentData);
+
+      console.log("Tournament created successfully:", response);
+
+      // Handle file upload if a tournament was created successfully
+      if (formData.banner && response.id) {
+        const tournamentId = response.id;
+        const formData = new FormData();
+        formData.append("banner", formData.banner);
+
+        // Example implementation - adjust based on your actual API
+        await tournamentService.academy.uploadBanner(
+          academyId,
+          tournamentId,
+          formData
+        );
+      }
+
+      // Redirect on success
+      navigate(`/academy/${academyId}/tournament/`);
+    } catch (err) {
+      console.error("Error creating tournament:", err);
+      setError(err.message || "Failed to create tournament. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (isLoading) {
+    return <div className="loading-container">Loading...</div>;
+  }
 
   return (
     <div className="glass-form-overlay">
@@ -57,6 +155,8 @@ const TournamentCreationForm = (academyId) => {
           </button>
         </div>
 
+        {error && <div className="error-message">{error}</div>}
+
         <form onSubmit={handleSubmit} className="tournament-form">
           <div className="form-section">
             <h3 className="section-title">Tournament Details</h3>
@@ -66,8 +166,8 @@ const TournamentCreationForm = (academyId) => {
               <input
                 type="text"
                 id="tournamentName"
-                name="tournamentName"
-                value={formData.tournamentName}
+                name="name"
+                value={formData.Name}
                 onChange={handleChange}
                 required
                 placeholder="e.g. Junior Equestrian Championship"
@@ -79,8 +179,8 @@ const TournamentCreationForm = (academyId) => {
                 <label htmlFor="tournamentType">Tournament Type*</label>
                 <select
                   id="tournamentType"
-                  name="tournamentType"
-                  value={formData.tournamentType}
+                  name="category"
+                  value={formData.category}
                   onChange={handleChange}
                   required
                 >
@@ -98,8 +198,8 @@ const TournamentCreationForm = (academyId) => {
                   <input
                     type="number"
                     id="maxParticipants"
-                    name="maxParticipants"
-                    value={formData.maxParticipants}
+                    name="max_teams"
+                    value={formData.max_teams}
                     onChange={handleChange}
                     required
                     min="1"
@@ -134,8 +234,8 @@ const TournamentCreationForm = (academyId) => {
                   <input
                     type="date"
                     id="startDate"
-                    name="startDate"
-                    value={formData.startDate}
+                    name="start_date"
+                    value={formData.start_date}
                     onChange={handleChange}
                     required
                   />
@@ -149,8 +249,8 @@ const TournamentCreationForm = (academyId) => {
                   <input
                     type="date"
                     id="endDate"
-                    name="endDate"
-                    value={formData.endDate}
+                    name="end_date"
+                    value={formData.end_date}
                     onChange={handleChange}
                     required
                   />
@@ -167,8 +267,8 @@ const TournamentCreationForm = (academyId) => {
                 <input
                   type="date"
                   id="registrationDeadline"
-                  name="registrationDeadline"
-                  value={formData.registrationDeadline}
+                  name="registration_deadline"
+                  value={formData.registration_deadline}
                   onChange={handleChange}
                   required
                 />
@@ -220,8 +320,8 @@ const TournamentCreationForm = (academyId) => {
                   <input
                     type="number"
                     id="entryFee"
-                    name="entryFee"
-                    value={formData.entryFee}
+                    name="entry_fee"
+                    value={formData.entry_fee}
                     onChange={handleChange}
                     required
                     min="0"
@@ -249,8 +349,8 @@ const TournamentCreationForm = (academyId) => {
                 <Trophy size={16} className="input-icon" />
                 <textarea
                   id="prizes"
-                  name="prizes"
-                  value={formData.prizes}
+                  name="prize_pool"
+                  value={formData.prize_pool}
                   onChange={handleChange}
                   placeholder="Describe prizes and recognition for winners..."
                   rows="2"
@@ -289,8 +389,12 @@ const TournamentCreationForm = (academyId) => {
                 Cancel
               </button>
             </Link>
-            <button type="submit" className="submit-button">
-              Create Tournament
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Creating..." : "Create Tournament"}
             </button>
           </div>
         </form>

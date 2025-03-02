@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import {
   Search,
   Calendar,
@@ -9,53 +9,104 @@ import {
   Plus,
 } from "lucide-react";
 import "./MyTournament.css";
+import tournamentService from "../../../../../Backend/src/api/services/tournamentService.js"; // Adjust the path as needed
 
-const MyTournament = (academyId) => {
+const MyTournament = () => {
+  const { academyId } = useParams(); // Extract academyId from URL
   const [activeTab, setActiveTab] = useState("Upcoming");
+  const [tournaments, setTournaments] = useState([]);
+  const [filteredTournaments, setFilteredTournaments] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Sample tournament data
-  const tournaments = [
-    {
-      id: 1,
-      title: "Junior Equestrian Championship",
-      location: "National Equesterian Academy, Delhi",
-      date: "March 15-17, 2025",
-      participants: "32 registered",
-      status: "Upcoming",
-      image: "/api/placeholder/60/60",
-    },
-    {
-      id: 2,
-      title: "Regional District Competition",
-      location: "National Equesterian Academy, Delhi",
-      date: "April 5-6, 2025",
-      participants: "24 registered",
-      status: "Upcoming",
-      image: "/api/placeholder/60/60",
-    },
-    {
-      id: 3,
-      title: "Division Masters",
-      location: "National Equesterian Academy, Delhi",
-      date: "February 10-12, 2025",
-      participants: "48 registered",
-      status: "Completed",
-      image: "/api/placeholder/60/60",
-    },
-    {
-      id: 4,
-      title: "Beginners Horse Riding Contest",
-      location: "National Equesterian Academy, Delhi",
-      date: "January 25-26, 2025",
-      participants: "16 registered",
-      status: "Completed",
-      image: "/api/placeholder/60/60",
-    },
-  ];
+  // Fetch tournaments from backend
+  useEffect(() => {
+    const fetchTournaments = async () => {
+      try {
+        setLoading(true);
+        const response = await tournamentService.academy.getAll(academyId);
 
-  const filteredTournaments = tournaments.filter(
-    (tournament) => activeTab === "All" || tournament.status === activeTab
-  );
+        // Add status field based on tournament dates if not already included
+        const processedTournaments = response.map((tournament) => {
+          // This is a simple example - adjust according to your actual data structure
+          const startDate = new Date(
+            tournament.start_date || tournament.date.split("-")[0]
+          );
+          const endDate = new Date(
+            tournament.end_date || tournament.date.split("-")[1]
+          );
+          const today = new Date();
+
+          let status;
+          if (endDate < today) {
+            status = "Completed";
+          } else if (startDate <= today && today <= endDate) {
+            status = "Ongoing";
+          } else {
+            status = "Upcoming";
+          }
+
+          return {
+            ...tournament,
+            status: tournament.status || status,
+            // Ensure there's an image property
+            image:
+              tournament.banner_url ||
+              tournament.image ||
+              "/api/placeholder/60/60",
+          };
+        });
+
+        setTournaments(processedTournaments);
+        setError(null);
+      } catch (err) {
+        console.error("Failed to fetch tournaments:", err);
+        setError("Failed to load tournaments. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (academyId) {
+      fetchTournaments();
+    }
+  }, [academyId]);
+
+  // Filter tournaments based on active tab and search term
+  useEffect(() => {
+    let filtered = tournaments;
+
+    // Filter by status/tab
+    if (activeTab !== "All") {
+      filtered = filtered.filter(
+        (tournament) => tournament.status === activeTab
+      );
+    }
+
+    // Filter by search term
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (tournament) =>
+          tournament.title?.toLowerCase().includes(term) ||
+          tournament.location?.toLowerCase().includes(term)
+      );
+    }
+
+    setFilteredTournaments(filtered);
+  }, [tournaments, activeTab, searchTerm]);
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Handle tournament click to view details
+  const handleViewTournament = (tournamentId) => {
+    // Navigate to tournament details page
+    window.location.href = `/academy/${academyId}/tournament/${tournamentId}`;
+  };
 
   return (
     <div className="tournaments-page">
@@ -82,6 +133,8 @@ const MyTournament = (academyId) => {
                 type="text"
                 placeholder="Search tournaments..."
                 className="search-input"
+                value={searchTerm}
+                onChange={handleSearchChange}
               />
             </div>
           </div>
@@ -103,9 +156,17 @@ const MyTournament = (academyId) => {
 
           {/* Tournament List */}
           <div className="tournament-list">
-            {filteredTournaments.length > 0 ? (
+            {loading ? (
+              <div className="loading-state">Loading tournaments...</div>
+            ) : error ? (
+              <div className="error-state">{error}</div>
+            ) : filteredTournaments.length > 0 ? (
               filteredTournaments.map((tournament) => (
-                <div key={tournament.id} className="tournament-item">
+                <div
+                  key={tournament.id}
+                  className="tournament-item"
+                  onClick={() => handleViewTournament(tournament.id)}
+                >
                   <div className="tournament-info">
                     <img
                       src={tournament.image}
@@ -121,7 +182,8 @@ const MyTournament = (academyId) => {
                         </div>
                         <div className="meta-item">
                           <Calendar size={14} className="meta-icon" />
-                          {tournament.date} • {tournament.participants}
+                          {tournament.date} •{" "}
+                          {tournament.participants || "0 registered"}
                         </div>
                       </div>
                     </div>

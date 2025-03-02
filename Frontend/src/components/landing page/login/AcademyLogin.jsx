@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./AcademyLogin.css";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Buttoncustom from "../../../common/Buttoncustom";
 import academyService from "../../../../../Backend/src/api/services/academyService";
 
@@ -9,18 +9,29 @@ function AcademyLogin() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const navigate = useNavigate();
-  const { academyId } = useParams();
 
   useEffect(() => {
-    // Check if user is already logged in
-    const token = localStorage.getItem("token");
-    const storedAcademyId = localStorage.getItem("academyId");
+    // Check if user is already authenticated via cookies
+    const checkAuthentication = async () => {
+      try {
+        const { authenticated, academyId } =
+          await academyService.auth.checkAuth();
 
-    if (token && storedAcademyId) {
-      // If academyId is available, navigate to academy home
-      navigate(`/academy`);
-    }
+        if (authenticated && academyId) {
+          // User is already authenticated with valid cookie
+          navigate(`/academy`);
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        // Continue to login page if authentication check fails
+      } finally {
+        setCheckingAuth(false);
+      }
+    };
+
+    checkAuthentication();
   }, [navigate]);
 
   const handleSubmit = async (e) => {
@@ -33,7 +44,7 @@ function AcademyLogin() {
       setLoading(false);
 
       if (response.academy && response.academy.id) {
-        // Make sure we're using the correct ID property and it's a valid UUID
+        // With cookie auth, we don't need to pass parameters in URL
         navigate(`/academy`);
       } else {
         setError("Could not retrieve academy ID. Please try again.");
@@ -44,6 +55,11 @@ function AcademyLogin() {
       console.error("Login error:", err);
     }
   };
+
+  // Show loading state while checking authentication
+  if (checkingAuth) {
+    return <div className="login-container-academy">Loading...</div>;
+  }
 
   return (
     <div className="login-container-academy">

@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser"); // Add this
 require("dotenv").config();
 
 const playerRoutes = require("./src/routes/playerRoutes");
@@ -20,6 +21,9 @@ const app = express();
 //   console.log("----------------------\n");
 //   next();
 // });
+
+// Add cookie parser before other middleware
+app.use(cookieParser());
 
 // Middleware
 app.use(

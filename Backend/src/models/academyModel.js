@@ -171,7 +171,7 @@ class AcademyModel {
         SELECT * FROM AcademyUpdates 
         WHERE Academy_id = @academyId 
         AND Publish_date >= DATEADD(month, -1, GETDATE())
-        ORDER BY Publish_date DESC
+        ORDER BY Publish_date DESC 
       `);
 
     return result.recordset;

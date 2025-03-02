@@ -46,26 +46,50 @@ const tournamentController = {
   async createTournament(req, res) {
     try {
       const { id: academyId } = req.params;
+
+      // Validate academyId is a valid UUID
+      if (!isUUID(academyId)) {
+        return res.status(400).json({ message: "Invalid academy ID format" });
+      }
+
+      // Map the request body to match database field names
       const tournamentData = {
         academyId,
-        ...req.body,
+        Name: req.body.Name,
+        Start_Date: req.body.Start_Date,
+        End_Date: req.body.End_Date,
+        Location: req.body.Location,
+        Max_Teams: req.body.Max_Teams,
+        description: req.body.Description,
+        category: req.body.Category,
+        registration_deadline: req.body.Registration_Deadline,
+        registration_fee: req.body.Registration_fee,
+        prize_pool: req.body.Prize_Pool,
+        rules: req.body.Rules,
+        contact_phone: req.body.Contact_phone,
+        contact_email: req.body.Contact_email,
+        Min_Teams: req.body.Min_Teams,
       };
 
       // Validate required fields
-      const requiredFields = ["Name", "Date", "Location", "Max_Teams"];
-
-      console.log(tournamentData);
-      console.log(requiredFields);
-
+      const requiredFields = [
+        "Name",
+        "Start_Date",
+        "End_Date",
+        "Location",
+        "Max_Teams",
+      ];
       const missingFields = requiredFields.filter(
         (field) => !tournamentData[field]
       );
+
       if (missingFields.length > 0) {
         return res.status(400).json({
           message: `Missing required fields: ${missingFields.join(", ")}`,
         });
       }
-
+      // Add this right before the tournamentService.academy.create() call
+      console.log("Submitting tournament data:", tournamentData);
       await TournamentModel.createTournament(tournamentData);
       res.status(201).json({ message: "Tournament created successfully" });
     } catch (error) {
@@ -82,6 +106,10 @@ const tournamentController = {
     try {
       const { id: academyId } = req.params;
       const { tournamentId } = req.body;
+
+      if (!isUUID(academyId)) {
+        return res.status(400).json({ message: "Invalid academy ID format" });
+      }
 
       if (!isUUID(tournamentId)) {
         return res
@@ -116,6 +144,10 @@ const tournamentController = {
     try {
       const { id: academyId } = req.params;
       const { tournamentId } = req.body;
+
+      if (!isUUID(academyId)) {
+        return res.status(400).json({ message: "Invalid academy ID format" });
+      }
 
       if (!isUUID(tournamentId)) {
         return res

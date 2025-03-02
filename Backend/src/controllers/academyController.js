@@ -234,40 +234,32 @@ const academyController = {
   },
 
   // Academy Login Handler
+  // Inside loginAcademy method
   async loginAcademy(req, res) {
     try {
       const { email, password } = req.body;
 
-      // Input validation
       if (!email || !password) {
-        return res.status(400).json({
-          message: "Email and password are required",
-        });
+        return res
+          .status(400)
+          .json({ message: "Email and password are required" });
       }
-
-      console.log("Login request for academy:", email, password);
 
       const academy = await AcademyModel.findByEmail(email);
       if (!academy) {
         return res.status(404).json({ message: "Academy not found" });
       }
-      console.log("Academy found:", academy.Password);
 
-      // Add defensive check for stored password
-      if (!academy.Password) {
-        console.error("Stored password hash is missing for academy:", email);
+      // Ensure we correctly retrieve password field
+      const storedPassword = academy.password || academy.Password;
+      if (!storedPassword) {
+        console.error("No password found for academy:", email);
         return res.status(500).json({ message: "Authentication error" });
       }
 
-      // Validate password
-      try {
-        const validPassword = await bcrypt.compare(password, academy.Password);
-        if (!validPassword) {
-          return res.status(401).json({ message: "Invalid password" });
-        }
-      } catch (bcryptError) {
-        console.error("Password comparison error:", bcryptError);
-        return res.status(500).json({ message: "Authentication error" });
+      const validPassword = await bcrypt.compare(password, storedPassword);
+      if (!validPassword) {
+        return res.status(401).json({ message: "Invalid password" });
       }
 
       const token = jwt.sign(
@@ -280,8 +272,16 @@ const academyController = {
         { expiresIn: "24h" }
       );
 
+      // Set HTTP-only cookie
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Use secure in production
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      });
+
       res.json({
-        token,
+        token, // Still send token in response for local storage if needed
         academy: {
           id: academy.Academy_id,
           name: academy.name,
@@ -290,15 +290,21 @@ const academyController = {
       });
     } catch (error) {
       console.error("Login error:", error);
-      res.status(500).json({
-        message: "Error during login",
-        error: error.message,
-      });
+      res
+        .status(500)
+        .json({ message: "Error during login", error: error.message });
     }
   },
 
+  // In your logout method
   async logoutAcademy(req, res) {
-    res.clearCookie("token");
+    // Clear the cookie
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
+
     res.json({ message: "Logged out successfully", redirect: "/home" });
   },
 
