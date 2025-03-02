@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./PlayerLogin.css";
 import { Link, useNavigate } from "react-router-dom";
 import Buttoncustom from "../../../common/Buttoncustom";
-import playerService from "../../../../../Backend/src/api/services/playerService";
+import playerService from "../../../services/playerService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./AcademyLogin.css";
 import { Link, useNavigate } from "react-router-dom";
 import Buttoncustom from "../../../common/Buttoncustom";
-import academyService from "../../../../../Backend/src/api/services/academyService";
+import academyService from "../../../services/academyService";
 
 function AcademyLogin() {
   const [email, setEmail] = useState("");
