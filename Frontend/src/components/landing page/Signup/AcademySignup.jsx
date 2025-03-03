@@ -135,33 +135,13 @@ function AcademySignup() {
 
       const response = await academyService.auth.register(academyData);
 
-      if (response && response.token) {
-        // Save token and academy ID
-        localStorage.setItem("token", response.token);
-
-        // If there's a profile image, upload it
-        if (profileImage && response.academyId) {
+      // With cookie-based auth, we don't need to extract IDs or tokens
+      if (response && response.success) {
+        // If there's a profile image, upload it using the session cookie
+        if (profileImage) {
           const imageFormData = new FormData();
           imageFormData.append("profileImage", profileImage);
-          await academyService.profile.uploadProfileImage(
-            response.academyId,
-            imageFormData
-          );
-        }
-
-        // If the response includes the academy ID, save it
-        if (response.academyId) {
-          localStorage.setItem("academyId", response.academyId);
-        } else {
-          // Try to extract from token
-          try {
-            const payload = JSON.parse(atob(response.token.split(".")[1]));
-            if (payload && payload.id) {
-              localStorage.setItem("academyId", payload.id);
-            }
-          } catch (error) {
-            console.error("Error decoding token:", error);
-          }
+          await academyService.profile.uploadProfileImage(imageFormData);
         }
 
         toast.success("Registration successful!");

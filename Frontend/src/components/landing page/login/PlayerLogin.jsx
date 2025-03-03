@@ -5,13 +5,42 @@ import Buttoncustom from "../../../common/Buttoncustom";
 import playerService from "../../../services/playerService";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../../../context/AuthContext";
+import { useEffect } from "react";
 
 const PlayerLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [checkingAuth, setCheckingAuth] = useState(true); // Add this line
+  const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is already authenticated via cookies
+    const checkAuthentication = async () => {
+      try {
+        const { authenticated } = await playerService.auth.checkAuth();
+
+        if (authenticated) {
+          // User is already authenticated with valid cookie
+          navigate(`/player`);
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        // Continue to login page if authentication check fails
+      } finally {
+        setCheckingAuth(false);
+      }
+    };
+
+    checkAuthentication();
+  }, [navigate]);
+
+  // Show loading state while checking authentication
+  if (checkingAuth) {
+    return <div className="login-container">Loading...</div>;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,24 +53,16 @@ const PlayerLogin = () => {
 
     try {
       setLoading(true);
-      // Call the login method from playerService
-      const response = await playerService.auth.login(email, password);
+      // Use auth context's login method instead
+      await login(email, password, "player");
 
-      // If login successful, show success toast and redirect
-      if (response && response.token) {
-        // Store user ID if available
-        if (response.playerId) {
-          localStorage.setItem("playerId", response.playerId);
-        }
+      // Show success message
+      toast.success("Login successful! Redirecting to dashboard...");
 
-        // Show success message
-        toast.success("Login successful! Redirecting to dashboard...");
-
-        // Short delay before redirect for toast to be visible
-        setTimeout(() => {
-          navigate("/player");
-        }, 1500);
-      }
+      // Short delay before redirect for toast to be visible
+      setTimeout(() => {
+        navigate("/player");
+      }, 1500);
     } catch (err) {
       console.error("Login error:", err);
       // Show error toast with the error message

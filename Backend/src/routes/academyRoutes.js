@@ -46,6 +46,7 @@ router.get(
   authenticateToken,
   academyController.getCalendarEvents
 );
+router.get("/check-auth", authenticateToken, academyController.checkAuth);
 router.get("/:id/updates", authenticateToken, academyController.getUpdates);
 router.get(
   "/:id/tournaments",

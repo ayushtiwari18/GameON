@@ -62,7 +62,7 @@ function Navbar() {
       // Even if API logout fails, clear local storage and redirect
       localStorage.removeItem("token");
       localStorage.removeItem("playerId");
-      navigate("/");
+      navigate("/player/login");
     }
   };
 

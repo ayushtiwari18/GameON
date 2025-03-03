@@ -1,8 +1,9 @@
 // src/controllers/playerController.js
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 const PlayerModel = require("../models/playerModel");
-const { jwtSecret } = require("../config/auth");
+
+const authUtils = require("../utils/authUtils"); // Import the helper
 
 const playerController = {
   // Existing register and login methods remain the same...
@@ -51,15 +52,8 @@ const playerController = {
       const newPlayer = await PlayerModel.findByEmail(Email);
 
       // Generate a token for the newly registered user
-      const token = jwt.sign(
-        {
-          id: newPlayer.Player_id, // Include the ID in the token
-          email: Email,
-          role: "player",
-        },
-        jwtSecret,
-        { expiresIn: "24h" }
-      );
+      // Use the helper to set up auth
+      const token = authUtils.setupAuthSession(req, res, newPlayer, "player");
 
       res.status(201).json({
         message: "Player registered successfully",
@@ -97,22 +91,15 @@ const playerController = {
         return res.status(401).json({ message: "Invalid password" });
       }
 
-      const token = jwt.sign(
-        {
-          id: player.Player_id,
-          email: player.Email,
-          role: "player",
-        },
-        jwtSecret,
-        { expiresIn: "24h" }
-      );
+      // Use the helper to set up auth
+      const token = authUtils.setupAuthSession(req, res, player, "player");
 
       res.json({
         token,
         player: {
           id: player.Player_id,
           email: player.Email,
-          name: player.Name,
+          name: player.Full_Name,
         },
       });
     } catch (error) {
@@ -120,10 +107,36 @@ const playerController = {
       next(error);
     }
   },
+
   async logout(req, res) {
-    // Clear token from client-side
-    res.clearCookie("token");
-    res.json({ message: "Logged out successfully", redirect: "/home" });
+    // Clear session
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        return res.status(500).json({ message: "Logout failed" });
+      }
+
+      // Clear the auth cookie
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      });
+
+      // Clear session cookie
+      res.clearCookie("gameon.sid");
+
+      res.json({ message: "Logged out successfully", redirect: "/home" });
+    });
+  },
+  async logout(req, res) {
+    try {
+      await authUtils.clearAuthSession(req, res);
+      res.json({ message: "Logged out successfully", redirect: "/home" });
+    } catch (error) {
+      console.error("Logout error:", error);
+      res.status(500).json({ message: "Logout failed" });
+    }
   },
 
   async getHome(req, res, next) {
@@ -224,6 +237,31 @@ const playerController = {
       res.json({ message: "Player deleted successfully" });
     } catch (error) {
       next(error);
+    }
+  },
+  // In playerController.js
+  async checkAuth(req, res) {
+    try {
+      // Authentication middleware will have already verified the user
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      // If the user is not a player, return unauthorized
+      if (req.user.role !== "player") {
+        return res.status(401).json({ message: "Not a player account" });
+      }
+
+      // Return basic user info
+      return res.status(200).json({
+        playerId: req.user.id,
+        playerName: req.user.name,
+        email: req.user.email,
+        role: req.user.role,
+      });
+    } catch (error) {
+      console.error("Auth check error:", error);
+      res.status(500).json({ message: "Error checking authentication" });
     }
   },
   // In playerController.js

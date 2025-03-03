@@ -10,6 +10,7 @@ router.post("/login", playerController.login);
 router.post("/logout", playerController.logout); // Protected route
 
 // Protected routes
+router.get("/check-auth", authenticateToken, playerController.checkAuth);
 router.get("/:id/home", playerController.getHome); // Not working
 router.get("/:id/profile", playerController.getProfile);
 router.get("/skill-set/:skillSet", playerController.getBySkillSet);

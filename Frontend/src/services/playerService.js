@@ -1,57 +1,8 @@
 // src/api/services/playerService.js
 
-import axios from "axios";
+import createAxiosInstance from "./axiosConfig";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-console.log("API URL:", API_URL); // Debug log
-
-// Create axios instance with default config
-const axiosInstance = axios.create({
-  baseURL: `${API_URL}/player`,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  withCredentials: true, // Add this for credentials
-});
-
-// Request interceptor
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    console.log("Request Config:", config); // Debug log
-    return config;
-  },
-  (error) => {
-    console.error("Request Error:", error);
-    return Promise.reject(error);
-  }
-);
-
-// Response interceptor with better error handling
-axiosInstance.interceptors.response.use(
-  (response) => {
-    console.log("Response Data:", response.data); // Debug log
-    return response.data;
-  },
-  (error) => {
-    console.error("Response Error:", error);
-
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/signin";
-      return Promise.reject(new Error("Authentication failed"));
-    }
-
-    const errorMessage =
-      error.response?.data?.message ||
-      error.message ||
-      "An unexpected error occurred";
-    return Promise.reject(new Error(errorMessage));
-  }
-);
+const axiosInstance = createAxiosInstance("/player");
 
 const playerService = {
   auth: {
@@ -74,57 +25,70 @@ const playerService = {
           Language: playerData.language || "English",
         });
 
-        // Store token if it's in the response
-        if (response.token) {
-          localStorage.setItem("token", response.token);
-
-          // Store player ID from response
-          if (response.player && response.player.id) {
-            localStorage.setItem("playerId", response.player.id);
-          } else {
-            // Extract from token as fallback
-            try {
-              const payload = JSON.parse(atob(response.token.split(".")[1]));
-              if (payload && payload.id) {
-                localStorage.setItem("playerId", payload.id);
-              }
-            } catch (error) {
-              console.error("Error decoding token:", error);
-            }
-          }
+        // Even with HTTP-only cookies, we still store non-sensitive data locally
+        // for UI state management
+        if (response.player && response.player.id) {
+          localStorage.setItem("playerId", response.player.id);
+          localStorage.setItem("playerName", response.player.name);
+          localStorage.setItem("playerRole", "player");
         }
 
-        console.log("Registration response:", response);
         return response;
       } catch (error) {
         console.error("Registration error:", error);
         throw error;
       }
     },
+
     login: async (email, password) => {
       const response = await axiosInstance.post("/login", {
         Email: email,
         Password: password,
       });
-      if (response.token) {
-        localStorage.setItem("token", response.token);
+
+      // Store non-sensitive user data for UI
+      if (response.player) {
+        localStorage.setItem("playerId", response.player.id);
+        localStorage.setItem("playerName", response.player.name);
+        localStorage.setItem("playerRole", "player");
       }
+
       return response;
     },
 
     logout: async () => {
       const response = await axiosInstance.post("/logout");
-      localStorage.removeItem("token");
+      // Clear all player data from localStorage
+      localStorage.removeItem("playerId");
+      localStorage.removeItem("playerName");
+      localStorage.removeItem("playerRole");
+      localStorage.removeItem("token"); // Remove token if it exists
       return response;
     },
+
+    // Check authentication status
+    checkAuth: async () => {
+      try {
+        const response = await axiosInstance.get("/check-auth");
+        return {
+          authenticated: true,
+          playerId: response.playerId,
+          playerName: response.playerName,
+        };
+      } catch (error) {
+        return { authenticated: false };
+      }
+    },
+
+    // Add this to the auth object in playerService.js
+    checkDuplicate: async (data) => {
+      return axiosInstance.post("/check-duplicate", {
+        Email: data.Email,
+        Contact_number: data.Contact_number,
+      });
+    },
   },
-  // Add this to the auth object in playerService.js
-  checkDuplicate: async (data) => {
-    return axiosInstance.post("/check-duplicate", {
-      Email: data.Email,
-      Contact_number: data.Contact_number,
-    });
-  },
+
   // Profile endpoints
   profile: {
     getHome: async (playerId) => {

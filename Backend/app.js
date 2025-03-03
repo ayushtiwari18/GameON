@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const cookieParser = require("cookie-parser"); // Add this
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const playerRoutes = require("./src/routes/playerRoutes");
@@ -8,6 +9,7 @@ const academyRoutes = require("./src/routes/academyRoutes");
 const vacancyRoutes = require("./src/routes/vacancyRoutes");
 const tournamentRoutes = require("./src/routes/tournamentRoutes");
 const errorHandler = require("./src/middleware/errorHandler");
+const auth = require("./src/middleware/auth");
 
 const app = express();
 
@@ -28,13 +30,31 @@ app.use(cookieParser());
 // Middleware
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? process.env.FRONTEND_URL
-        : "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174", // Add this to allow requests from port 5174
+      process.env.FRONTEND_URL, // Keep the production frontend URL
+    ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allow required methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// Enhance the session middleware configuration
+// Session configuration
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "GAMEONISHERE",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+    name: "gameon.sid", // Custom name for the session cookie
   })
 );
 
@@ -53,6 +73,35 @@ app.use("/player", playerRoutes);
 app.use("/academy", academyRoutes);
 app.use("/vacancy", vacancyRoutes);
 app.use("/tournament", tournamentRoutes);
+
+// Add to your main app.js or in a test route file
+app.get("/api/test-session", (req, res) => {
+  if (req.session.views) {
+    req.session.views++;
+    res.json({
+      message: `You have visited this page ${req.session.views} times`,
+      sessionID: req.sessionID,
+      session: req.session,
+      cookies: req.cookies,
+    });
+  } else {
+    req.session.views = 1;
+    res.json({
+      message: "Welcome to this page for the first time!",
+      sessionID: req.sessionID,
+      session: req.session,
+      cookies: req.cookies,
+    });
+  }
+});
+
+// Test auth
+app.get("/api/protected", auth.authenticateToken, (req, res) => {
+  res.json({
+    message: "You have accessed a protected route",
+    user: req.user,
+  });
+});
 
 // Error handling
 app.use((err, req, res, next) => {

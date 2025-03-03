@@ -113,23 +113,13 @@ function PlayerSignup() {
       // If no duplicates, proceed with registration
       const response = await playerService.auth.register(formData);
 
-      if (response && response.token) {
-        // Save token and player ID immediately
-        localStorage.setItem("token", response.token);
-
-        // If the response includes the player ID, save it
-        if (response.playerId) {
-          localStorage.setItem("playerId", response.playerId);
-        } else {
-          // Try to extract from token
-          try {
-            const payload = JSON.parse(atob(response.token.split(".")[1]));
-            if (payload && payload.id) {
-              localStorage.setItem("playerId", payload.id);
-            }
-          } catch (error) {
-            console.error("Error decoding token:", error);
-          }
+      // If response contains player data, registration was successful
+      if (response && response.success) {
+        // If there's a profile image, upload it using the session cookie
+        if (profileImage) {
+          const imageFormData = new FormData();
+          imageFormData.append("profileImage", profileImage);
+          await playerService.profile.uploadProfileImage(imageFormData);
         }
 
         toast.success("Registration successful!");

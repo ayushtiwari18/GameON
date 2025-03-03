@@ -3,6 +3,7 @@ import "./AcademyLogin.css";
 import { Link, useNavigate } from "react-router-dom";
 import Buttoncustom from "../../../common/Buttoncustom";
 import academyService from "../../../services/academyService";
+import { useAuth } from "../../../context/AuthContext";
 
 function AcademyLogin() {
   const [email, setEmail] = useState("");
@@ -11,15 +12,16 @@ function AcademyLogin() {
   const [error, setError] = useState("");
   const [checkingAuth, setCheckingAuth] = useState(true);
   const navigate = useNavigate();
+  const { login } = useAuth(); // Use the context's login function
 
   useEffect(() => {
     // Check if user is already authenticated via cookies
     const checkAuthentication = async () => {
       try {
-        const { authenticated, academyId } =
-          await academyService.auth.checkAuth();
+        const { authenticated } = await academyService.auth.checkAuth();
 
-        if (authenticated && academyId) {
+        if (authenticated) {
+          // No need to extract ID from URL or localStorage
           // User is already authenticated with valid cookie
           navigate(`/academy`);
         }
@@ -40,15 +42,10 @@ function AcademyLogin() {
     setError("");
 
     try {
-      const response = await academyService.auth.login(email, password);
+      // Use the context's login function instead of direct service call
+      await login(email, password, "academy");
       setLoading(false);
-
-      if (response.academy && response.academy.id) {
-        // With cookie auth, we don't need to pass parameters in URL
-        navigate(`/academy`);
-      } else {
-        setError("Could not retrieve academy ID. Please try again.");
-      }
+      navigate(`/academy`);
     } catch (err) {
       setLoading(false);
       setError(err.message || "Login failed. Please check your credentials.");

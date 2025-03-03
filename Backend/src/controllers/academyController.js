@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { jwtSecret } = require("../config/auth");
 const { v4: isUUID } = require("uuid");
+const authUtils = require("../utils/authUtils"); // Import the helper
 
 // Get academy details by email
 const getAcademyByEmail = async (req, res) => {
@@ -239,6 +240,7 @@ const academyController = {
     try {
       const { email, password } = req.body;
 
+      // Validate credentials
       if (!email || !password) {
         return res
           .status(400)
@@ -250,7 +252,6 @@ const academyController = {
         return res.status(404).json({ message: "Academy not found" });
       }
 
-      // Ensure we correctly retrieve password field
       const storedPassword = academy.password || academy.Password;
       if (!storedPassword) {
         console.error("No password found for academy:", email);
@@ -262,26 +263,11 @@ const academyController = {
         return res.status(401).json({ message: "Invalid password" });
       }
 
-      const token = jwt.sign(
-        {
-          id: academy.Academy_id,
-          email: academy.contact_email,
-          role: "academy",
-        },
-        jwtSecret,
-        { expiresIn: "24h" }
-      );
-
-      // Set HTTP-only cookie
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Use secure in production
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      });
+      // Use the helper to set up auth
+      const token = authUtils.setupAuthSession(req, res, academy, "academy");
 
       res.json({
-        token, // Still send token in response for local storage if needed
+        token,
         academy: {
           id: academy.Academy_id,
           name: academy.name,
@@ -298,14 +284,13 @@ const academyController = {
 
   // In your logout method
   async logoutAcademy(req, res) {
-    // Clear the cookie
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    });
-
-    res.json({ message: "Logged out successfully", redirect: "/home" });
+    try {
+      await authUtils.clearAuthSession(req, res);
+      res.json({ message: "Logged out successfully", redirect: "/home" });
+    } catch (error) {
+      console.error("Logout error:", error);
+      res.status(500).json({ message: "Logout failed" });
+    }
   },
 
   async getAcademyHome(req, res) {
@@ -417,6 +402,33 @@ const academyController = {
         .json({ message: "Error deactivating academy", error: error.message });
     }
   },
+
+  // In academyController.js
+  async checkAuth(req, res) {
+    try {
+      // Authentication middleware will have already verified the user
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      // If the user is not an academy, return unauthorized
+      if (req.user.role !== "academy") {
+        return res.status(401).json({ message: "Not an academy account" });
+      }
+
+      // Return basic user info
+      return res.status(200).json({
+        academyId: req.user.id,
+        academyName: req.user.name,
+        email: req.user.email,
+        role: req.user.role,
+      });
+    } catch (error) {
+      console.error("Auth check error:", error);
+      res.status(500).json({ message: "Error checking authentication" });
+    }
+  },
+
   // - getAcademyByCity
   // Get academies by city
   async getAcademyByCity(req, res) {
