@@ -55,7 +55,7 @@ const AcademyProfile = () => {
           id: "MP001",
           Academy_Name: "Elite Basketball Academy",
           specialization: "Basketball",
-          ProfileImage: "/basketball-academy-logo.png",
+          ProfileImage: "/assets/academy/elite.png",
           Address: "Civil Lines, Jabalpur",
           State: "Madhya Pradesh",
         },
@@ -63,7 +63,7 @@ const AcademyProfile = () => {
           id: "MP002",
           Academy_Name: "Champions Sports Club",
           specialization: "Multi-Sport Facility",
-          ProfileImage: "/champions-logo.png",
+          ProfileImage: "/assets/academy/champ.jpeg",
           Address: "Napier Town, Jabalpur",
           State: "Madhya Pradesh",
         },
@@ -71,7 +71,7 @@ const AcademyProfile = () => {
           id: "MP003",
           Academy_Name: "NextGen Athletics",
           specialization: "Basketball & Athletics",
-          ProfileImage: "/nextgen-logo.png",
+          ProfileImage: "/assets/academy/next.png",
           Address: "Gwarighat Road, Jabalpur",
           State: "Madhya Pradesh",
         },
@@ -163,7 +163,7 @@ const AcademyProfile = () => {
           ProfileImage:
             academyData.ImageUrl ||
             academyData.ProfileImage ||
-            "/default-academy-logo.png",
+            "/assets/academy/academy-logo.png",
 
           // Default empty arrays for these properties
           coaches: academyData.coaches || [],
@@ -341,7 +341,7 @@ const AcademyProfile = () => {
     ...academy,
     profileUrl: academy.website || `gameon.com/academy/${academyId}`,
     language: academy.language || "English",
-    imageUrl: academy.ProfileImage || "/default-academy-logo.png",
+    imageUrl: academy.ProfileImage || "/assets/academy/academy-logo.png",
   };
 
   console.log("academyForDisplay", academyForDisplay);
@@ -554,7 +554,7 @@ const AcademyProfile = () => {
                       alt={activity.type}
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = "/default-activity-icon.png";
+                        e.target.src = "/assets/academy/basketball.jpeg";
                       }}
                     />
                   </div>

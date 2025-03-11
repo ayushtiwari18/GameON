@@ -308,6 +308,10 @@
 
 .steps-image {
   position: relative;
+  float: right;
+  width: 10%; /* Adjust this percentage to control the size */
+  margin-left: 20px; /* Creates some space between the image and left content */
+  margin-bottom: 15px; /* Optional: adds some space below */
 }
 
 .player-count {

@@ -111,6 +111,11 @@ function AcademyLogin() {
                 Email ID
               </label>
               <div className="input-with-icon">
+                <img 
+                  src="/assets/icons/mail.png" 
+                  alt="Email" 
+                  className="input-icon" 
+                />
                 <input
                   type="email"
                   id="email"
@@ -128,6 +133,11 @@ function AcademyLogin() {
                 Password
               </label>
               <div className="input-with-icon">
+                <img 
+                  src="/assets/icons/lock.png" 
+                  alt="Password" 
+                  className="input-icon" 
+                />
                 <input
                   type="password"
                   id="password"
