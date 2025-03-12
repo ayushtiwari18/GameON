@@ -12,7 +12,7 @@ const PlayerLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [checkingAuth, setCheckingAuth] = useState(true); // Add this line
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -158,6 +158,11 @@ const PlayerLogin = () => {
                 Email ID
               </label>
               <div className="input-with-icon">
+                <img 
+                  src="/assets/icons/mail.png" 
+                  alt="Email" 
+                  className="input-icon" 
+                />
                 <input
                   type="email"
                   id="email"
@@ -175,6 +180,11 @@ const PlayerLogin = () => {
                 Password
               </label>
               <div className="input-with-icon">
+                <img 
+                  src="/assets/icons/lock.png" 
+                  alt="Password" 
+                  className="input-icon" 
+                />
                 <input
                   type="password"
                   id="password"

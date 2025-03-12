@@ -21,10 +21,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-
   padding: 20px;
   position: relative;
 }
+
 .header-left-login {
   display: flex;
   align-items: center;
@@ -61,15 +61,18 @@ body {
   align-items: center;
   justify-content: space-evenly;
 }
+
 .illustrations-left {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
+
 .illustration-left-icon {
   width: 225px;
   height: 225px;
 }
+
 .illustration-right-icon {
   width: 350px;
   height: 350px;
@@ -88,7 +91,6 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  justify-content: center;
 }
 
 /* Social login section */
@@ -166,30 +168,40 @@ body {
 
 .input-with-icon {
   position: relative;
+  display: flex;
+  align-items: center;
   border: 2px solid black;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .input-icon {
   position: absolute;
-  left: 10px;
+  left: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: #999;
+  width: 20px;
+  height: 20px;
+  z-index: 1;
 }
 
 .form-input {
   width: 100%;
-  padding: 12px 12px 12px 40px;
-  border: 1px solid #ddd;
-  border-radius: 25px;
+  padding: 12px 12px 12px 45px; /* Increased left padding to make room for icon */
+  border: none; /* Remove individual input border since container has border */
+  border-radius: 10px;
   font-size: 14px;
-  transition: border-color 0.3s;
+  transition: all 0.3s;
+  background-color: transparent;
 }
 
 .form-input:focus {
   outline: none;
+}
+
+.input-with-icon:focus-within {
   border-color: #4d61fc;
+  box-shadow: 0 0 0 2px rgba(77, 97, 252, 0.2);
 }
 
 .forgot-password {

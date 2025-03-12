@@ -23,7 +23,7 @@ const players = [
     rating: 4.8,
     reviews: 6,
     skills: ["Gimp", "Wordpress"],
-    image: "/placeholder.svg",
+    image: "/assets/academy/tennis.jpeg",
   },
   // Add more player data as needed
 ];
@@ -152,7 +152,7 @@ function AcademyHome() {
           <button className="create-vacancy-btn">CREATE VACANCY</button>
         </div>
         <img
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%20(27)-W9y2uXehNEMVpv1FOvpuy2GJSdpdE2.png"
+          src="/assets/academy/application.png"
           alt="Create Vacancy"
           className="vacancy-image"
         />
@@ -186,7 +186,7 @@ function AcademyHome() {
             </div>
           </div>
           <div className="steps-image">
-            <img src="/placeholder.svg" alt="How it works" />
+            <img src="/assets/academy/how.jpeg" alt="How it works" />
             <div className="player-count">
               <div className="player-avatars">
                 <img src="/placeholder.svg" alt="Player" />

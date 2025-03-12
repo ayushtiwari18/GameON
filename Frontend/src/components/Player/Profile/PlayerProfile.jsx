@@ -286,7 +286,7 @@ const PlayerProfile = () => {
                     alt={connection.name}
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = "/default-avatar.png";
+                      e.target.src = "/assets/player/avatar.jpg";
                     }}
                   />
                 </div>
@@ -327,7 +327,7 @@ const PlayerProfile = () => {
                 className="profile-image"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = "/default-avatar.png";
+                  e.target.src = "/assets/player/pi.jpeg";
                 }}
                 alt={playerForDisplay.full_name}
               />
