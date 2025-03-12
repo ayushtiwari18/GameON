@@ -3,15 +3,21 @@ const cors = require("cors");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
+const http = require("http"); // Add this import
+const setupSocketIO = require("./src/config/socket"); // Add this import
 
 const playerRoutes = require("./src/routes/playerRoutes");
 const academyRoutes = require("./src/routes/academyRoutes");
 const vacancyRoutes = require("./src/routes/vacancyRoutes");
 const tournamentRoutes = require("./src/routes/tournamentRoutes");
+const notificationRoutes = require("./src/routes/notificationRoutes"); // Add the notifications routes
+
 const errorHandler = require("./src/middleware/errorHandler");
 const auth = require("./src/middleware/auth");
 
 const app = express();
+const server = http.createServer(app); // Create HTTP server
+const io = setupSocketIO(server); // Initialize Socket.IO
 
 // Debug middleware to log requests
 // app.use((req, res, next) => {
@@ -23,6 +29,9 @@ const app = express();
 //   console.log("----------------------\n");
 //   next();
 // });
+
+// Make io available to all routes
+app.set("io", io);
 
 // Add cookie parser before other middleware
 app.use(cookieParser());
@@ -73,6 +82,7 @@ app.use("/player", playerRoutes);
 app.use("/academy", academyRoutes);
 app.use("/vacancy", vacancyRoutes);
 app.use("/tournament", tournamentRoutes);
+app.use("/notifications", notificationRoutes); // Add the notifications routes
 
 // Add to your main app.js or in a test route file
 app.get("/api/test-session", (req, res) => {

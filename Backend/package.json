@@ -23,6 +23,7 @@
     "jsonwebtoken": "^9.0.2",
     "mssql": "^11.0.1",
     "pdf-lib": "^1.17.1",
+    "socket.io": "^4.8.1",
     "toastify-react": "^4.3.1",
     "uuid": "^11.0.5"
   }

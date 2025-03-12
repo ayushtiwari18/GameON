@@ -92,6 +92,39 @@ const vacancyController = {
       next(error);
     }
   },
+  // Inside the function that handles vacancy applications
+  async applyToVacancy(req, res) {
+    try {
+      // Your existing application logic...
+
+      // After successfully saving the application, create a notification
+      if (req.app.get("io")) {
+        const io = req.app.get("io");
+
+        // Create notification record
+        const notificationData = {
+          academy_id: vacancy.academy_id,
+          player_id: req.user.id,
+          type: "vacancy_application",
+          message: `Player ${playerName} has applied for the ${vacancyTitle} position`,
+          link_url: `/vacancy/applications/${applicationId}`,
+          read_status: 0,
+        };
+
+        const notificationId = await NotificationModel.create(notificationData);
+
+        // Emit real-time notification
+        io.to(`academy:${vacancy.academy_id}`).emit("notification", {
+          id: notificationId,
+          ...notificationData,
+        });
+      }
+
+      res.status(201).json({ message: "Application submitted successfully" });
+    } catch (error) {
+      // Error handling...
+    }
+  },
 };
 
 module.exports = vacancyController;
