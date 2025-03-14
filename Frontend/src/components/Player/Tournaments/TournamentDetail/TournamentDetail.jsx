@@ -150,7 +150,7 @@ function TournamentDetail() {
     <div className="app-container">
       {/* Main Content */}
       <div className="main-container">
-        <h1 className="tournament-title">{tournament.Name}</h1>
+        <h1 className="tournament-title-player">{tournament.Name}</h1>
 
         <div className="content-layout">
           {/* Main Content Area */}
@@ -164,7 +164,7 @@ function TournamentDetail() {
 
             {/* Cards Grid Layout */}
             <div className="cards-container">
-              <div className="tournament-overview card">
+              <div className="tournament-overview card-tournament">
                 <h2>Tournament Overview</h2>
                 <p>{tournament.description}</p>
                 <div className="tournament-meta">
@@ -187,7 +187,7 @@ function TournamentDetail() {
                 </div>
               </div>
 
-              <div className="prizes card">
+              <div className="prizes card-tournament">
                 <h2>Prizes & Rewards</h2>
                 <p>
                   <strong>Prize Pool:</strong> ₹
@@ -200,7 +200,7 @@ function TournamentDetail() {
                 </ul>
               </div>
 
-              <div className="rules card">
+              <div className="rules card-tournament">
                 <h2>Rules & Guidelines</h2>
                 <ul>
                   {typeof rulesContent === "string" ? (
@@ -214,7 +214,7 @@ function TournamentDetail() {
                 </ul>
               </div>
 
-              <div className="tournament-track card">
+              <div className="tournament-track card-tournament">
                 <h2>Tournament Track</h2>
                 <ul className="track-timeline">
                   {Array.isArray(trackContent) ? (
@@ -230,7 +230,7 @@ function TournamentDetail() {
                 </ul>
               </div>
 
-              <div className="sponsors card">
+              <div className="sponsors card-tournament">
                 <h2>Sponsors & Partners</h2>
                 <ul>
                   {typeof sponsorsContent === "string" ? (
@@ -248,7 +248,7 @@ function TournamentDetail() {
 
           {/* Registration Sidebar */}
           <div className="registration-sidebar">
-            <div className="registration-buttons card">
+            <div className="registration-buttons card-tournament">
               <Buttoncustom
                 text="Find Vacancies"
                 onClick={handleVacancyButton}

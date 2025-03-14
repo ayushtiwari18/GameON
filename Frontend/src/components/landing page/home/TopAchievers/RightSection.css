@@ -1,4 +1,4 @@
-.right-section {
+.right-section-home {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -9,7 +9,7 @@
   background: transparent;
 }
 
-.basketball-image {
+.basketball-image-right {
   width: 400px;
   height: auto;
   border-radius: 10px;
@@ -17,7 +17,7 @@
   box-shadow: 10px 10px 20px rgb(38, 114, 255); /* Blue glow effect */
 }
 
-.basketball-text {
+.basketball-text-right {
   background: rgba(128, 128, 128, 0.3); /* Light transparent background */
   padding: 25px;
   border-radius: 50px;

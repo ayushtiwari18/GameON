@@ -261,6 +261,13 @@ function AcademyTournamentDetail() {
                 onClick={handleDownloadButton}
                 disabled={generatingPdf}
               />
+              <Buttoncustom
+                text="Edit Tournament"
+                onClick={() => {
+                  navigate(`/academy/tournament/${id}/edit-tournament`);
+                }}
+              />{" "}
+              {/*this button should be displayed only with the tournaments of logged in academy */}
             </div>
           </div>
         </div>

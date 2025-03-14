@@ -1,7 +1,7 @@
 /* TournamentCreationForm.css */
 
 /* Glass form overlay and container */
-.glass-form-overlay {
+.glass-form-overlay-create {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,7 +16,7 @@
   animation: fadeIn 0.3s ease;
 }
 
-.glass-form-container {
+.glass-form-container-create {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
   border-radius: 16px;

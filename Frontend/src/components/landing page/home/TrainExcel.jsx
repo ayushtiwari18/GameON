@@ -10,20 +10,20 @@ import Buttoncustom from "../../../common/Buttoncustom";
 
 const TrainExcel = () => {
   return (
-    <div className="hero-section">
-      <div className="hero-content">
+    <div className="hero-section-landing">
+      <div className="hero-content-landing">
         <h1>“ Play. Train. Excel. All in One Place! ”</h1>
         <p>
           Join us now to master your sport, connect with top coaches, and reach
           your goals.
         </p>
-        <div className="button-group">
+        <div className="button-group-landing">
           <Buttoncustom
             text="Latest Update"
             Icon={FaClock}
             style={{
-              fontSize: "25px",
-              fontFamily: "Poppins",
+              fontSize: "23px",
+              fontFamily: "sans-serif",
               boxShadow: "8px 8px 16px rgba(58, 58, 240, 0.5) ",
             }}
           />
@@ -32,7 +32,7 @@ const TrainExcel = () => {
             Icon={FaChessKing}
             style={{
               fontSize: "25px",
-              fontFamily: "Poppins",
+              fontFamily: "sans-serif",
               boxShadow: "8px 8px 16px rgba(58, 58, 240, 0.5) ",
             }}
           />
@@ -41,7 +41,7 @@ const TrainExcel = () => {
             Icon={FaTrophy}
             style={{
               fontSize: "25px",
-              fontFamily: "Poppins",
+              fontFamily: "sans-serif",
               boxShadow: "8px 8px 16px rgba(58, 58, 240, 0.5) ",
             }}
           />
@@ -50,7 +50,7 @@ const TrainExcel = () => {
             Icon={FaGraduationCap}
             style={{
               fontSize: "25px",
-              fontFamily: "Poppins",
+              fontFamily: "sans-serif",
               boxShadow: "8px 8px 16px rgba(58, 58, 240, 0.5)  ",
             }}
           />

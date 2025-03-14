@@ -1,0 +1,298 @@
+body {
+  background-color: #fff8dc; /* Light yellow background */
+}
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  background-color: #fff8dc;
+  font-family: "Arial", sans-serif;
+}
+
+.error-card {
+  width: 90%;
+  max-width: 800px;
+  background-color: rgb(232, 219, 181);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 100px;
+  margin-bottom: 125px;
+  padding: 30px;
+  box-shadow: 10px 10px 20px 0 rgba(0, 0, 0, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.error-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.error-text {
+  flex: 1;
+  padding-right: 20px;
+  font-size: 36px;
+}
+
+.error-text h1 {
+  font-size: 40px;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+.error-text h2 {
+  font-size: 28px;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+.error-text p {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.home-button {
+  background-color: #ffca28;
+  color: #333;
+  border: none;
+  padding: 12px 30px;
+  font-size: 25px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.home-button:hover {
+  background-color: #ffb300;
+}
+
+.error-illustration {
+  flex: 1;
+  position: relative;
+  height: 350px;
+}
+
+.error-code {
+  position: relative;
+  text-align: right;
+  width: 400px; /* Set your desired width */
+  height: 400px; /* Set your desired height */
+  overflow: hidden;
+}
+
+.error-code span {
+  font-size: 22px;
+  color: #444;
+  font-weight: bold;
+}
+
+.error-code h1 {
+  font-size: 70px;
+  margin: 0;
+  color: #222;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.error-label {
+  display: inline-block;
+  background-color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  position: relative;
+  top: -10px;
+}
+
+/* Robot styles */
+.robot {
+  position: absolute;
+  bottom: 20px;
+  right: 80px;
+  width: 140px;
+  height: 180px;
+}
+
+.robot-body {
+  position: absolute;
+  width: 100px;
+  height: 120px;
+  background-color: #ffca28;
+  border-radius: 10px;
+  bottom: 40px;
+  left: 20px;
+}
+
+.robot-face {
+  position: relative;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.robot-eye {
+  width: 40px;
+  height: 20px;
+  background-color: #333;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.robot-mouth {
+  width: 30px;
+  height: 10px;
+  background-color: #333;
+  border-radius: 5px;
+}
+
+.robot-arm-left,
+.robot-arm-right {
+  position: absolute;
+  width: 20px;
+  height: 80px;
+  background-color: #ffca28;
+  border-radius: 5px;
+}
+
+.robot-arm-left {
+  left: 0;
+  top: 30px;
+  transform: rotate(20deg);
+}
+
+.robot-arm-right {
+  right: 0;
+  top: 30px;
+  transform: rotate(-20deg);
+}
+
+.robot-leg-left,
+.robot-leg-right {
+  position: absolute;
+  width: 20px;
+  height: 40px;
+  background-color: #ffca28;
+  border-radius: 5px;
+  bottom: 0;
+}
+
+.robot-leg-left {
+  left: 30px;
+}
+
+.robot-leg-right {
+  right: 30px;
+}
+
+.gear {
+  position: absolute;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gear:after {
+  content: "";
+  width: 50%;
+  height: 50%;
+  background-color: #999;
+  border-radius: 50%;
+}
+
+.gear-1 {
+  width: 30px;
+  height: 30px;
+  top: 0;
+  right: 40px;
+}
+
+.gear-2 {
+  width: 20px;
+  height: 20px;
+  top: 30px;
+  right: 10px;
+}
+
+.gear-3 {
+  width: 25px;
+  height: 25px;
+  bottom: 50px;
+  right: -10px;
+}
+
+.gear-4 {
+  width: 15px;
+  height: 15px;
+  bottom: 100px;
+  left: 10px;
+}
+
+.flower-vase {
+  position: absolute;
+  bottom: 0;
+  left: 30px;
+}
+
+.vase {
+  width: 30px;
+  height: 40px;
+  background-color: #ffa000;
+  border-radius: 5px 5px 15px 15px;
+}
+
+.flower {
+  position: absolute;
+  top: -20px;
+  left: 5px;
+  width: 20px;
+  height: 20px;
+  background-color: #ffeb3b;
+  border-radius: 50%;
+}
+
+.flower:before {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 20px;
+  background-color: #7cb342;
+  bottom: 0;
+  left: 7px;
+  z-index: -1;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .error-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .error-text {
+    padding-right: 0;
+    margin-bottom: 30px;
+  }
+
+  .error-code {
+    text-align: center;
+  }
+
+  .error-illustration {
+    height: 250px;
+  }
+
+  .robot {
+    right: calc(50% - 70px);
+  }
+}

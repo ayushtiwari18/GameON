@@ -32,10 +32,10 @@ const FAQSection = () => {
   ];
 
   return (
-    <div className="faq-section">
-      <h2 className="faq-title">Frequently Asked Questions</h2>
-      <div className="faq-container">
-        <div className="faq-list">
+    <div className="faq-section-landing">
+      <h2 className="faq-title-landing">Frequently Asked Questions</h2>
+      <div className="faq-container-landing">
+        <div className="faq-list-landing">
           {faqData.map((item, index) => (
             <FAQItem
               key={index}
