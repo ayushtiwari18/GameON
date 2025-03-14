@@ -126,8 +126,33 @@ const tournamentService = {
     },
 
     update: async (academyId, tournamentId, tournamentData) => {
-      // Updating to match your backend route structure
-      return axiosInstance.put(`/academy/${academyId}/update`, tournamentData);
+      // Handle file upload separately
+      const formData = { ...tournamentData };
+      const banner = formData.banner;
+      delete formData.banner;
+
+      try {
+        // Update tournament data
+        await axiosInstance.put(`/academy/${academyId}/update`, {
+          ...formData,
+          tournamentId: tournamentId,
+        });
+
+        // If banner was included, upload it separately
+        if (banner) {
+          const bannerFormData = new FormData();
+          bannerFormData.append("banner", banner);
+          await formDataInstance.post(
+            `/academy/${academyId}/${tournamentId}/banner`,
+            bannerFormData
+          );
+        }
+
+        return { success: true };
+      } catch (error) {
+        console.error("Error updating tournament:", error);
+        throw error;
+      }
     },
 
     delete: async (academyId, tournamentId) => {

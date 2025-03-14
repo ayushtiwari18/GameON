@@ -12,38 +12,65 @@ const TournamentEditForm = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [formData, setFormData] = useState({
-    name: "",
-    start_date: "",
-    end_date: "",
-    location: "",
-    max_teams: "",
+    Name: "",
+    Start_Date: "",
+    End_Date: "",
+    Location: "",
+    Max_Teams: "",
     description: "",
-    rules: "",
-    registration_deadline: "",
-    entry_fee: "",
-    prize_pool: "",
+    Rules: "",
+    Registration_Deadline: "",
+    Registration_fee: "",
+    Prize_Pool: "",
     contact_email: "",
     contact_phone: "",
-    category: "",
-    address: "",
-    banner: null,
+    Category: "",
+    Min_Teams: "",
   });
-
-  console.log("Tournament ID from URL:", id);
 
   useEffect(() => {
     const fetchTournamentDetails = async () => {
       try {
-        const data = await tournamentService.getById(id);
+        const response = await tournamentService.getById(id);
 
-        setFormData(data);
+        // Extract tournament data from response
+        const tournament = response.tournament || response;
+
+        // Convert date strings to YYYY-MM-DD format for date inputs
+        const formatDateForInput = (dateString) => {
+          if (!dateString) return "";
+          const date = new Date(dateString);
+          return date.toISOString().split("T")[0];
+        };
+
+        setFormData({
+          Name: tournament.Name || "",
+          Start_Date: formatDateForInput(tournament.Start_Date),
+          End_Date: formatDateForInput(tournament.End_Date),
+          Location: tournament.Location || "",
+          Max_Teams: tournament.Max_Teams || "",
+          description: tournament.description || "",
+          Rules: tournament.Rules || "",
+          Registration_Deadline: formatDateForInput(
+            tournament.Registration_Deadline
+          ),
+          Registration_fee: tournament.Registration_fee || "",
+          Prize_Pool: tournament.Prize_Pool || "",
+          contact_email: tournament.contact_email || "",
+          contact_phone: tournament.contact_phone || "",
+          Category: tournament.Category || "",
+          Min_Teams: tournament.Min_Teams || "",
+        });
       } catch (err) {
         console.error("Failed to fetch tournament details", err);
-        setError("Error loading tournament data");
+        setError(
+          "Error loading tournament data: " + (err.message || "Unknown error")
+        );
       } finally {
         setIsLoading(false);
       }
     };
+
     fetchTournamentDetails();
   }, [id]);
 
@@ -60,19 +87,51 @@ const TournamentEditForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
+
     try {
-      await tournamentService.updateTournament(tournamentId, formData);
-      navigate(`/academy/tournament/${tournamentId}`);
+      // Get academyId from localStorage
+      const academyId = localStorage.getItem("academyId");
+
+      if (!academyId) {
+        throw new Error("Academy ID not found. Please log in again.");
+      }
+
+      // Prepare data for API
+      const updateData = {
+        ...formData,
+        tournamentId: id, // Add the tournament ID to the request body
+      };
+
+      // Call the API to update the tournament
+      await tournamentService.academy.update(academyId, id, updateData);
+
+      // Upload banner if selected
+      if (formData.banner) {
+        const bannerFormData = new FormData();
+        bannerFormData.append("banner", formData.banner);
+        await tournamentService.academy.uploadBanner(
+          academyId,
+          id,
+          bannerFormData
+        );
+      }
+
+      // Redirect to tournament detail page
+      navigate(`/academy/tournament/${id}`);
     } catch (err) {
       console.error("Error updating tournament:", err);
-      setError("Failed to update tournament");
+      setError(
+        "Failed to update tournament: " + (err.message || "Unknown error")
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   if (isLoading) {
-    return <div className="loading-container">Loading...</div>;
+    return (
+      <div className="loading-container">Loading tournament details...</div>
+    );
   }
 
   return (
@@ -94,46 +153,152 @@ const TournamentEditForm = () => {
             <label>Tournament Name</label>
             <input
               type="text"
-              name="name"
-              value={formData.name}
+              name="Name"
+              value={formData.Name}
               onChange={handleChange}
               required
             />
           </div>
+
           <div className="form-group">
             <label>Start Date</label>
             <input
               type="date"
-              name="start_date"
-              value={formData.start_date}
+              name="Start_Date"
+              value={formData.Start_Date}
               onChange={handleChange}
               required
             />
           </div>
+
           <div className="form-group">
             <label>End Date</label>
             <input
               type="date"
-              name="end_date"
-              value={formData.end_date}
+              name="End_Date"
+              value={formData.End_Date}
               onChange={handleChange}
               required
             />
           </div>
+
+          <div className="form-group">
+            <label>Registration Deadline</label>
+            <input
+              type="date"
+              name="Registration_Deadline"
+              value={formData.Registration_Deadline}
+              onChange={handleChange}
+            />
+          </div>
+
           <div className="form-group">
             <label>Location</label>
             <input
               type="text"
-              name="location"
-              value={formData.location}
+              name="Location"
+              value={formData.Location}
               onChange={handleChange}
               required
             />
           </div>
+
+          <div className="form-group">
+            <label>Category</label>
+            <input
+              type="text"
+              name="Category"
+              value={formData.Category}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Maximum Teams</label>
+            <input
+              type="number"
+              name="Max_Teams"
+              value={formData.Max_Teams}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Minimum Teams</label>
+            <input
+              type="number"
+              name="Min_Teams"
+              value={formData.Min_Teams}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Registration Fee (₹)</label>
+            <input
+              type="number"
+              name="Registration_fee"
+              value={formData.Registration_fee}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Prize Pool (₹)</label>
+            <input
+              type="number"
+              name="Prize_Pool"
+              value={formData.Prize_Pool}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows="3"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Rules</label>
+            <textarea
+              name="Rules"
+              value={formData.Rules}
+              onChange={handleChange}
+              rows="3"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Contact Email</label>
+            <input
+              type="email"
+              name="contact_email"
+              value={formData.contact_email}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Contact Phone</label>
+            <input
+              type="tel"
+              name="contact_phone"
+              value={formData.contact_phone}
+              onChange={handleChange}
+            />
+          </div>
+
           <div className="form-group">
             <label>Banner</label>
             <input type="file" accept="image/*" onChange={handleFileChange} />
           </div>
+
           <div className="form-actions">
             <button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Updating..." : "Update Tournament"}

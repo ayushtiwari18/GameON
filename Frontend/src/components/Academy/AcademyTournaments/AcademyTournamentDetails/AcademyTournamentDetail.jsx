@@ -17,6 +17,7 @@ function AcademyTournamentDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [generatingPdf, setGeneratingPdf] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
     const fetchTournamentDetails = async () => {
@@ -26,6 +27,16 @@ function AcademyTournamentDetail() {
         const data = await tournamentService.getById(id);
         console.log("API response:", data);
         setTournament(data.tournament); // Access the tournament object from response
+
+        // Check if the logged-in academy is the owner of this tournament
+        const loggedInAcademyId = localStorage.getItem("academyId");
+        const tournamentCreatorId =
+          data.tournament?.Academy_id || data.tournament?.academy_id;
+
+        if (loggedInAcademyId && tournamentCreatorId) {
+          setIsOwner(loggedInAcademyId === tournamentCreatorId);
+        }
+
         setError(null);
       } catch (err) {
         console.error("Error fetching tournament details:", err);
@@ -261,13 +272,15 @@ function AcademyTournamentDetail() {
                 onClick={handleDownloadButton}
                 disabled={generatingPdf}
               />
-              <Buttoncustom
-                text="Edit Tournament"
-                onClick={() => {
-                  navigate(`/academy/tournament/${id}/edit-tournament`);
-                }}
-              />{" "}
-              {/*this button should be displayed only with the tournaments of logged in academy */}
+              {/* Only render Edit Tournament button if the logged-in academy is the owner */}
+              {isOwner && (
+                <Buttoncustom
+                  text="Edit Tournament"
+                  onClick={() => {
+                    navigate(`/academy/tournament/${id}/edit-tournament`);
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>

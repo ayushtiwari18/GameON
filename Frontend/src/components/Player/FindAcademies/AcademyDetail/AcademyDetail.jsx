@@ -4,6 +4,7 @@ import "./AcademyDetail.css";
 import InfoCard from "../../Tournaments/TournamentDetail/InfoCard";
 import Buttoncustom from "../../../../common/Buttoncustom";
 import academyService from "../../../../services/academyService"; // Adjust the path as needed
+import downloadAcademyDetails from "../../../../utils/AcademyPdfGenerator"; // Import the PDF
 
 function AcademyDetail() {
   const [academy, setAcademy] = useState({
@@ -209,9 +210,8 @@ function AcademyDetail() {
 
   // Handle download details
   const handleDownloadDetails = () => {
-    // This would typically generate a PDF with academy details
-    alert("Download functionality will be implemented soon.");
-    // You could implement this with a library like jsPDF
+    // Use our imported PDF download function
+    downloadAcademyDetails(academy);
   };
 
   if (loading) {
