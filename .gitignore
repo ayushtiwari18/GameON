@@ -2,3 +2,5 @@ Backend/node_modules
 Frontend/node_modules
 Backend/.env
 .qodo
+.venv
+path.py
