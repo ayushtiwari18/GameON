@@ -1,4 +1,4 @@
-.faq-section {
+.faq-section-landing {
   width: 100vw;
   margin: auto;
   text-align: center;
@@ -6,26 +6,26 @@
   background-color: #fff6db; /* Matching background */
 }
 
-.faq-title {
+.faq-title-landing {
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 20px;
   font-family: "Satisfy", cursive;
 }
 
-.faq-container {
+.faq-container-landing {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   gap: 20px;
 }
 
-.faq-list {
+.faq-list-landing {
   width: 100%;
   max-width: 600px;
 }
 
-.faq-item {
+.faq-item-landing {
   background: linear-gradient(135deg, #00008b, #1e3fa0);
   color: white;
   padding: 20px;
@@ -35,11 +35,11 @@
   transition: all 0.3s ease;
 }
 
-.faq-item:hover {
+.faq-item-landing:hover {
   background: linear-gradient(135deg, #1e3fa0, #3f5efb);
 }
 
-.faq-question {
+.faq-question-landing {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,11 +52,11 @@
   transition: transform 0.3s ease;
 }
 
-.faq-item.open .arrow {
+.faq-item-landing.open .arrow {
   transform: rotate(180deg);
 }
 
-.faq-answer {
+.faq-answer-landing {
   margin-top: 10px;
   font-size: 16px;
   background: rgba(255, 255, 255, 0.1);

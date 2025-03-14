@@ -23,6 +23,7 @@ import TournamentDetail from "../components/Player/Tournaments/TournamentDetail/
 import FindVacancy from "../components/Player/Tournaments/Vacancies/FindVacancy";
 import FindAcademy from "../components/Player/FindAcademies/FindAcademies";
 import PlayerProfile from "../components/Player/Profile/PlayerProfile";
+import AcademyDetail from "../components/Player/FindAcademies/AcademyDetail/AcademyDetail";
 
 // Academy components
 import AcademyHome from "../components/Academy/Home/AcademyHome";
@@ -31,6 +32,7 @@ import AcademyTournamentDetail from "../components/Academy/AcademyTournaments/Ac
 import AcademyProfile from "../components/Academy/AcademyProfile/AcademyProfile";
 import MyTournament from "../components/Academy/MyTournaments/MyTournaments";
 import TournamentCreationForm from "../components/Academy/MyTournaments/TournamentCreationForm";
+import TournamentEditForm from "../components/Academy/MyTournaments/EditTournament";
 
 const AppRoutes = () => {
   return (
@@ -112,6 +114,19 @@ const AppRoutes = () => {
           >
             <PlayerLayout>
               <FindAcademy />
+            </PlayerLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/player/academies/:id"
+        element={
+          <ProtectedRoute
+            allowedRoles={["player"]}
+            redirectPath="/player/login"
+          >
+            <PlayerLayout>
+              <AcademyDetail />
             </PlayerLayout>
           </ProtectedRoute>
         }
@@ -205,7 +220,22 @@ const AppRoutes = () => {
             redirectPath="/academy/login"
           >
             <AcademyLayout>
+              <MyTournament />
               <TournamentCreationForm />
+            </AcademyLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/academy/tournament/:id/edit-tournament"
+        element={
+          <ProtectedRoute
+            allowedRoles={["academy"]}
+            redirectPath="/academy/login"
+          >
+            <AcademyLayout>
+              <AcademyTournamentDetail />
+              <TournamentEditForm />
             </AcademyLayout>
           </ProtectedRoute>
         }

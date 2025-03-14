@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./FindAcademies.css";
 import AcademyCard from "./AcademyCard";
 import academyService from "../../../services/academyService";
@@ -13,7 +14,7 @@ function FindAcademy() {
     category: "",
     state: "",
   });
-
+  const navigate = useNavigate();
   useEffect(() => {
     // Initial fetch of academies
     fetchAcademies();
@@ -132,6 +133,9 @@ function FindAcademy() {
                 <AcademyCard
                   key={academy.Academy_id || `academy-${Math.random()}`}
                   academy={academy}
+                  onClick={() => {
+                    navigate(`/player/academies/${academy.Academy_id}`);
+                  }}
                 />
               ))
             ) : (

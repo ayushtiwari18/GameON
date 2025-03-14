@@ -1,0 +1,59 @@
+.academy-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.academy-info {
+  display: flex;
+  align-items: center;
+}
+
+.academy-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  margin-right: 15px;
+}
+
+.academy-details h4 {
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+.academy-details p {
+  font-size: 12px;
+  color: #666;
+  margin: 2px 0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.apply-btn,
+.follow-btn {
+  padding: 5px 10px;
+  border-radius: 15px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.apply-btn {
+  background-color: white;
+  color: #333;
+}
+
+.follow-btn {
+  background-color: white;
+  color: #333;
+}
+
+.follow-btn.only {
+  margin-left: auto;
+}

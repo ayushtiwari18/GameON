@@ -1,3 +1,7 @@
+html,
+body {
+  overflow-x: hidden;
+}
 .hero {
   background-image: url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%20(9)-dHOE4wfL7vasVP4w8L2y1Hk4vgMg2V.png");
   background-size: cover;
@@ -8,7 +12,10 @@
   color: white;
   position: relative;
 }
-
+.hero::before {
+  width: 100%;
+  height: 100%;
+}
 .hero::before {
   content: "";
   position: absolute;

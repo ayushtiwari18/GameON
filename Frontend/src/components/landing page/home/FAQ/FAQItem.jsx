@@ -5,14 +5,14 @@ const FAQItem = ({ question, answer }) => {
 
   return (
     <div
-      className={`faq-item ${isOpen ? "open" : ""}`}
+      className={`faq-item-landing ${isOpen ? "open" : ""}`}
       onClick={() => setIsOpen(!isOpen)}
     >
-      <div className="faq-question">
+      <div className="faq-question-landing">
         <span>{question}</span>
         <span className="arrow">{isOpen ? "▲" : "▶"}</span>
       </div>
-      {isOpen && <div className="faq-answer">{answer}</div>}
+      {isOpen && <div className="faq-answer-landing">{answer}</div>}
     </div>
   );
 };

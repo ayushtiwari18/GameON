@@ -144,8 +144,8 @@ const TournamentCreationForm = () => {
   }
 
   return (
-    <div className="glass-form-overlay">
-      <div className="glass-form-container">
+    <div className="glass-form-overlay-create">
+      <div className="glass-form-container-create">
         <div className="form-header">
           <h2>Host a New Tournament</h2>
           <button className="close-button">

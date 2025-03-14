@@ -10,7 +10,7 @@
   padding: 0 1rem;
 }
 
-.tournament-title {
+.tournament-title-player {
   font-size: 4rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
@@ -58,31 +58,35 @@
 }
 
 /* Card styles */
-.card {
+.card-tournament {
   background-color: #e8dbb5;
   border-radius: 0.5rem;
   padding: 1.5rem;
   box-shadow: 8px 8px 5px rgba(0, 0, 0, 0.3) !important;
 }
+.card-tournament:hover {
+  transform: scale(1.02);
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.3) !important;
+}
 
-.card h2 {
+.card-tournament h2 {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1rem;
   color: #1a1a1a;
 }
 
-.card ul {
+.card-tournament ul {
   list-style-type: disc;
   padding-left: 1.5rem;
 }
 
-.card li {
+.card-tournament li {
   margin-bottom: 0.5rem;
   color: #4b5563;
 }
 
-.card p {
+.card-tournament p {
   color: #4b5563;
   line-height: 1.6;
 }
@@ -101,7 +105,7 @@
 }
 
 /* Ensure individual cards have consistent styling */
-.info-cards .card {
+.info-cards .card-tournament {
   background-color: #fef6db; /* Match other card styles */
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
   border-radius: 10px;

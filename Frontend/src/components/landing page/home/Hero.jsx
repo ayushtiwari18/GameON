@@ -8,7 +8,7 @@ import "./Hero.css";
 
 const Hero = () => {
   return (
-    <div className="carousel-container">
+    <div className="carousel-container-landing">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={30}
@@ -23,7 +23,7 @@ const Hero = () => {
         <SwiperSlide>
           <div className="slide">
             <img src="/assets/Volleyball.jpg" alt="Beach Volleyball" />
-            <div className="overlay">
+            <div className="overlay-landing">
               <h2>
                 GameOn: <i>Where Every Click is a Victory!</i>
               </h2>
@@ -49,7 +49,7 @@ const Hero = () => {
         <SwiperSlide>
           <div className="slide">
             <img src="/assets/Basketball Court.jpg" alt="Deep Ocean" />
-            <div className="overlay">
+            <div className="overlay-landing">
               <h2>⚔️ One Game, Endless Glory! ⚔️</h2>
               <p>
                 Step into the arena where legends are forged. Rise through the
@@ -74,7 +74,7 @@ const Hero = () => {
         <SwiperSlide>
           <div className="slide">
             <img src="/assets/Cycleing.jpg" alt="Ship Adventure" />
-            <div className="overlay">
+            <div className="overlay-landing">
               <h2>🚀 Level Up. Dominate. Repeat. 🚀</h2>
               <p>
                 Power up your skills, crush your opponents, and climb the
