@@ -1,5 +1,4 @@
-// academyService.js - Updated for proper cookie handling
-
+// academyService.js - Updated with enrollment functionality
 import createAxiosInstance from "./axiosConfig";
 
 const axiosInstance = createAxiosInstance("/academy");
@@ -26,49 +25,40 @@ const academyService = {
           location: academyData.address,
           password: academyData.password,
         });
-
         // Store non-sensitive academy data for UI
         if (response.academyId) {
           localStorage.setItem("academyId", response.academyId);
           localStorage.setItem("academyName", academyData.name);
           localStorage.setItem("userRole", "academy");
         }
-
         return response;
       } catch (error) {
         console.error("Registration error:", error);
         throw error;
       }
     },
-
     login: async (email, password) => {
       const response = await axiosInstance.post("/login", {
         email: email,
         password: password,
       });
-
       // Store non-sensitive academy data for UI
       if (response.academy) {
         localStorage.setItem("academyId", response.academy.id);
         localStorage.setItem("academyName", response.academy.name);
         localStorage.setItem("userRole", "academy");
       }
-
       return response;
     },
-
     logout: async () => {
       const response = await axiosInstance.post("/logout");
-
       // Clear all academy data from localStorage
       localStorage.removeItem("academyId");
       localStorage.removeItem("academyName");
       localStorage.removeItem("userRole");
       localStorage.removeItem("token"); // Remove token if it exists
-
       return response;
     },
-
     // Check if user is authenticated using cookies
     checkAuth: async () => {
       try {
@@ -172,6 +162,160 @@ const academyService = {
 
     deleteEvent: async (academyId, eventId) => {
       return axiosInstance.delete(`/${academyId}/events/${eventId}`);
+    },
+  },
+
+  // Enrollment functionalities
+  enrollment: {
+    // For players to enroll in an academy
+    enroll: async (academyId, playerId) => {
+      return axiosInstance.post(`/${academyId}/enrollments`, {
+        player_id: playerId,
+      });
+    },
+
+    // For academies to get all enrollment requests
+    getEnrollmentRequests: async (academyId) => {
+      return axiosInstance.get(`/${academyId}/enrollments/requests`);
+    },
+
+    // For academies to accept an enrollment request
+    acceptEnrollment: async (academyId, enrollmentId) => {
+      return axiosInstance.put(
+        `/${academyId}/enrollments/${enrollmentId}/accept`
+      );
+    },
+
+    // For academies to reject an enrollment request
+    rejectEnrollment: async (academyId, enrollmentId) => {
+      return axiosInstance.put(
+        `/${academyId}/enrollments/${enrollmentId}/reject`
+      );
+    },
+
+    // For players to check their enrollment status
+    checkEnrollmentStatus: async (playerId, academyId) => {
+      return axiosInstance.get(`/players/${playerId}/enrollments/${academyId}`);
+    },
+
+    // For players to get all their enrollments
+    getPlayerEnrollments: async (playerId) => {
+      return axiosInstance.get(`/players/${playerId}/enrollments`);
+    },
+
+    // For academies to get all enrolled players
+    getEnrolledPlayers: async (academyId) => {
+      return axiosInstance.get(`/${academyId}/enrolled-players`);
+    },
+
+    // For players to cancel their enrollment
+    cancelEnrollment: async (playerId, academyId) => {
+      return axiosInstance.delete(
+        `/players/${playerId}/enrollments/${academyId}`
+      );
+    },
+  },
+
+  // Programs management
+  programs: {
+    getAllPrograms: async (academyId) => {
+      return axiosInstance.get(`/${academyId}/programs`);
+    },
+
+    getProgram: async (academyId, programId) => {
+      return axiosInstance.get(`/${academyId}/programs/${programId}`);
+    },
+
+    createProgram: async (academyId, programData) => {
+      return axiosInstance.post(`/${academyId}/programs`, programData);
+    },
+
+    updateProgram: async (academyId, programId, programData) => {
+      return axiosInstance.put(
+        `/${academyId}/programs/${programId}`,
+        programData
+      );
+    },
+
+    deleteProgram: async (academyId, programId) => {
+      return axiosInstance.delete(`/${academyId}/programs/${programId}`);
+    },
+  },
+
+  // Coaches management
+  coaches: {
+    getAllCoaches: async (academyId) => {
+      return axiosInstance.get(`/${academyId}/coaches`);
+    },
+
+    getCoach: async (academyId, coachId) => {
+      return axiosInstance.get(`/${academyId}/coaches/${coachId}`);
+    },
+
+    addCoach: async (academyId, coachData) => {
+      return axiosInstance.post(`/${academyId}/coaches`, coachData);
+    },
+
+    updateCoach: async (academyId, coachId, coachData) => {
+      return axiosInstance.put(`/${academyId}/coaches/${coachId}`, coachData);
+    },
+
+    deleteCoach: async (academyId, coachId) => {
+      return axiosInstance.delete(`/${academyId}/coaches/${coachId}`);
+    },
+  },
+
+  // Facilities management
+  facilities: {
+    getAllFacilities: async (academyId) => {
+      return axiosInstance.get(`/${academyId}/facilities`);
+    },
+
+    updateFacilities: async (academyId, facilitiesData) => {
+      return axiosInstance.put(`/${academyId}/facilities`, {
+        facilities: facilitiesData,
+      });
+    },
+  },
+
+  // Achievements management
+  achievements: {
+    getAllAchievements: async (academyId) => {
+      return axiosInstance.get(`/${academyId}/achievements`);
+    },
+
+    addAchievement: async (academyId, achievementData) => {
+      return axiosInstance.post(`/${academyId}/achievements`, achievementData);
+    },
+
+    updateAchievement: async (academyId, achievementId, achievementData) => {
+      return axiosInstance.put(
+        `/${academyId}/achievements/${achievementId}`,
+        achievementData
+      );
+    },
+
+    deleteAchievement: async (academyId, achievementId) => {
+      return axiosInstance.delete(
+        `/${academyId}/achievements/${achievementId}`
+      );
+    },
+  },
+
+  // Media management (gallery, videos, etc.)
+  media: {
+    getGallery: async (academyId) => {
+      return axiosInstance.get(`/${academyId}/gallery`);
+    },
+
+    uploadImage: async (academyId, imageFile) => {
+      const formData = new FormData();
+      formData.append("image", imageFile);
+      return formDataInstance.post(`/${academyId}/gallery`, formData);
+    },
+
+    deleteImage: async (academyId, imageId) => {
+      return axiosInstance.delete(`/${academyId}/gallery/${imageId}`);
     },
   },
 };
