@@ -35,6 +35,7 @@ import MyTournament from "../components/Academy/MyTournaments/MyTournaments";
 import TournamentCreationForm from "../components/Academy/MyTournaments/TournamentCreationForm";
 import TournamentEditForm from "../components/Academy/MyTournaments/EditTournament";
 import CreateVacancy from "../components/Academy/AcademyTournaments/CreateVacancy/CreateVacancy";
+import MyVacancies from "../components/Academy/MyVacancies/MyVacancies";
 
 const AppRoutes = () => {
   return (
@@ -264,7 +265,19 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-
+      <Route
+        path="/academy/:academyId/my-vacancy"
+        element={
+          <ProtectedRoute
+            allowedRoles={["academy"]}
+            redirectPath="/academy/login"
+          >
+            <AcademyLayout>
+              <MyVacancies />
+            </AcademyLayout>
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/academy/profile/:id"
         element={

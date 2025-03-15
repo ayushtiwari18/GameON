@@ -1,20 +1,14 @@
-/* Updated TournamentsPage.css with your theme colors */
+/* Updated VacanciesPage.css with new class names */
 
-/* Custom font import */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
-/* Base styles with theme colors */
 :root {
   --primary-color: #e1cb03;
   --primary-hover: #d4cbb2;
   --neutral-dark: #e8dbb5;
   --neutral-light: #fef6db;
-  --success-color: #22c55e;
-  --warning-color: #f59e0b;
-  --danger-color: #ef4444;
   --border-color: #e5e7eb;
   --background-light: #fff6db;
-  --highlight-color: #fef2a5;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -26,29 +20,25 @@ body {
   padding: 0;
 }
 
-.tournaments-page {
+.vacancies-page {
   min-height: 100vh;
   background: linear-gradient(to bottom, #fef6db, #fef2a5);
   margin: 80px;
 }
-
-/* Header styling */
 .app-header {
   background-color: var(--neutral-dark);
   color: white;
   padding: 1rem;
   box-shadow: var(--shadow);
 }
-
-/* Page header */
-.page-header {
+.page-header-vacancy {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.page-title {
+.page-title-vacancy {
   font-size: 2rem;
   font-weight: 700;
   color: var(--primary-color);
@@ -60,7 +50,7 @@ body {
   text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
 }
 
-.host-tournament-btn {
+.post-vacancy-btn {
   all: unset; /* Resets all default styles */
   cursor: pointer;
   background-color: var(--primary-color);
@@ -76,57 +66,16 @@ body {
   text-decoration: none;
   background: linear-gradient(to right, #4a4aff, #0d0d50);
 }
-.host-tournament-btn a {
+
+.post-vacancy-btn:hover {
   background-color: var(--primary-hover);
   transform: translateY(-2px);
   box-shadow: var(--shadow);
 }
-
 .link-wrapper {
   text-decoration: none; /* Remove underline from the Link component */
 }
-.host-tournament-btn:hover {
-  background-color: var(--primary-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-
-/* Search and filter */
-.search-filter-container {
-  background-color: var(--neutral-dark);
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  box-shadow: var(--shadow);
-}
-
-.search-box {
-  position: relative;
-  flex-grow: 1;
-  background: var(--background-light);
-  padding: 0.75rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-}
-
-.search-input {
-  width: 100%;
-  padding-left: 2.5rem;
-  border: none;
-  background: transparent;
-  font-size: 0.875rem;
-  box-shadow: 6px 6px 10px #4848ff;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  background: var(--background-light);
-  box-shadow: 6px 6px 10px #4848ff;
-}
-
-/* Tabs */
-.tabs-container {
+.search-container-vacancy {
   background-color: var(--neutral-dark);
   border-radius: 8px;
   box-shadow: var(--shadow);
@@ -135,70 +84,53 @@ body {
   padding: 20px;
 }
 
-.tabs-header {
+.search-box-vacancy {
+  position: relative;
+  flex-grow: 1;
+  background: var(--background-light);
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.search-input-vacancy {
+  width: 100%;
+  padding-left: 2.5rem;
+  border: none;
+  background: transparent;
+  font-size: 0.875rem;
+  box-shadow: 6px 6px 10px #4848ff;
+}
+
+.search-input-vacancy:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  background: var(--background-light);
+  box-shadow: 6px 6px 10px #4848ff;
+}
+
+.vacancy-list {
   display: flex;
-  border-bottom: 2px solid var(--border-color);
+  flex-direction: column;
 }
 
-.tab {
-  background: none; /* Remove background */
-  border: none; /* Remove border */
-  outline: none;
-  padding: 0.75rem 1.5rem;
-  font-weight: 500;
-  cursor: pointer;
-  color: #4848ff;
-  transition: all 0.2s;
-}
-
-.tab:hover,
-.tab.active-tab {
-  color: #0d0d50;
-  border-bottom: 3px solid #0d0d50;
-  text-decoration: none;
-  outline: none;
-}
-
-/* Tournament list */
-.tournament-item {
+.vacancy-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 2rem;
   border-bottom: 1px solid var(--border-color);
-  background-color: var(--highlight-color);
+  background-color: var(--neutral-light);
   border-radius: 8px;
   margin-bottom: 0.75rem;
   transition: all 0.2s;
 }
 
-.tournament-item:hover {
-  background-color: var(--neutral-light);
+.vacancy-item:hover {
+  background-color: var(--background-light);
 }
 
-.status-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin-right: 1rem;
-}
-
-.status-upcoming {
-  background-color: rgba(34, 197, 94, 0.1);
-  color: #15803d;
-}
-
-.status-ongoing {
-  background-color: rgba(59, 130, 246, 0.1);
-  color: #1d4ed8;
-}
-
-.status-completed {
-  background-color: rgba(75, 85, 99, 0.1);
-  color: #4b5563;
-}
-.view-button {
+.view-button-vacancy {
   color: var(--primary-color);
   background: none;
   border: none;
@@ -210,25 +142,15 @@ body {
   color: var(--primary-hover);
 }
 
-/* Responsive design */
 @media (min-width: 768px) {
-  .main-nav {
-    display: flex;
-  }
-  .filter-row {
-    flex-direction: row;
-    align-items: center;
-  }
   .search-box {
     margin-right: 1rem;
   }
 }
 
-/* Accessibility */
 button:focus,
 a:focus,
-input:focus,
-select:focus {
+input:focus {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
