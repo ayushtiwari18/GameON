@@ -1,5 +1,4 @@
-/* TournamentEditForm.css */
-.glass-form-overlay {
+.glass-form-overlay-vacancy {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,8 +12,7 @@
   z-index: 1000;
   animation: fadeIn 0.3s ease;
 }
-
-.glass-form-container {
+.glass-form-container-vacancy {
   background: rgba(255, 246, 219, 0.45);
   backdrop-filter: blur(10px);
   border-radius: 16px;
@@ -27,8 +25,7 @@
   padding: 2rem;
   animation: slideUp 0.4s ease;
 }
-
-.form-header {
+.form-header-vacancy {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,8 +34,8 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.form-header h2 {
-  font-size: 1.5rem;
+.form-header-vacancy h2 {
+  font-size: 2rem;
   font-weight: 700;
   color: #1e40af;
   margin: 0;
@@ -47,46 +44,4 @@
   -webkit-background-clip: text;
   background-clip: text;
   text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
-}
-
-.close-button {
-  background: none;
-  border: none;
-  color: #64748b;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.close-button:hover {
-  color: #1e40af;
-  transform: scale(1.1);
-}
-
-.form-group {
-  margin-bottom: 10px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-input {
-  width: 100%;
-  padding: 8px;
-  border-radius: 6px;
-  border: none;
-}
-
-.form-actions {
-  text-align: right;
-  margin-top: 10px;
-}
-
-button {
-  background: #007bff;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
 }

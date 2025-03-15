@@ -119,7 +119,10 @@ const MyTournament = () => {
       <main className="main-content">
         <div className="page-header">
           <h1 className="page-title">Academy Tournaments</h1>
-          <Link to={`/academy/${academyId}/tournament/create-tournament`}>
+          <Link
+            to={`/academy/${academyId}/tournament/create-tournament`}
+            className="link-wrapper "
+          >
             <button className="host-tournament-btn">
               <Plus size={20} className="btn-icon" />
               Host a New Tournament

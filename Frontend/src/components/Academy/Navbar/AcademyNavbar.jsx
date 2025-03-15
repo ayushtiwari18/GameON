@@ -100,7 +100,7 @@ function AcademyNavbar() {
         <Link to="/academy/application" className="link-academy">
           Application
         </Link>
-        <Link to={`/academy/${academyId}/vacancy`} className="link-academy">
+        <Link to={`/academy/${academyId}/my-vacancy`} className="link-academy">
           My vacancies
         </Link>
         <Link to="/academy/notifications" className="link-academy">
