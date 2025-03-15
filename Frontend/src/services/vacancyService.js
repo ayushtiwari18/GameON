@@ -39,7 +39,8 @@ axiosInstance.interceptors.response.use(
 const vacancyService = {
   // Create a new vacancy
   create: async (vacancyData) => {
-    return axiosInstance.post("/", {
+    // Ensure all required fields are present before sending to the API
+    const requiredData = {
       tournament_id: vacancyData.tournamentId,
       academy_id: vacancyData.academyId,
       position: vacancyData.position,
@@ -47,7 +48,18 @@ const vacancyService = {
       vacancy_count: vacancyData.vacancyCount,
       gender_preference: vacancyData.genderPreference,
       age_limit: vacancyData.ageLimit,
-    });
+    };
+
+    // Validate required fields
+    const missingFields = Object.entries(requiredData)
+      .filter(([_, value]) => value === undefined || value === "")
+      .map(([key]) => key);
+
+    if (missingFields.length > 0) {
+      throw new Error(`Missing required fields: ${missingFields.join(", ")}`);
+    }
+
+    return axiosInstance.post("/", requiredData);
   },
 
   // Get vacancies by tournament ID
@@ -58,37 +70,6 @@ const vacancyService = {
   // Get all tournaments that have vacancies
   getTournamentsWithVacancies: async () => {
     return axiosInstance.get("/vacancies/tournaments");
-  },
-
-  // Additional utility functions that could be implemented
-  search: {
-    // Search vacancies by position
-    byPosition: async (position) => {
-      return axiosInstance.get("/search", {
-        params: { position },
-      });
-    },
-
-    // Search vacancies by requirements
-    byRequirements: async (requirements) => {
-      return axiosInstance.get("/search", {
-        params: { requirements },
-      });
-    },
-
-    // Search vacancies by gender preference
-    byGenderPreference: async (genderPreference) => {
-      return axiosInstance.get("/search", {
-        params: { genderPreference },
-      });
-    },
-
-    // Search vacancies by age limit
-    byAgeLimit: async (ageLimit) => {
-      return axiosInstance.get("/search", {
-        params: { ageLimit },
-      });
-    },
   },
 };
 
