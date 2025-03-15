@@ -18,6 +18,7 @@ function AcademyTournamentDetail() {
   const [error, setError] = useState(null);
   const [generatingPdf, setGeneratingPdf] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchTournamentDetails = async () => {
@@ -266,7 +267,12 @@ function AcademyTournamentDetail() {
           {/* Registration Sidebar */}
           <div className="registration-sidebar-academy">
             <div className="registration-buttons-academy card-detail-academy">
-              <Buttoncustom text="Create Vacancy" />
+              <Buttoncustom
+                text="Create Vacancy"
+                onClick={() => {
+                  navigate(`/academy/tournament/${id}/create-vacancy`);
+                }}
+              />
               <Buttoncustom
                 text={generatingPdf ? "Generating PDF..." : "Download Details"}
                 onClick={handleDownloadButton}
