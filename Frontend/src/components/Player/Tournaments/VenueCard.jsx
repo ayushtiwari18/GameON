@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import { Award, Users, Loader, Trophy, IndianRupee } from "lucide-react";
+import { useEffect } from "react";
 import { format } from "date-fns";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import "./VenueCard.css";
 
-function VenueCard({ venue, onClick }) {
+function VenueCard({ venue, onClick, isLoading }) {
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
+
+  // Add this useEffect to handle cases where the image URL is empty or null
+  useEffect(() => {
+    if (!venue.image_url) {
+      setImageLoading(false);
+      setImageError(true);
+    }
+  }, [venue.image_url]);
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -34,7 +45,7 @@ function VenueCard({ venue, onClick }) {
 
   const DefaultImage = () => (
     <div className="default-image">
-      <Trophy size={48} strokeWidth={1.5} />
+      <Trophy size={48} strokeWidth={1.5} color="#ffffff" />
     </div>
   );
 
@@ -46,6 +57,41 @@ function VenueCard({ venue, onClick }) {
   };
 
   const registrationStatus = getRegistrationStatus();
+
+  if (isLoading) {
+    return (
+      <div className="card skeleton-card">
+        <div className="card-image-container">
+          <Skeleton height="100%" />
+        </div>
+        <div style={{ marginTop: "15px" }}>
+          <Skeleton width={100} height={32} />
+        </div>
+        <div className="tags" style={{ marginTop: "15px" }}>
+          <Skeleton width={100} height={32} />
+          <Skeleton width={80} height={32} />
+        </div>
+        <div className="content">
+          <Skeleton height={28} width="80%" style={{ marginBottom: "10px" }} />
+          <Skeleton count={3} style={{ marginBottom: "5px" }} />
+        </div>
+        <div className="details-grid">
+          <Skeleton width={150} height={24} />
+        </div>
+        <div
+          className="footer"
+          style={{
+            marginTop: "15px",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Skeleton width={120} height={24} />
+          <Skeleton width={100} height={36} borderRadius="30px" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="card" onClick={onClick}>
