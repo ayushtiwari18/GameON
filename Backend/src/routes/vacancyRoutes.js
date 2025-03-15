@@ -16,4 +16,17 @@ router.get(
   vacancyController.getTournamentsWithVacancies
 ); // Get tournaments with vacancies
 
+// Academy-specific routes
+router.get(
+  "/academy/:academyId/vacancies",
+  vacancyController.getAcademyVacancies
+); // Get all vacancies for an academy
+router.get("/vacancies/:id", vacancyController.getVacancyById); // Get specific vacancy by ID
+router.put("/vacancies/:id", vacancyController.updateVacancy); // Update a vacancy
+router.delete("/vacancies/:id", vacancyController.deleteVacancy); // Delete a vacancy
+
+// Application routes (if you implement this feature later)
+// router.post("/vacancies/:id/apply", authenticateToken, vacancyController.applyToVacancy);
+// router.get("/vacancies/:id/applications", authenticateToken, vacancyController.getVacancyApplications);
+
 module.exports = router;

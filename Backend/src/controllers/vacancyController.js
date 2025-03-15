@@ -125,6 +125,146 @@ const vacancyController = {
       // Error handling...
     }
   },
+  // Get all vacancies for a specific academy
+  async getAcademyVacancies(req, res, next) {
+    try {
+      await poolConnect;
+      const academyId = req.params.academyId;
+
+      if (!academyId) {
+        return res.status(400).json({ message: "Academy ID is required" });
+      }
+
+      const request = pool
+        .request()
+        .input("academy_id", sql.UniqueIdentifier, academyId);
+
+      const query = `
+        SELECT v.*, t.Name as tournament_name
+        FROM Vacancies v
+        JOIN Tournaments t ON v.Tournament_id = t.Tournament_id
+        WHERE v.Academy_id = @academy_id
+      `;
+
+      const result = await request.query(query);
+      res.json(result.recordset);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Get a specific vacancy by ID
+  async getVacancyById(req, res, next) {
+    try {
+      await poolConnect;
+      const vacancyId = req.params.id;
+
+      if (!vacancyId) {
+        return res.status(400).json({ message: "Vacancy ID is required" });
+      }
+
+      const request = pool
+        .request()
+        .input("vacancy_id", sql.UniqueIdentifier, vacancyId);
+
+      const query = `
+        SELECT v.*, t.Name as tournament_name, a.Name as academy_name
+        FROM Vacancies v
+        JOIN Tournaments t ON v.Tournament_id = t.Tournament_id
+        JOIN Academies a ON v.Academy_id = a.Academy_id
+        WHERE v.Vacancy_id = @vacancy_id
+      `;
+
+      const result = await request.query(query);
+
+      if (result.recordset.length === 0) {
+        return res.status(404).json({ message: "Vacancy not found" });
+      }
+
+      res.json(result.recordset[0]);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Update a vacancy
+  async updateVacancy(req, res, next) {
+    try {
+      await poolConnect;
+      const vacancyId = req.params.id;
+      const {
+        position,
+        requirements,
+        vacancy_count,
+        gender_preference,
+        age_limit,
+      } = req.body;
+
+      if (!vacancyId) {
+        return res.status(400).json({ message: "Vacancy ID is required" });
+      }
+
+      const request = pool
+        .request()
+        .input("vacancy_id", sql.UniqueIdentifier, vacancyId)
+        .input("position", sql.NVarChar, position)
+        .input("requirements", sql.NVarChar, requirements)
+        .input("vacancy_count", sql.Int, vacancy_count)
+        .input("gender_preference", sql.NVarChar, gender_preference)
+        .input("age_limit", sql.Int, age_limit);
+
+      const query = `
+        UPDATE Vacancies
+        SET Position = @position,
+            Requirements = @requirements,
+            Vacancy_count = @vacancy_count,
+            Gender_preference = @gender_preference,
+            Age_limit = @age_limit
+        WHERE Vacancy_id = @vacancy_id
+      `;
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).json({ message: "Vacancy not found" });
+      }
+
+      res.json({ message: "Vacancy updated successfully" });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  // Delete a vacancy
+  async deleteVacancy(req, res, next) {
+    try {
+      await poolConnect;
+      const vacancyId = req.params.id;
+
+      if (!vacancyId) {
+        return res.status(400).json({ message: "Vacancy ID is required" });
+      }
+
+      const request = pool
+        .request()
+        .input("vacancy_id", sql.UniqueIdentifier, vacancyId);
+
+      const query = `
+        DELETE FROM Vacancies
+        WHERE Vacancy_id = @vacancy_id
+      `;
+
+      const result = await request.query(query);
+
+      if (result.rowsAffected[0] === 0) {
+        return res.status(404).json({ message: "Vacancy not found" });
+      }
+
+      res.json({ message: "Vacancy deleted successfully" });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = vacancyController;

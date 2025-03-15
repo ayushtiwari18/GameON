@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import the navigation hook
 import { Award, Users, Loader, Trophy, IndianRupee } from "lucide-react";
 import { format } from "date-fns";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import "./tournamentVenueCard.css";
 
 function VenueCard({ venue, onClick }) {
+  const navigate = useNavigate(); // Initialize the navigate function
   const [imageLoading, setImageLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
 
@@ -32,12 +36,6 @@ function VenueCard({ venue, onClick }) {
     return deadline > now ? "OPEN" : "CLOSED";
   };
 
-  const DefaultImage = () => (
-    <div className="default-image">
-      <Trophy size={48} strokeWidth={1.5} />
-    </div>
-  );
-
   const truncateText = (text, maxLength) => {
     if (!text) return "";
     return text.length > maxLength
@@ -47,16 +45,25 @@ function VenueCard({ venue, onClick }) {
 
   const registrationStatus = getRegistrationStatus();
 
+  // Immediately set imageError to true if image_url is empty or null
+  useEffect(() => {
+    if (!venue.image_url) {
+      setImageLoading(false);
+      setImageError(true);
+    }
+  }, [venue.image_url]);
+
   return (
     <div className="card-academy" onClick={onClick}>
       <div className="card-image-container-academy">
-        {imageLoading && (
-          <div className="image-loading">
-            <Loader className="animate-spin" size={24} />
-          </div>
+        {imageLoading && !imageError && (
+          <Skeleton height={200} borderRadius={12} />
         )}
+
         {imageError || !venue.image_url ? (
-          <DefaultImage />
+          <div className="default-image-academy">
+            <Trophy size={48} strokeWidth={1.5} color="#4848ff" />
+          </div>
         ) : (
           <img
             src={venue.image_url}
@@ -123,7 +130,17 @@ function VenueCard({ venue, onClick }) {
         <span className="location-academy">
           {venue.City || venue.Location || "Location TBA"}
         </span>
-        <button className="create-btn-academy ">Create Vacancy</button>
+        <button
+          className="create-btn-academy"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent parent onClick from firing
+            navigate(
+              `/academy/tournament/${venue._id || venue.id}/create-vacancy`
+            );
+          }}
+        >
+          Create Vacancy
+        </button>
       </div>
     </div>
   );

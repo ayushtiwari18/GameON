@@ -94,3 +94,45 @@
     gap: 30px;
   }
 }
+
+/* Custom skeleton theme to match color scheme */
+.react-loading-skeleton {
+  background-color: #d4cbb2 !important;
+  background-image: linear-gradient(
+    90deg,
+    #d4cbb2,
+    #e8dbb5,
+    #d4cbb2
+  ) !important;
+}
+
+/* Ensure skeleton elements have the same box-shadow style */
+.card-academy .react-loading-skeleton {
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for no results message */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  color: #2c2c5a;
+  background: #d4cbb2;
+  border-radius: 10px;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Style for error message */
+.error {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  color: #721c24;
+  background: #f8d7da;
+  border-radius: 10px;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.3);
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import VenueCard from "./tournamentVenueCard.jsx";
 import tournamentService from "../../../services/tournamentService.js";
+import { TournamentSkeletonGrid } from "./TournamentSkeleton";
 import "./AcademyTournament.css";
 
 function AcademyTournament({ type = "tournament" }) {
@@ -32,7 +33,6 @@ function AcademyTournament({ type = "tournament" }) {
       // Ensure each tournament has required fields
       const sanitizedTournaments = tournamentsData.map((tournament) => ({
         ...tournament,
-        console: console.log(tournament),
         _id: tournament.Tournament_id, // Map Tournament_id to _id for consistency
         Location: tournament.City || tournament.Location, // Use City if Location is null
         Name: tournament.Name || "",
@@ -48,7 +48,10 @@ function AcademyTournament({ type = "tournament" }) {
       setError("Failed to fetch tournaments. Please try again later.");
       setTournaments([]);
     } finally {
-      setLoading(false);
+      // Add a slight delay to prevent flash of skeleton
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -141,7 +144,7 @@ function AcademyTournament({ type = "tournament" }) {
         </div>
 
         {loading ? (
-          <div className="loading">Loading tournaments...</div>
+          <TournamentSkeletonGrid count={6} />
         ) : error ? (
           <div className="error">{error}</div>
         ) : (

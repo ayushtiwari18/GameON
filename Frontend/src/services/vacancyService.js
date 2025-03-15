@@ -71,6 +71,29 @@ const vacancyService = {
   getTournamentsWithVacancies: async () => {
     return axiosInstance.get("/vacancies/tournaments");
   },
+
+  // Academy-specific endpoints
+  academy: {
+    // Get all vacancies for a specific academy
+    getAll: async (academyId) => {
+      return axiosInstance.get(`/academy/${academyId}/vacancies`);
+    },
+
+    // Get details for a specific vacancy
+    getOne: async (vacancyId) => {
+      return axiosInstance.get(`/vacancies/${vacancyId}`);
+    },
+
+    // Delete a vacancy
+    delete: async (vacancyId) => {
+      return axiosInstance.delete(`/vacancies/${vacancyId}`);
+    },
+
+    // Update a vacancy
+    update: async (vacancyId, updateData) => {
+      return axiosInstance.put(`/vacancies/${vacancyId}`, updateData);
+    },
+  },
 };
 
 export default vacancyService;
