@@ -9,6 +9,7 @@ import AcademyLayout from "../components/Academy/AcademyLayout";
 
 // Landing page components
 import Home from "../components/landing page/home/Home";
+import About from "../components/landing page/aboutUs/about";
 
 // Auth components
 import PlayerSignup from "../components/landing page/Signup/PlayerSignup";
@@ -33,6 +34,7 @@ import AcademyProfile from "../components/Academy/AcademyProfile/AcademyProfile"
 import MyTournament from "../components/Academy/MyTournaments/MyTournaments";
 import TournamentCreationForm from "../components/Academy/MyTournaments/TournamentCreationForm";
 import TournamentEditForm from "../components/Academy/MyTournaments/EditTournament";
+import CreateVacancy from "../components/Academy/AcademyTournaments/CreateVacancy/CreateVacancy";
 
 const AppRoutes = () => {
   return (
@@ -43,6 +45,14 @@ const AppRoutes = () => {
         element={
           <LandingLayout>
             <Home />
+          </LandingLayout>
+        }
+      />
+      <Route
+        path="/about"
+        element={
+          <LandingLayout>
+            <About />
           </LandingLayout>
         }
       />
@@ -193,6 +203,20 @@ const AppRoutes = () => {
           >
             <AcademyLayout>
               <AcademyTournamentDetail />
+            </AcademyLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/academy/tournament/:id/create-vacancy"
+        element={
+          <ProtectedRoute
+            allowedRoles={["academy"]}
+            redirectPath="/academy/login"
+          >
+            <AcademyLayout>
+              <AcademyTournamentDetail />
+              <CreateVacancy />
             </AcademyLayout>
           </ProtectedRoute>
         }
