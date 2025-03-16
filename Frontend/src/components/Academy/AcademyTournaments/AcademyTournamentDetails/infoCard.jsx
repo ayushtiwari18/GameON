@@ -1,5 +1,5 @@
 import React from "react";
-import "./InfoCard.css";
+import "./infoCard.css";
 
 const InfoCard = ({ title, content }) => (
   <div className="info-card-academy card-academy">
