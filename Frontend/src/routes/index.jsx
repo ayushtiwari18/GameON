@@ -3,19 +3,19 @@ import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 
 // Layouts
-import LandingLayout from "../components/landing page/LandingLayout";
+import LandingLayout from "../components/landingPage/LandingLayout";
 import PlayerLayout from "../components/Player/PlayerLayout";
 import AcademyLayout from "../components/Academy/AcademyLayout";
 
-// Landing page components
-import Home from "../components/landing page/home/Home";
-import About from "../components/landing page/aboutUs/about";
+// LandingPage components
+import Home from "../components/landingPage/home/Home";
+import About from "../components/landingPage/aboutUs/about";
 
 // Auth components
-import PlayerSignup from "../components/landing page/Signup/PlayerSignup";
-import PlayerLogin from "../components/landing page/login/PlayerLogin";
-import AcademySignup from "../components/landing page/Signup/AcademySignup";
-import AcademyLogin from "../components/landing page/login/AcademyLogin";
+import PlayerSignup from "../components/landingPage/Signup/PlayerSignup";
+import PlayerLogin from "../components/landingPage/login/PlayerLogin";
+import AcademySignup from "../components/landingPage/Signup/AcademySignup";
+import AcademyLogin from "../components/landingPage/login/AcademyLogin";
 
 // Player components
 import PlayerHome from "../components/Player/Home/Home";

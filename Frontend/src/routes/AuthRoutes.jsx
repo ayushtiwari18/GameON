@@ -1,9 +1,9 @@
 // src/routes/AuthRoutes.jsx
 import { Route, Routes } from "react-router-dom";
-import PlayerSignup from "../components/landing page/Signup/PlayerSignup";
-import PlayerLogin from "../components/landing page/login/PlayerLogin";
-import AcademySignup from "../components/landing page/Signup/AcademySignup";
-import AcademyLogin from "../components/landing page/login/AcademyLogin";
+import PlayerSignup from "../components/landingPage/Signup/PlayerSignup";
+import PlayerLogin from "../components/landingPage/login/PlayerLogin";
+import AcademySignup from "../components/landingPage/Signup/AcademySignup";
+import AcademyLogin from "../components/landingPage/login/AcademyLogin";
 
 const AuthRoutes = () => {
   return (
