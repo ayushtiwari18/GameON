@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./AcademyTournamentDetail.css";
-import InfoCard from "./InfoCard";
+import InfoCard from "./infoCard.jsx";
 import { useParams, useNavigate } from "react-router-dom";
 import Buttoncustom from "../../../../common/Buttoncustom.jsx";
 import tournamentService from "../../../../services/tournamentService.js";
