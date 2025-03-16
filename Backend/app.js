@@ -1,34 +1,26 @@
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
+const SequelizeStore = require("express-session-sequelize")(session.Store);
+const { Sequelize } = require("sequelize");
+const { pool, poolConnect } = require("./src/config/database");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
-const http = require("http"); // Add this import
-const setupSocketIO = require("./src/config/socket"); // Add this import
+const http = require("http");
+const setupSocketIO = require("./src/config/socket");
 
 const playerRoutes = require("./src/routes/playerRoutes");
 const academyRoutes = require("./src/routes/academyRoutes");
 const vacancyRoutes = require("./src/routes/vacancyRoutes");
 const tournamentRoutes = require("./src/routes/tournamentRoutes");
-const notificationRoutes = require("./src/routes/notificationRoutes"); // Add the notifications routes
+const notificationRoutes = require("./src/routes/notificationRoutes");
 
 const errorHandler = require("./src/middleware/errorHandler");
 const auth = require("./src/middleware/auth");
 
 const app = express();
-const server = http.createServer(app); // Create HTTP server
-const io = setupSocketIO(server); // Initialize Socket.IO
-
-// Debug middleware to log requests
-// app.use((req, res, next) => {
-//   console.log("\n--- Incoming Request ---");
-//   console.log("Method:", req.method);
-//   console.log("Path:", req.path);
-//   console.log("Headers:", req.headers);
-//   console.log("Body:", req.body);
-//   console.log("----------------------\n");
-//   next();
-// });
+const server = http.createServer(app);
+const io = setupSocketIO(server);
 
 // Make io available to all routes
 app.set("io", io);
@@ -41,8 +33,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "http://localhost:5174", // Add this to allow requests from port 5174
-      process.env.FRONTEND_URL, // Keep the production frontend URL
+      "http://localhost:5174",
+      process.env.FRONTEND_URL,
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -50,41 +42,75 @@ app.use(
   })
 );
 
-// Enhance the session middleware configuration
+// Create Sequelize instance
+const sequelize = new Sequelize(
+  process.env.DB_NAME, // Make sure this is "gamedb"
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_SERVER,
+    dialect: "mssql",
+    dialectOptions: {
+      options: {
+        encrypt: true,
+        trustServerCertificate: true, // Try setting this to true
+      },
+    },
+  }
+);
+
+// Define the sessions model explicitly
+const Session = sequelize.define(
+  "Session",
+  {
+    session_id: {
+      type: Sequelize.STRING(100), // Increase the size to handle longer session IDs
+      primaryKey: true,
+    },
+    expires: Sequelize.DATE,
+    data: Sequelize.TEXT,
+  },
+  {
+    tableName: "Sessions",
+    timestamps: true,
+  }
+);
+
+// Initialize Sequelize Store with the model
+const myStore = new SequelizeStore({
+  db: sequelize,
+  table: Session,
+  checkExpirationInterval: 15 * 60 * 1000, // Clean up expired sessions every 15 minutes
+  expiration: 24 * 60 * 60 * 1000, // Session expiration (24 hours)
+});
+
 // Session configuration
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "GAMEONISHERE",
     resave: false,
     saveUninitialized: false,
+    store: myStore,
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
-    name: "gameon.sid", // Custom name for the session cookie
+    name: "gameon.sid",
   })
 );
 
 app.use(express.json());
-
-// Debug middleware after body parsing
-// app.use((req, res, next) => {
-//   console.log("\n--- After Body Parsing ---");
-//   console.log("Parsed Body:", req.body);
-//   console.log("------------------------\n");
-//   next();
-// });
 
 // Routes
 app.use("/player", playerRoutes);
 app.use("/academy", academyRoutes);
 app.use("/vacancy", vacancyRoutes);
 app.use("/tournament", tournamentRoutes);
-app.use("/notifications", notificationRoutes); // Add the notifications routes
+app.use("/notifications", notificationRoutes);
 
-// Add to your main app.js or in a test route file
+// Session test route
 app.get("/api/test-session", (req, res) => {
   if (req.session.views) {
     req.session.views++;
@@ -122,6 +148,25 @@ app.use((err, req, res, next) => {
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+
+// Initialize database and start server in the correct sequence
+async function startServer() {
+  try {
+    // First sync the Sessions table
+    // Use force: true only for the first run to create the table
+    await sequelize.authenticate();
+    console.log("Database connection established successfully");
+    console.log("Sessions table synchronized!");
+
+    // Start the server only after database setup is complete
+    server.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Unable to sync tables:", err);
+    process.exit(1);
+  }
+}
+
+// Start everything
+startServer();
