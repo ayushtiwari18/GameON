@@ -1,0 +1,41 @@
+.hero-section-landing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 50px;
+  height: 100vh;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(9, 9, 121, 1) 50%
+  );
+  /* background: linear-gradient(to bottom, #000000, #0d0d4a); */
+  color: white;
+}
+
+.hero-content-landing {
+  max-width: 50%;
+}
+
+.hero-content-landing h1 {
+  font-size: 2.3rem;
+  font-weight: bold;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+.button-group-landing {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column !important;
+  gap: 15px;
+}
+
+.hero-image img {
+  width: 500px;
+  height: auto;
+}
