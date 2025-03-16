@@ -1,5 +1,5 @@
 import React from "react";
-import "./TournamentCard.css"; // Import the CSS file
+import "./Tournamentcard.css"; // Import the CSS file
 
 const TournamentCard = () => {
   return (
