@@ -34,9 +34,10 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      process.env.FRONTEND_URL,
+      "https://gameonat.netlify.app",
+      process.env.FRONTEND_URL, // Ensure this is set correctly
     ],
-    credentials: true,
+    credentials: true, // Allow cookies to be sent
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -93,8 +94,8 @@ app.use(
     store: myStore,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: true, // Ensure cookies are sent over HTTPS
+      sameSite: "none", // Required for cross-site requests
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
     name: "gameon.sid",
