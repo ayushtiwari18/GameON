@@ -4,6 +4,12 @@
   publish = "dist"  # Correct for Vite
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+from = "/sitemap.xml"
+to = "https://gameon-c4e7.onrender.com/sitemap.xml"
+status = 200
+force = true
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
