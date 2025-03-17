@@ -35,6 +35,7 @@ app.use(
       "http://localhost:5173",
       "http://localhost:5174",
       "https://gameonat.netlify.app",
+      "https://game-on.me/",
       process.env.FRONTEND_URL, // Ensure this is set correctly
     ],
     credentials: true, // Allow cookies to be sent
