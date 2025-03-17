@@ -1,0 +1,25 @@
+# Allow all search engines
+User-agent: *
+
+# Allow indexing of public pages
+Allow: /
+Allow: /about
+Allow: /player/signup
+Allow: /player/login
+Allow: /academy/signup
+Allow: /academy/login
+
+# Disallow indexing of private and sensitive routes
+Disallow: /player/
+Disallow: /academy/
+Disallow: /player/profile/
+Disallow: /academy/profile/
+Disallow: /player/tournaments/
+Disallow: /academy/tournament/
+Disallow: /academy/my-vacancy/
+Disallow: /academy/tournament/create-tournament
+Disallow: /academy/tournament/edit-tournament
+Disallow: /academy/tournament/create-vacancy
+
+# Sitemap location
+Sitemap: https://gameon-c4e7.onrender.com/sitemap.xml

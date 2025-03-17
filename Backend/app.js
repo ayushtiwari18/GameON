@@ -3,7 +3,7 @@ const cors = require("cors");
 const session = require("express-session");
 const SequelizeStore = require("express-session-sequelize")(session.Store);
 const { Sequelize } = require("sequelize");
-const { pool, poolConnect } = require("./src/config/database");
+const path = require("path");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const http = require("http");
@@ -14,6 +14,7 @@ const academyRoutes = require("./src/routes/academyRoutes");
 const vacancyRoutes = require("./src/routes/vacancyRoutes");
 const tournamentRoutes = require("./src/routes/tournamentRoutes");
 const notificationRoutes = require("./src/routes/notificationRoutes");
+const sitemapRoutes = require("./src/routes/sitemapRoutes");
 
 const errorHandler = require("./src/middleware/errorHandler");
 const auth = require("./src/middleware/auth");
@@ -111,6 +112,7 @@ app.use("/academy", academyRoutes);
 app.use("/vacancy", vacancyRoutes);
 app.use("/tournament", tournamentRoutes);
 app.use("/notifications", notificationRoutes);
+app.use("/", sitemapRoutes);
 
 // Session test route
 app.get("/api/test-session", (req, res) => {
@@ -145,6 +147,14 @@ app.get("/api/protected", auth.authenticateToken, (req, res) => {
 app.use((err, req, res, next) => {
   console.error("Global error handler:", err);
   next(err);
+});
+
+// Serve static files from 'public' folder
+app.use(express.static(path.join(__dirname, "public")));
+
+// Test route to check robots.txt
+app.get("/robots.txt", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "robots.txt"));
 });
 
 app.use(errorHandler);
