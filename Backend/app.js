@@ -47,20 +47,22 @@ app.use(
 
 // Create Sequelize instance
 const sequelize = new Sequelize(
-  process.env.DB_NAME, // Make sure this is "gamedb"
+  process.env.DB_NAME,
   process.env.DB_USER,
   process.env.DB_PASSWORD,
   {
     host: process.env.DB_SERVER,
     dialect: "mssql",
+    logging: console.log, // Enable logging for debugging
     dialectOptions: {
       options: {
         encrypt: true,
-        trustServerCertificate: true, // Try setting this to true
+        trustServerCertificate: true,
       },
     },
   }
 );
+
 
 // Define the sessions model explicitly
 const Session = sequelize.define(
