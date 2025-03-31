@@ -37,6 +37,7 @@ app.use(
       "http://localhost:5174",
       "https://gameonat.netlify.app",
       "https://game-on.me",
+      "https://main.d3rxrhvac5e5sm.amplifyapp.com",
       process.env.FRONTEND_URL, // Ensure this is set correctly
     ],
     credentials: true, // Allow cookies to be sent
@@ -62,7 +63,6 @@ const sequelize = new Sequelize(
     },
   }
 );
-
 
 // Define the sessions model explicitly
 const Session = sequelize.define(
